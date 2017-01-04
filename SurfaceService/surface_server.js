@@ -18,11 +18,8 @@ app.use(express.static(__dirname + '/'));
 
 // routing
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/client.html');
+  res.sendfile(__dirname + '/client/client.html');
 });
-
-// Chargement de socket.io
-var io = require('socket.io').listen(server);
 
 var json = "";
 
