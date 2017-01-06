@@ -103,7 +103,7 @@ remote_control_nsp.on('connection', function (socket) {
 
     // Quand le serveur reçoit un signal de type "message" du client
     socket.on('displayImg', function (message) {
-        board_nsp.emit('display', "star_wars.jpg");
+        board_nsp.emit('display', "images/star_wars.jpg");
         console.log("display");
     });
 });
