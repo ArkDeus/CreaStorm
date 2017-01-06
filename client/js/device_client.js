@@ -1,3 +1,8 @@
+var socket = io('/DeviceService');
+
+// ##############
+// UPLOAD SECTION
+// ##############
 $('.upload-btn').on('click', function (){
     $('#upload-input').click();
     $('.progress-bar').text('0%');
@@ -22,7 +27,7 @@ $('#upload-input').on('change', function(){
     }
 
     $.ajax({
-      url: '/upload',
+      url: '/DeviceService',
       type: 'POST',
       data: formData,
       processData: false,

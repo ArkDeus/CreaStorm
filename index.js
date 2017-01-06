@@ -1,8 +1,8 @@
-// var server1 = require('./DeviceService/device_server');
-// var server2 = require('./SurfaceService/surface_server');
-
 // We need to use the express framework: have a real web servler that knows how to send mime types etc.
 var express = require('express');
+var formidable = require('formidable');
+var path = require('path');
+var fs = require('fs');
 
 // Init globals variables for each module required
 var app = express()
@@ -28,19 +28,59 @@ app.get('/SurfaceService', function (req, res) {
     res.sendFile(__dirname + '/client/surface_client.html');
 });
 
+// route for the 'DeviceService' namespace
+app.get('/DeviceService', function (req, res) {
+    res.sendFile(__dirname + '/client/device_client.html');
+});
+app.post('/DeviceService', function (req, res) {
+    // create an incoming form object
+    var form = new formidable.IncomingForm();
+
+    // specify that we want to allow the user to upload multiple files in a single request
+    form.multiples = true;
+
+    // store all uploads in the /uploads directory
+    form.uploadDir = path.join(__dirname, '/uploads');
+
+    // every time a file has been uploaded successfully,
+    // rename it to it's orignal name
+    form.on('file', function (field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
+
+    // log any errors that occur
+    form.on('error', function (err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+    // once all the files have been uploaded, send a response to the client
+    form.on('end', function () {
+        res.end('success');
+    });
+
+    // parse the incoming request containing the form data
+    form.parse(req);
+
+});
+
 // namespace
 // manage the event on the namespace 'SurfaceService'
 var surface_nsp = io.of('/SurfaceService');
 surface_nsp.on('connection', function (socket) {
     var surface_server = require('./server/surface_server');
-    console.log("un client connecté sur le namespace");
-    socket.emit('message', 'Vous êtes bien connecté sur le namespace!');
+    console.log("un client connecté sur le SurfaceService");
 
     // Quand le serveur reçoit un signal de type "message" du client
     socket.on('message', function (message) {
-        var result = surface_server.getAllFilesFromFolder("node_modules");
+        var result = surface_server.getAllFilesFromFolder("uploads");
         // send the json to the client
         // hack : remove the 2 last characters to remove the last ",}" and replace by "}}"
         socket.emit('folder', "{" + result.substring(0, result.length - 2) + "}}");
     });
+});
+
+// manage the event on the namespace 'DeviceService'
+var device_nsp = io.of('/DeviceService');
+device_nsp.on('connection', function (socket) {
+    console.log("un client connecté sur le DeviceService");
 });
