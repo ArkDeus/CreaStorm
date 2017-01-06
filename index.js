@@ -63,6 +63,16 @@ app.post('/DeviceService', function (req, res) {
 
 });
 
+// route for the "RemoteControl" namespace
+app.get('/RemoteControl', function (req, res) {
+    res.sendFile(__dirname + '/client/remote_control_client.html');
+});
+
+// route for the 'BoardService' namespace
+app.get('/BoardService', function (req, res) {
+    res.sendFile(__dirname + '/client/board_client.html');
+});
+
 // namespace
 // manage the event on the namespace 'SurfaceService'
 var surface_nsp = io.of('/SurfaceService');
@@ -83,4 +93,24 @@ surface_nsp.on('connection', function (socket) {
 var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
+});
+
+// manage the event on the namespace 'RemoteControl'
+var remote_control_nsp = io.of('/RemoteControl');
+remote_control_nsp.on('connection', function (socket) {
+    // var surface_server = require('surface_server');
+    console.log("un client connecté sur le RemoteControl");
+
+    // Quand le serveur reçoit un signal de type "message" du client
+    socket.on('displayImg', function (message) {
+        board_nsp.emit('display', "star_wars.jpg");
+        console.log("display");
+    });
+});
+
+// manage the event on the namespace 'BoardService'
+var board_nsp = io.of('/BoardService');
+board_nsp.on('connection', function (socket) {
+    console.log("un client connecté sur le BoardService");
+
 });
