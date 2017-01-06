@@ -49,7 +49,7 @@ telephone_nsp.on('connection', function (socket) {
         // var result = ;
         // send the json to the client
         // hack : remove the 2 last characters to remove the last ",}" and replace by "}}"
-        surface_nsp.emit('display', "star_wars.jpg");
+        surface_nsp.emit('display', "images/star_wars.jpg");
         console.log("display");
     });
 });
