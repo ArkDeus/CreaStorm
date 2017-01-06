@@ -21,7 +21,7 @@ function displayAll() {
 
 
 socket.on('message', function(message) {
-    alert('Le serveur a un message pour vous : ' + message);
+    //alert('Le serveur a un message pour vous : ' + message);
 })
 // var img = document.querySelector("#img1");
 // socket.on('displayImg', function(urlImg){
