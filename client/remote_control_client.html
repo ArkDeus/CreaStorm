@@ -7,78 +7,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../client/css/remote_control_style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="../client/js/remote_control_client.js"></script>
+    <script type="text/javascript" src="../client/js/remote_control_client.js"></script>
 </head>
 
 <body>
-
     <div class="container">
         <div class="jumbotron">
             <h1>Remote controller</h1>
-
         </div>
+
         <div class="container">
             <h3>Options</h3>
             <hr />
             <div class="row">
-                <h4>Server response <span id="p1"></span></h4>
-                <div class="col-md-4">
-
-                    <div class="[ form-group ]">
-                        <input type="checkbox" name="fancy-checkbox-default" id="fancy-checkbox-default" autocomplete="off" />
-                        <div class="[ btn-group ]" onclick="displayAll()" >
-<label for="fancy-checkbox-default" class="[ btn btn-default ]">
-                    <span class="[ glyphicon glyphicon-ok ]"></span>
-                    <span> </span>
-                </label>
-<label for="fancy-checkbox-default" class="[ btn btn-default active ]">
-                    Display all
-                </label>
-</div>
-</div>
-</div>
-
-
-
-<div class="col-md-4">
+<div class="col-md-3">
     <div class="[ form-group ]">
-        <input type="checkbox" name="fancy-checkbox-warning-custom-icons" id="fancy-checkbox-warning-custom-icons" autocomplete="off"
+        <input type="checkbox" name="fancy-checkbox-all" id="fancy-checkbox-all" autocomplete="off" />
+        <div class="[ btn-group ]" id="btnGroupAll">
+            <label for="fancy-checkbox-all" class="[ btn btn-primary ]">
+                <span class="[ glyphicon glyphicon-ok ]"></span>
+                <span></span>
+            </label>
+            <label for="fancy-checkbox-all" class="[ btn btn-default active ]">Display all</label>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="[ form-group ]">
+        <input type="checkbox" name="fancy-checkbox-gif" id="fancy-checkbox-gif" autocomplete="off"
         />
         <div class="[ btn-group ]">
-            <label for="fancy-checkbox-warning-custom-icons" class="[ btn btn-warning ]">
-                    <span class="[ glyphicon glyphicon-plus ]"></span>
-                    <span class="[ glyphicon glyphicon-minus ]"></span>
-                </label>
-            <label for="fancy-checkbox-warning-custom-icons" class="[ btn btn-default active ]">
-                    Do not display .gif
-                </label>
+            <label for="fancy-checkbox-gif" class="[ btn btn-primary ]">
+                <span class="[ glyphicon glyphicon-ok ]"></span>
+                <span></span>
+            </label>
+            <label for="fancy-checkbox-gif" class="[ btn btn-default active ]">Display only .gif</label>
         </div>
     </div>
 
 </div>
-<div class="col-md-4">
+
+<div class="col-md-3">
     <div class="[ form-group ]">
-        <input type="checkbox" name="fancy-checkbox-danger-custom-icons" id="fancy-checkbox-danger-custom-icons" autocomplete="off"
+        <input type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-jpg" autocomplete="off"
         />
         <div class="[ btn-group ]">
-            <label for="fancy-checkbox-danger-custom-icons" class="[ btn btn-danger ]">
-                    <span class="[ glyphicon glyphicon-plus ]"></span>
-                    <span class="[ glyphicon glyphicon-minus ]"></span>
-                </label>
-            <label for="fancy-checkbox-danger-custom-icons" class="[ btn btn-default active ]">
-                    Do not display .jpg
-                </label>
+            <label for="fancy-checkbox-jpg" class="[ btn btn-primary ]">
+                <span class="[ glyphicon glyphicon-ok ]"></span>
+                <span></span>
+            </label>
+            <label for="fancy-checkbox-jpg" class="[ btn btn-default active ]">Display only .jpg</label>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="[ form-group ]">
+        <input checked type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-nothing" autocomplete="off"
+        />
+        <div class="[ btn-group ]">
+            <label for="fancy-checkbox-nothing" class="[ btn btn-primary ]">
+                <span class="[ glyphicon glyphicon-ok ]"></span>
+                <span></span>
+            </label>
+            <label for="fancy-checkbox-nothing" class="[ btn btn-default active ]">Hide everything</label>
         </div>
     </div>
 </div>
 </div>
 </div>
-
-
-
 </body>
-
 </html>
