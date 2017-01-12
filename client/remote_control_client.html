@@ -23,6 +23,7 @@
             <h3>Options</h3>
             <hr />
             <div class="row">
+<!-- start filter DisplayAll -->
 <div class="col-md-3">
     <div class="[ form-group ]">
         <input type="checkbox" name="fancy-checkbox-all" id="fancy-checkbox-all" autocomplete="off" />
@@ -35,7 +36,8 @@
         </div>
     </div>
 </div>
-
+<!-- end filter DisplayAll -->
+<!-- start filter DisplayGif -->
 <div class="col-md-3">
     <div class="[ form-group ]">
         <input type="checkbox" name="fancy-checkbox-gif" id="fancy-checkbox-gif" autocomplete="off"
@@ -48,9 +50,9 @@
             <label for="fancy-checkbox-gif" class="[ btn btn-default active ]">Display only .gif</label>
         </div>
     </div>
-
 </div>
-
+<!-- end filter DisplayGif -->
+<!-- start filter DisplayJpg -->
 <div class="col-md-3">
     <div class="[ form-group ]">
         <input type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-jpg" autocomplete="off"
@@ -64,7 +66,8 @@
         </div>
     </div>
 </div>
-
+<!-- end filter DisplayJpg -->
+<!-- start filter DisplayNothing -->
 <div class="col-md-3">
     <div class="[ form-group ]">
         <input checked type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-nothing" autocomplete="off"
@@ -78,6 +81,63 @@
         </div>
     </div>
 </div>
+<!-- end filter DisplayNothing -->
+
+<!-- start listing projects -->
+<div class="col-md-6 col-xs-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">List of the projects</h3>
+        </div>
+        <div class="panel-body">
+            <button id="get-projects" class="btn btn-default col-md-6 col-xs-6">Get the list</button>
+            <div id="display-project-error" class="col-md-6 col-xs-6" hidden>
+                    <div class="alert alert-danger" style="padding-bottom: 6px; padding-top: 6px;" role="alert">
+                        <p style=" font-size: 14pt; text-align: center;">No Project</p>
+                    </div>
+                </div>
+            <div class="col-md-12 col-xs-12" hidden id="display-list-project">
+                <hr />
+                <ul id="list-project">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end listing projects -->
+
+<!-- start creation project -->
+<div class="col-md-6 col-xs-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Project's name</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-9 col-xs-8">
+                <input style="font-size: 14pt; height: auto;" class="form-control required" type="text" minlength="5" id="project-name" placeholder="The name of your project" required/>
+            </div>
+            <div class="col-md-3 col-xs-4">
+                <button id="create-project" class="btn btn-default">Create</button>
+            </div>
+            <div class="col-md-12 col-xs-12" id="display-server-answer" hidden>
+                <hr />
+                <div hidden id="server-answer-error">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span id="server-answer-error-message"></span>
+                    </div>
+                </div>
+                <div hidden id="server-answer-success">
+                    <div class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        <span id="server-answer-success-message"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end creation project -->
 </div>
 </div>
 </body>

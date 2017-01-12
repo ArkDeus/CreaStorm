@@ -98,9 +98,21 @@ device_nsp.on('connection', function (socket) {
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
+    var remote_server = require('./server/remote_server');
     console.log("un client connecté sur le RemoteControl");
 
     // Quand le serveur reçoit un signal de type "message" du client
+    // Start manage the projects
+    socket.on('getAllProjects', function(){
+        var answer = remote_server.getAllProjectsName();
+        socket.emit('returnGetAll', answer);
+    })
+    socket.on('createProject', function(name){
+        var isCreated = remote_server.createProject(name);
+        socket.emit('returnCreated', isCreated);
+    })
+    // End manage the projects
+    // Start listen filter
     socket.on('displayAll', function () {
         board_nsp.emit('displayAll', "../images/star_wars.jpg");
     });
@@ -113,6 +125,7 @@ remote_control_nsp.on('connection', function (socket) {
     socket.on('displayNothing', function () {
         board_nsp.emit('hideAll', "../images/star_wars.jpg");
     });
+    // End listen filter
 });
 
 // manage the event on the namespace 'BoardService'
