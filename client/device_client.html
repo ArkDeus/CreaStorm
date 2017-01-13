@@ -10,34 +10,74 @@
   <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link href="../client/css/device_style.css" rel="stylesheet">
+  <link href="../tags-input/bootstrap-tagsinput.css" rel="stylesheet">
+
 </head>
 
 <body>
 
   <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <span class="glyphicon glyphicon-cloud-upload"></span>
+    <div class="row container">
             <h2>File Uploader</h2>
-            <h4>coligo.io</h4>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar"></div>
+            <div class="row">
+                <span style="color: #fff" class="col-xs-2">Tags</span>
+                <div class="col-xs-10">
+                  <input type="text" aria-describedby="basic-addon3" data-role="tagsinput" id="tags">
+
+                </div>
             </div>
-            <button class="btn btn-lg upload-btn" type="button">Upload File</button>
+
+            <div class="row">
+              <div class="input-file-container row">
+                <input type="file" class="input-file" id="fileInput">
+                <label for="fileInput" class="input-file-trigger" tabindex="0">Select a file ...</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <p class="file-return"></p>
+            </div>
+            <div class="row">
+              <input type="submit" id="upload" value="Upload">
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
   <input id="upload-input" type="file" name="uploads[]" multiple="multiple"></br>
 
+  <script>
+      // ajout de la classe JS à HTML
+      document.querySelector("html").classList.add('js');
+
+      // initialisation des variables
+      var fileInput  = document.querySelector( ".input-file" ),
+          button     = document.querySelector( ".input-file-trigger" ),
+          the_return = document.querySelector(".file-return");
+
+      // action lorsque la "barre d'espace" ou "Entrée" est pressée
+      button.addEventListener( "keydown", function( event ) {
+          if ( event.keyCode == 13 || event.keyCode == 32 ) {
+              fileInput.focus();
+          }
+      });
+
+      // action lorsque le label est cliqué
+      button.addEventListener( "click", function( event ) {
+          fileInput.focus();
+          return false;
+      });
+
+      // affiche un retour visuel dès que input:file change
+      fileInput.addEventListener( "change", function( event ) {
+          the_return.innerHTML = this.value;
+      });
+
+  </script>
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="../client/js/device_client.js"></script>
+  <script type="text/javascript" src="../tags-input/bootstrap-tagsinput.js"></script>
 </body>
 
 </html>
