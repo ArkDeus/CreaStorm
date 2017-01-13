@@ -98,13 +98,20 @@ device_nsp.on('connection', function (socket) {
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
+
+    var board_server = require('./server/board_server');
     // var surface_server = require('surface_server');
     console.log("un client connecté sur le RemoteControl");
 
     // Quand le serveur reçoit un signal de type "message" du client
     socket.on('displayImg', function (message) {
-        board_nsp.emit('display', "images/star_wars.jpg");
+        board_nsp.emit('display', result);
         console.log("display");
+    });
+
+    socket.on('tag', function(message) {
+        var tab = board_server.getTabFromTag(message);
+        board_nsp.emit('tag', tab);
     });
 });
 
@@ -112,5 +119,4 @@ remote_control_nsp.on('connection', function (socket) {
 var board_nsp = io.of('/BoardService');
 board_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le BoardService");
-
 });
