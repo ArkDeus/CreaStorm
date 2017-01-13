@@ -74,10 +74,10 @@ window.onload = function () {
 	projectTitle = document.getElementById('project-title');
 	projectNameTitle = document.getElementById('project-name-title');
 
-	disAll = document.getElementById("fancy-checkbox-all");
-	disGif = document.getElementById("fancy-checkbox-gif");
-	disJpg = document.getElementById("fancy-checkbox-jpg");
-	disNot = document.getElementById("fancy-checkbox-nothing");
+	disAll = document.getElementById("checkbox-all");
+	disGif = document.getElementById("checkbox-gif");
+	disJpg = document.getElementById("checkbox-jpg");
+	disNot = document.getElementById("checkbox-nothing");
 
 	getProjectsButton = document.getElementById('get-projects');
 	displayListProject = document.getElementById('display-list-projects');
@@ -111,6 +111,7 @@ window.onload = function () {
 	};
 
 	disGif.onchange = function () {
+		console.log("Display only gif : " + this.checked);
 		if (disGif.checked) {
 			disAll.checked = false;
 			disJpg.checked = false;

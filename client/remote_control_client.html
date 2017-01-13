@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <title>Remote controller</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../client/css/remote_control_style.css">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="../client/js/remote_control_client.js"></script>
+    </head>
 
-<head>
-    <title>Remote controller</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../client/css/remote_control_style.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="../client/js/remote_control_client.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <div class="jumbotron">
-            <h1>Remote controller</h1>
-            <div>
-                <h2 id="project-title" hidden><span>Selected project : </span><span id="project-name-title"></span></h2>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Remote controller</h1>
+                <div>
+                    <h2 id="project-title" hidden><span>Selected project : </span><span id="project-name-title"></span></h2>
+                </div>
             </div>
         </div>
 
@@ -26,118 +26,109 @@
             <h3>Options</h3>
             <hr />
             <div class="row">
-<!-- start filter DisplayAll -->
-<div class="col-md-3 col-xs-6">
-    <div class="form-group">
-        <input type="checkbox" name="fancy-checkbox-all" id="fancy-checkbox-all" autocomplete="off" />
-        <div class="btn-group" id="btnGroupAll">
-            <label for="fancy-checkbox-all" class="btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
-                <span></span>
-            </label>
-            <label for="fancy-checkbox-all" class="btn btn-default active">Display all</label>
+                <!-- start filter DisplayAll -->
+                <div class="col-lg-3 col-md-6 col-xs-12">
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="checkbox-all">
+                            <div class="slider round"></div>
+                        </label>
+                        <p class="switch-label">Display all</p>
+                    </div>
+                </div>
+                <!-- end filter DisplayAll -->
+                <!-- start filter DisplayGif -->
+                <div class="col-lg-3 col-md-6 col-xs-12">
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="checkbox-gif">
+                            <div class="slider round"></div>
+                        </label>
+                        <p class="switch-label">Display only .gif</p>
+                    </div>
+                </div>
+                <!-- end filter DisplayGif -->
+                <!-- start filter DisplayJpg -->
+                <div class="col-lg-3 col-md-6 col-xs-12">
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="checkbox-jpg">
+                            <div class="slider round"></div>
+                        </label>
+                        <p class="switch-label">Display only .jpg</p>
+                    </div>
+                </div>
+                <!-- end filter DisplayJpg -->
+                <!-- start filter DisplayNothing -->
+                <div class="col-lg-3 col-md-6 col-xs-12">
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="checkbox-nothing">
+                            <div class="slider round"></div>
+                        </label>
+                        <p class="switch-label">Hide everything</p>
+                    </div>
+                </div>
+                <!-- end filter DisplayNothing -->
+            </div>
         </div>
-    </div>
-</div>
-<!-- end filter DisplayAll -->
-<!-- start filter DisplayGif -->
-<div class="col-md-3 col-xs-6">
-    <div class="form-group">
-        <input type="checkbox" name="fancy-checkbox-gif" id="fancy-checkbox-gif" autocomplete="off" />
-        <div class="btn-group">
-            <label for="fancy-checkbox-gif" class="btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
-                <span></span>
-            </label>
-            <label for="fancy-checkbox-gif" class="btn btn-default active">Display only .gif</label>
-        </div>
-    </div>
-</div>
-<!-- end filter DisplayGif -->
-<!-- start filter DisplayJpg -->
-<div class="col-md-3 col-xs-6">
-    <div class="form-group">
-        <input type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-jpg" autocomplete="off" />
-        <div class="btn-group">
-            <label for="fancy-checkbox-jpg" class="btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
-                <span></span>
-            </label>
-            <label for="fancy-checkbox-jpg" class="btn btn-default active">Display only .jpg</label>
-        </div>
-    </div>
-</div>
-<!-- end filter DisplayJpg -->
-<!-- start filter DisplayNothing -->
-<div class="col-md-3 col-xs-6">
-    <div class="form-group">
-        <input checked type="checkbox" name="fancy-checkbox-jpg" id="fancy-checkbox-nothing" autocomplete="off" />
-        <div class="btn-group">
-            <label for="fancy-checkbox-nothing" class="btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
-                <span></span>
-            </label>
-            <label for="fancy-checkbox-nothing" class="btn btn-default active">Hide everything</label>
-        </div>
-    </div>
-</div>
-<!-- end filter DisplayNothing -->
+        <div class="container">
+            <h3>Project configuration</h3>
+            <hr />
+            <!-- start listing projects -->
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">List of the projects</h3>
+                    </div>
+                    <div class="panel-body">
+                        <button id="get-projects" class="btn btn-default col-md-6 col-xs-6">Get the list</button>
+                        <div id="display-project-error" class="col-md-6 col-xs-6" hidden>
+                            <div class="alert alert-danger" style="padding-bottom: 6px; padding-top: 6px;" role="alert">
+                                <p style="text-align: center;">No Project</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xs-12" hidden id="display-list-projects">
+                            <hr />
+                                <form id="list-projects">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end listing projects -->
 
-<!-- start listing projects -->
-<div class="col-md-6 col-xs-12">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">List of the projects</h3>
-        </div>
-        <div class="panel-body">
-            <button id="get-projects" class="btn btn-default col-md-6 col-xs-6">Get the list</button>
-            <div id="display-project-error" class="col-md-6 col-xs-6" hidden>
-                    <div class="alert alert-danger" style="padding-bottom: 6px; padding-top: 6px;" role="alert">
-                        <p style=" font-size: 14pt; text-align: center;">No Project</p>
+            <!-- start creation project -->
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Project's name</h3>
                     </div>
-                </div>
-            <div class="col-md-12 col-xs-12" id="display-list-projects">
-                <hr />
-                <form id="list-projects">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- end listing projects -->
+                    <div class="panel-body">
+                        <div class="col-md-9 col-xs-8">
+                            <input class="form-control required" type="text" minlength="5" id="project-name-input" placeholder="The name of your project" required/>
+                        </div>
+                        <button id="create-project" class="btn btn-default col-md-3 col-xs-4">Create</button>
 
-<!-- start creation project -->
-<div class="col-md-6 col-xs-12">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">Project's name</h3>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-9 col-xs-8">
-                <input style="font-size: 14pt; height: auto;" class="form-control required" type="text" minlength="5" id="project-name-input" placeholder="The name of your project" required/>
-            </div>
-                <button id="create-project" class="btn btn-default col-md-3 col-xs-4">Create</button>
-            
-            <div class="col-md-12 col-xs-12" id="display-server-answer" hidden>
-                <hr />
-                <div hidden id="server-answer-error">
-                    <div class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span id="server-answer-error-message"></span>
+                        <div class="col-md-12 col-xs-12" id="display-server-answer" hidden>
+                            <hr />
+                            <div hidden id="server-answer-error">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span id="server-answer-error-message"></span>
+                                </div>
+                            </div>
+                            <div hidden id="server-answer-success">
+                                <div class="alert alert-success" role="alert">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                    <span id="server-answer-success-message"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div hidden id="server-answer-success">
-                    <div class="alert alert-success" role="alert">
-                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                        <span id="server-answer-success-message"></span>
-                    </div>
-                </div>
+                <!-- end creation project -->
             </div>
         </div>
-    </div>
-</div>
-<!-- end creation project -->
-</div>
-</div>
-</body>
+    </body>
 </html>
