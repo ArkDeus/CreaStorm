@@ -117,13 +117,17 @@ remote_control_nsp.on('connection', function (socket) {
     });
     // End manage the projects
     // Start listen filter
-    socket.on('displayAll', function () {
+    socket.on('displayAll', function (name) {
+        var answer = remote_server.getAllFilesFromProject(name);
+        console.log(answer);
         board_nsp.emit('displayAll', "../images/star_wars.jpg");
     });
     socket.on('displayGif', function () {
         board_nsp.emit('displayGif', "../images/star_wars.jpg");
     });
-    socket.on('displayJpg', function () {
+    socket.on('displayJpg', function (name, ext) {
+        var answer = remote_server.getAllFilesFromProjectByExtention(name, ext);
+        console.log(answer);
         board_nsp.emit('displayJpg', "../images/star_wars.jpg");
     });
     socket.on('displayNothing', function () {

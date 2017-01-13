@@ -100,7 +100,9 @@ window.onload = function () {
 			disGif.checked = false;
 			disJpg.checked = false;
 			disNot.checked = false;
-			socket.emit('displayAll');
+			if (projectNameTitle.innerHTML.length > 0) {
+				socket.emit('displayAll', projectNameTitle.innerHTML);
+			}
 		} else {
 			disNot.checked = true;
 			socket.emit('displayNothing');
@@ -124,7 +126,9 @@ window.onload = function () {
 			disAll.checked = false;
 			disGif.checked = false;
 			disNot.checked = false;
-			socket.emit('displayJpg');
+			if (projectNameTitle.innerHTML.length > 0) {
+				socket.emit('displayJpg', projectNameTitle.innerHTML, "jpeg");
+			}
 		} else {
 			disNot.checked = true;
 			socket.emit('displayNothing');

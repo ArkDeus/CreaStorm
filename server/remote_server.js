@@ -6,6 +6,22 @@ var json = "";
 
 var projectFolder = "Projects/";
 
+function _getAllFilesFromProjectByExtention(name, ext) {
+    var result = [];
+    try {
+        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
+            file = projectFolder + name + '/' + file;
+            var lookup = mime.lookup(file).split("/");
+            if (lookup[1] === ext) {
+                result.push([file, mime.lookup(file)]);
+            }
+        });
+    } catch (e) {
+        return e;
+    }
+    return result;
+}
+
 function _getAllFilesFromProject(name) {
     var result = [];
     try {
@@ -50,5 +66,8 @@ module.exports = {
     },
     getAllFilesFromProject: function (name) {
         return _getAllFilesFromProject(name);
+    },
+    getAllFilesFromProjectByExtention: function (name, ext) {
+        return _getAllFilesFromProjectByExtention(name, ext);
     }
 };
