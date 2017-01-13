@@ -111,6 +111,10 @@ remote_control_nsp.on('connection', function (socket) {
         var isCreated = remote_server.createProject(name);
         socket.emit('returnCreated', isCreated);
     })
+    socket.on('getProjectFiles', function(name){
+        var answer = remote_server.getAllFilesFromProject(name);
+        socket.emit('returnGetFiles', answer);
+    });
     // End manage the projects
     // Start listen filter
     socket.on('displayAll', function () {

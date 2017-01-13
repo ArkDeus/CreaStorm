@@ -1,12 +1,22 @@
 // to access to the file system to read folder content
 var filesystem = require("fs");
+var mime = require('mime');
 
 var json = "";
 
 var projectFolder = "Projects/";
 
-function _getAllFilesFromProject(dir) {
-
+function _getAllFilesFromProject(name) {
+    var result = [];
+    try {
+        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
+            file = projectFolder + name + '/' + file;
+            result.push([file, mime.lookup(file)]);
+        });
+    } catch (e) {
+        return e;
+    }
+    return result;
 }
 
 function _createProject(name) {
@@ -19,19 +29,26 @@ function _createProject(name) {
 }
 
 function _getAllProjectsName() {
-    return filesystem.readdirSync('Projects');
+    var result = [];
+    var listFile;
+    var objProjectAndFiles;
+    var listProject = filesystem.readdirSync('Projects');
+    for (var i = 0; i < listProject.length; i++) {
+        listFile = _getAllFilesFromProject(listProject[i]);
+        objProjectAndFiles = [listProject[i], listFile];
+        result.push(objProjectAndFiles);
+    }
+    return result;
 }
 
 module.exports = {
-    getAllFilesFromProject: function (dir) {
-        // clear the json
-        json = "";
-        return _getAllFilesFromProject(dir);
-    },
     getAllProjectsName: function () {
         return _getAllProjectsName();
     },
     createProject: function (name) {
         return _createProject(name);
+    },
+    getAllFilesFromProject: function (name) {
+        return _getAllFilesFromProject(name);
     }
 };

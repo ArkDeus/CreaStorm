@@ -20,22 +20,44 @@ socket.on('returnCreated', function (value) {
 })
 
 socket.on('returnGetAll', function (value) {
+	console.log(value);
 	if (value.length > 0) {
 		document.getElementById('display-list-project').hidden = false;
 		document.getElementById('display-project-error').hidden = true;
-		var ul = document.getElementById("list-project");
+		var form = document.getElementById("list-project");
 		// clear the list
-		ul.innerHTML = "";
-
+		form.innerHTML = "";
 		for (var i = 0; i < value.length; i++) {
-			var li = document.createElement("li");
-			li.appendChild(document.createTextNode(value[i]));
-			ul.appendChild(li);
+			// create the title for the radio button
+			var title = document.createElement('label');
+			title.style = "margin-left : 5px;";
+			if (value[i][1].length > 1) {
+				title.appendChild(document.createTextNode(value[i][0] + " (" + value[i][1].length + " files)"));
+			} else {
+				title.appendChild(document.createTextNode(value[i][0] + " (" + value[i][1].length + " file)"));
+			}
+			// create the radio button
+			var input = document.createElement("input");
+			input.type = "radio";
+			input.name = "project";
+			input.value = value[i][0];
+			// check the first one by default
+			if (i === 0) {
+				input.checked = true;
+			}
+			form.appendChild(input);
+			form.appendChild(title);
+			form.appendChild(document.createElement("br"));
+			// socket.emit('getProjectFiles', value[i][0]);
 		}
 	} else {
 		document.getElementById('display-list-project').hidden = true;
 		document.getElementById('display-project-error').hidden = false;
 	}
+})
+
+socket.on('returnGetFiles', function (value) {
+	console.log(value);
 })
 
 window.onload = function () {
