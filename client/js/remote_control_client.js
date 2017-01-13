@@ -1,32 +1,36 @@
 var socket = io('/RemoteControl');
 
+var projectTitle, projectNameTitle;
+var disAll, disGif, disJpg, disNot;
+var getProjectsButton, displayListProject, displayProjectError, listProjects;
+var projectNameInput, createProjectButton;
+var displayServerAnswer, serverAnswerError, serverAnswerSuccess, serverAnswerErrorMessage, serverAnswerSuccessMessage;
+
 socket.on('returnCreated', function (value) {
 	if (value != true) {
-		document.getElementById('display-server-answer').hidden = false;
-		document.getElementById('server-answer-error').hidden = false;
-		document.getElementById('server-answer-success').hidden = true;
+		displayServerAnswer.hidden = false;
+		serverAnswerError.hidden = false;
+		serverAnswerSuccess.hidden = true;
 		if (value.code === "EEXIST") {
-			document.getElementById('server-answer-error-message').innerHTML = "The project already exists";
+			serverAnswerErrorMessage.innerHTML = "The project already exists";
 		} else {
-			document.getElementById('server-answer').innerHTML = value.code;
+			serverAnswerErrorMessage.innerHTML = value.code;
 			console.log("There is a problem : " + value.code);
 		}
 	} else {
-		document.getElementById('display-server-answer').hidden = false;
-		document.getElementById('server-answer-error').hidden = true;
-		document.getElementById('server-answer-success').hidden = false;
-		document.getElementById('server-answer-success-message').innerHTML = "Successfully created";
+		displayServerAnswer.hidden = false;
+		serverAnswerError.hidden = true;
+		serverAnswerSuccess.hidden = false;
+		serverAnswerSuccessMessage.innerHTML = "Successfully created";
 	}
 })
 
 socket.on('returnGetAll', function (value) {
-	console.log(value);
 	if (value.length > 0) {
-		document.getElementById('display-list-project').hidden = false;
-		document.getElementById('display-project-error').hidden = true;
-		var form = document.getElementById("list-project");
+		displayListProject.hidden = false;
+		displayProjectError.hidden = true;
 		// clear the list
-		form.innerHTML = "";
+		listProjects.innerHTML = "";
 		for (var i = 0; i < value.length; i++) {
 			// create the title for the radio button
 			var title = document.createElement('label');
@@ -41,18 +45,24 @@ socket.on('returnGetAll', function (value) {
 			input.type = "radio";
 			input.name = "project";
 			input.value = value[i][0];
+			input.onchange = function () {
+				projectNameTitle.innerHTML = this.value;
+			}
 			// check the first one by default
 			if (i === 0) {
+				projectTitle.hidden = false;
+				projectNameTitle.innerHTML = value[i][0];
 				input.checked = true;
 			}
-			form.appendChild(input);
-			form.appendChild(title);
-			form.appendChild(document.createElement("br"));
+			listProjects.appendChild(input);
+			listProjects.appendChild(title);
+			listProjects.appendChild(document.createElement("br"));
 			// socket.emit('getProjectFiles', value[i][0]);
 		}
 	} else {
-		document.getElementById('display-list-project').hidden = true;
-		document.getElementById('display-project-error').hidden = false;
+		displayListProject.hidden = true;
+		displayProjectError.hidden = false;
+		projectTitle.hidden = true;
 	}
 })
 
@@ -61,15 +71,31 @@ socket.on('returnGetFiles', function (value) {
 })
 
 window.onload = function () {
-	var disAll = document.getElementById("fancy-checkbox-all");
-	var disGif = document.getElementById("fancy-checkbox-gif");
-	var disJpg = document.getElementById("fancy-checkbox-jpg");
-	var disNot = document.getElementById("fancy-checkbox-nothing");
+	projectTitle = document.getElementById('project-title');
+	projectNameTitle = document.getElementById('project-name-title');
 
-	document.getElementById("project-name").value = "";
+	disAll = document.getElementById("fancy-checkbox-all");
+	disGif = document.getElementById("fancy-checkbox-gif");
+	disJpg = document.getElementById("fancy-checkbox-jpg");
+	disNot = document.getElementById("fancy-checkbox-nothing");
+
+	getProjectsButton = document.getElementById('get-projects');
+	displayListProject = document.getElementById('display-list-projects');
+	displayProjectError = document.getElementById('display-project-error');
+	listProjects = document.getElementById('list-projects');
+
+	projectNameInput = document.getElementById("project-name-input");
+	createProjectButton = document.getElementById('create-project');
+
+	displayServerAnswer = document.getElementById('display-server-answer');
+	serverAnswerError = document.getElementById('server-answer-error');
+	serverAnswerSuccess = document.getElementById('server-answer-success');
+	serverAnswerErrorMessage = document.getElementById('server-answer-error-message');
+	serverAnswerSuccessMessage = document.getElementById('server-answer-success-message');
+
+	projectNameInput.value = "";
 
 	disAll.onchange = function () {
-		console.log("displayAll = " + disAll.checked);
 		if (disAll.checked) {
 			disGif.checked = false;
 			disJpg.checked = false;
@@ -82,7 +108,6 @@ window.onload = function () {
 	};
 
 	disGif.onchange = function () {
-		console.log("displayGif = " + disGif.checked);
 		if (disGif.checked) {
 			disAll.checked = false;
 			disJpg.checked = false;
@@ -95,7 +120,6 @@ window.onload = function () {
 	};
 
 	disJpg.onchange = function () {
-		console.log("displayJpg = " + disJpg.checked);
 		if (disJpg.checked) {
 			disAll.checked = false;
 			disGif.checked = false;
@@ -108,7 +132,6 @@ window.onload = function () {
 	};
 
 	disNot.onchange = function () {
-		console.log("displayNothing = " + disNot.checked);
 		if (disNot.checked) {
 			disAll.checked = false;
 			disGif.checked = false;
@@ -120,21 +143,19 @@ window.onload = function () {
 		}
 	};
 
-	var getProjectsButton = document.getElementById('get-projects');
+
 	getProjectsButton.onclick = function () {
 		socket.emit('getAllProjects');
 	}
 
-	var createProjectButton = document.getElementById('create-project');
 	createProjectButton.onclick = function () {
-		var projectObj = document.getElementById('project-name');
-		if (projectObj.validity.valid) {
-			socket.emit('createProject', projectObj.value);
+		if (projectNameInput.validity.valid) {
+			socket.emit('createProject', projectNameInput.value);
 		} else {
-			document.getElementById('display-server-answer').hidden = false;
-			document.getElementById('server-answer-error').hidden = false;
-			document.getElementById('server-answer-success').hidden = true;
-			document.getElementById('server-answer-error-message').innerHTML = "The name can't be empty";
+			displayServerAnswer.hidden = false;
+			serverAnswerError.hidden = false;
+			serverAnswerSuccess.hidden = true;
+			serverAnswerErrorMessage.innerHTML = "The name can't be empty";
 		}
 	}
 };

@@ -17,6 +17,9 @@
     <div class="container">
         <div class="jumbotron">
             <h1>Remote controller</h1>
+            <div>
+                <h2 id="project-title" hidden><span>Selected project : </span><span id="project-name-title">Test</span></h2>
+            </div>
         </div>
 
         <div class="container">
@@ -93,9 +96,9 @@
                         <p style=" font-size: 14pt; text-align: center;">No Project</p>
                     </div>
                 </div>
-            <div class="col-md-12 col-xs-12" id="display-list-project">
+            <div class="col-md-12 col-xs-12" id="display-list-projects">
                 <hr />
-                <form id="list-project">
+                <form id="list-projects">
                 </form>
             </div>
         </div>
@@ -111,7 +114,7 @@
         </div>
         <div class="panel-body">
             <div class="col-md-9 col-xs-8">
-                <input style="font-size: 14pt; height: auto;" class="form-control required" type="text" minlength="5" id="project-name" placeholder="The name of your project" required/>
+                <input style="font-size: 14pt; height: auto;" class="form-control required" type="text" minlength="5" id="project-name-input" placeholder="The name of your project" required/>
             </div>
                 <button id="create-project" class="btn btn-default col-md-3 col-xs-4">Create</button>
             
