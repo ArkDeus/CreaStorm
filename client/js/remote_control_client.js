@@ -107,6 +107,7 @@ window.onload = function () {
 			disNot.checked = true;
 			socket.emit('displayNothing');
 		}
+		socket.emit('tag', "costumes");
 	};
 
 	disGif.onchange = function () {

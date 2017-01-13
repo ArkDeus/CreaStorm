@@ -103,15 +103,15 @@ remote_control_nsp.on('connection', function (socket) {
 
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
-    socket.on('getAllProjects', function(){
+    socket.on('getAllProjects', function () {
         var answer = remote_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
     })
-    socket.on('createProject', function(name){
+    socket.on('createProject', function (name) {
         var isCreated = remote_server.createProject(name);
         socket.emit('returnCreated', isCreated);
     })
-    socket.on('getProjectFiles', function(name){
+    socket.on('getProjectFiles', function (name) {
         var answer = remote_server.getAllFilesFromProject(name);
         socket.emit('returnGetFiles', answer);
     });
@@ -134,11 +134,15 @@ remote_control_nsp.on('connection', function (socket) {
         board_nsp.emit('hideAll', "../images/star_wars.jpg");
     });
     // End listen filter
+
+    socket.on('tag', function (message) {
+        var tab = remote_server.getTabFromTag(message);
+        board_nsp.emit('tag', tab);
+    });
 });
 
 // manage the event on the namespace 'BoardService'
 var board_nsp = io.of('/BoardService');
 board_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le BoardService");
-
 });

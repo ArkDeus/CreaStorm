@@ -57,6 +57,18 @@ function _getAllProjectsName() {
     return result;
 }
 
+function _getTabFromTag(tag) {
+    var parsedJSON = require('./../medias.json');
+
+    for (var i = 0; i < parsedJSON.medias.length; i++) {
+        if (!parsedJSON.medias[i].tags.includes(tag)) {
+            // console.log("j'ai supprime : " + parsedJSON.medias[i].url);
+            parsedJSON.medias.splice(i, 1);
+        }
+    }
+    return parsedJSON;
+}
+
 module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
@@ -69,5 +81,8 @@ module.exports = {
     },
     getAllFilesFromProjectByExtention: function (name, ext) {
         return _getAllFilesFromProjectByExtention(name, ext);
+    },
+    getTabFromTag: function (tag) {
+        return _getTabFromTag(tag);
     }
 };
