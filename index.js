@@ -32,12 +32,14 @@ app.get('/SurfaceService', function (req, res) {
 app.get('/DeviceService', function (req, res) {
     res.sendFile(__dirname + '/client/device_client.html');
 });
+
+
 app.post('/DeviceService', function (req, res) {
     // create an incoming form object
     var form = new formidable.IncomingForm();
 
     // specify that we want to allow the user to upload multiple files in a single request
-    form.multiples = false;
+    form.multiples = true;
 
     // store all uploads in the /uploads directory
     form.imgUploadDir = path.join(__dirname, '/uploads');
@@ -49,8 +51,15 @@ app.post('/DeviceService', function (req, res) {
         fs.rename(file.path, path.join(form.imgUploadDir, file.name));
     });
 
-    form.on('imgJson', function(){
-        var imgData = require
+
+
+    form.on('imgJson', function(field, file){
+        console.log('fonction Json');
+        var imgData = require('./medias.json');
+        var parsedImgData = JSON.parse(imgData);
+        parsedImgData['medias'].push(file.valueOf());
+        var jsonString = JSON.stringify(parsedImgData);
+        fs.writeFile('./medias.json', jsonString);
     });
 
     // log any errors that occur
@@ -98,7 +107,17 @@ surface_nsp.on('connection', function (socket) {
 var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
+    socket.on('addToJson', function(message){
+        console.log("message received");
+        var imgData = require('./medias.json');
+        var parsedImgData = imgData;
+        parsedImgData['medias'].push(message);
+        var jsonString = JSON.stringify(parsedImgData);
+        fs.writeFile('./medias.json', jsonString);
+        console.log("fin message");
+    });
 });
+
 
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');

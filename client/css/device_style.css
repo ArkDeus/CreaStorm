@@ -23,6 +23,18 @@ h4 {
   color: #9CA3A9;
 }
 
+.row{
+  margin-top: 10px;
+}
+
+.inputLabel{
+  width: 40px;
+}
+
+#projects{
+  width: 200px;
+}
+
 h2 {
   margin-top: 15px;
   color: #ffffff;
@@ -46,6 +58,10 @@ h2 {
 
 .progress{
   color: #39D2B4;
+}
+
+#projects{
+  border: none;
 }
 
 /* styles de base si JS est activé */
