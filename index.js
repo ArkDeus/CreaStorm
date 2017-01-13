@@ -122,13 +122,46 @@ device_nsp.on('connection', function (socket) {
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
-    // var surface_server = require('surface_server');
+    var remote_server = require('./server/remote_server');
     console.log("un client connecté sur le RemoteControl");
 
     // Quand le serveur reçoit un signal de type "message" du client
-    socket.on('displayImg', function (message) {
-        board_nsp.emit('display', "images/star_wars.jpg");
-        console.log("display");
+    // Start manage the projects
+    socket.on('getAllProjects', function () {
+        var answer = remote_server.getAllProjectsName();
+        socket.emit('returnGetAll', answer);
+    })
+    socket.on('createProject', function (name) {
+        var isCreated = remote_server.createProject(name);
+        socket.emit('returnCreated', isCreated);
+    })
+    socket.on('getProjectFiles', function (name) {
+        var answer = remote_server.getAllFilesFromProject(name);
+        socket.emit('returnGetFiles', answer);
+    });
+    // End manage the projects
+    // Start listen filter
+    socket.on('displayAll', function (name) {
+        var answer = remote_server.getAllFilesFromProject(name);
+        console.log(answer);
+        board_nsp.emit('displayAll', "../images/star_wars.jpg");
+    });
+    socket.on('displayGif', function () {
+        board_nsp.emit('displayGif', "../images/star_wars.jpg");
+    });
+    socket.on('displayJpg', function (name, ext) {
+        var answer = remote_server.getAllFilesFromProjectByExtention(name, ext);
+        console.log(answer);
+        board_nsp.emit('displayJpg', "../images/star_wars.jpg");
+    });
+    socket.on('displayNothing', function () {
+        board_nsp.emit('hideAll', "../images/star_wars.jpg");
+    });
+    // End listen filter
+
+    socket.on('tag', function (message) {
+        var tab = remote_server.getTabFromTag(message);
+        board_nsp.emit('tag', tab);
     });
 });
 
@@ -136,5 +169,4 @@ remote_control_nsp.on('connection', function (socket) {
 var board_nsp = io.of('/BoardService');
 board_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le BoardService");
-
 });
