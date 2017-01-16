@@ -1,10 +1,14 @@
 var socket = io('/RemoteControl');
 
-var projectTitle, projectNameTitle;
+var productName = "CreaStorm";
+var projectName = "";
+
+var projectNameTitle;
 var disAll, disGif, disJpg, disNot;
 var getProjectsButton, displayListProject, displayProjectError, listProjects;
 var projectNameInput, createProjectButton;
 var displayServerAnswer, serverAnswerError, serverAnswerSuccess, serverAnswerErrorMessage, serverAnswerSuccessMessage;
+var sidebarMenu;
 
 socket.on('returnCreated', function (value) {
 	if (value != true) {
@@ -46,12 +50,13 @@ socket.on('returnGetAll', function (value) {
 			input.name = "project";
 			input.value = value[i][0];
 			input.onchange = function () {
-				projectNameTitle.innerHTML = this.value;
+				projectName = this.value;
+				projectNameTitle.innerHTML = productName + " - " + projectName;
 			}
 			// check the first one by default
 			if (i === 0) {
-				projectTitle.hidden = false;
-				projectNameTitle.innerHTML = value[i][0];
+				projectName = value[i][0];
+				projectNameTitle.innerHTML = productName + " - " + projectName;
 				input.checked = true;
 			}
 			listProjects.appendChild(input);
@@ -62,7 +67,6 @@ socket.on('returnGetAll', function (value) {
 	} else {
 		displayListProject.hidden = true;
 		displayProjectError.hidden = false;
-		projectTitle.hidden = true;
 	}
 })
 
@@ -71,8 +75,9 @@ socket.on('returnGetFiles', function (value) {
 })
 
 window.onload = function () {
-	projectTitle = document.getElementById('project-title');
 	projectNameTitle = document.getElementById('project-name-title');
+
+	sidebarMenu = document.getElementById('sidebar-menu');
 
 	disAll = document.getElementById("checkbox-all");
 	disGif = document.getElementById("checkbox-gif");
@@ -93,15 +98,34 @@ window.onload = function () {
 	serverAnswerErrorMessage = document.getElementById('server-answer-error-message');
 	serverAnswerSuccessMessage = document.getElementById('server-answer-success-message');
 
+	projectNameTitle.innerHTML = productName;
 	projectNameInput.value = "";
+
+	sidebarMenu.onclick = function (event) {
+		var sectionToShow = "";
+		for (var i = 0; i < this.children.length; i++) {
+			sectionToShow = this.children[i].firstChild.attributes.getNamedItem('href').value.slice(1);
+			if (this.children[i].firstChild === event.target) {
+				this.children[i].className = "active";
+				if (sectionToShow != "") {
+					document.getElementById(sectionToShow).hidden = false;
+				}
+			} else {
+				this.children[i].className = "";
+				if (sectionToShow != "") {
+					document.getElementById(sectionToShow).hidden = true;
+				}
+			}
+		}
+	}
 
 	disAll.onchange = function () {
 		if (disAll.checked) {
 			disGif.checked = false;
 			disJpg.checked = false;
 			disNot.checked = false;
-			if (projectNameTitle.innerHTML.length > 0) {
-				socket.emit('displayAll', projectNameTitle.innerHTML);
+			if (projectName.length > 0) {
+				socket.emit('displayAll', projectName);
 			}
 		} else {
 			disNot.checked = true;
@@ -111,7 +135,6 @@ window.onload = function () {
 	};
 
 	disGif.onchange = function () {
-		console.log("Display only gif : " + this.checked);
 		if (disGif.checked) {
 			disAll.checked = false;
 			disJpg.checked = false;
@@ -128,8 +151,9 @@ window.onload = function () {
 			disAll.checked = false;
 			disGif.checked = false;
 			disNot.checked = false;
-			if (projectNameTitle.innerHTML.length > 0) {
-				socket.emit('displayJpg', projectNameTitle.innerHTML, "jpeg");
+			if (projectName.length > 0) {
+				console.log("emit");
+				socket.emit('displayJpg', projectName, "jpeg");
 			}
 		} else {
 			disNot.checked = true;
@@ -161,7 +185,13 @@ window.onload = function () {
 			displayServerAnswer.hidden = false;
 			serverAnswerError.hidden = false;
 			serverAnswerSuccess.hidden = true;
-			serverAnswerErrorMessage.innerHTML = "The name can't be empty";
+			if (projectNameInput.validity.tooShort) {
+				serverAnswerErrorMessage.innerHTML = "The name is too short (min. 5 characters)";
+			} else if (projectNameInput.validity.valueMissing) {
+				serverAnswerErrorMessage.innerHTML = "The name can't be empty";
+			} else {
+				serverAnswerErrorMessage.innerHTML = "The name is invalid";
+			}
 		}
 	}
 };
