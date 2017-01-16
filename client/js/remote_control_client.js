@@ -67,6 +67,8 @@ socket.on('returnGetAll', function (value) {
 	} else {
 		displayListProject.hidden = true;
 		displayProjectError.hidden = false;
+		projectName = "";
+		projectNameTitle.innerHTML = productName;
 	}
 })
 
@@ -152,7 +154,6 @@ window.onload = function () {
 			disGif.checked = false;
 			disNot.checked = false;
 			if (projectName.length > 0) {
-				console.log("emit");
 				socket.emit('displayJpg', projectName, "jpeg");
 			}
 		} else {
