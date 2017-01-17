@@ -119,6 +119,15 @@ window.onload = function () {
 	remoteControl();
 };
 
+window.onresize = function(){
+	// if desktop open the left menu
+	if(window.innerWidth >= 768){
+		$('#navbar').collapse("show");
+	}else{ // else close it
+		$('#navbar').collapse("toggle");
+	}
+}
+
 function menuController() {
 	sidebarMenu.onclick = function (event) {
 		var sectionToShow = "";
