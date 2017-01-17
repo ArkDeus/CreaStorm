@@ -5,11 +5,16 @@
     <title>CreaStorm - Remote control</title>
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="../client/css/remote_control_style.css" rel="stylesheet">
 
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="../client/js/remote_control_client.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+    <script src="../client/js/remote_control_client.js"></script>
   </head>
 
   <body>
@@ -33,11 +38,11 @@
             <ul id="sidebar-menu" class="nav nav-sidebar">
                 <li id="navProjMan" class="active"><a href="#project-management">Project management</a></li>
                 <li id="navFilter" ><a href="#filter">Filter</a></li>
-                <li id="navGallery" ><a href="#">Gallery</a></li>
+                <li id="navGallery" ><a href="#gallery">Gallery</a></li>
                 <li id="navRemCon" ><a href="#remote-control">Remote Control</a></li>
             </ul>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="height:95%">
             <div  id="project-management">
                 <h1 class="page-header">Project management</h1>
                 <div class="row placeholders">
@@ -98,50 +103,137 @@
                 </div>
             </div>
             <div id="filter" hidden>
-                <!-- start filter DisplayAll -->
-                <div class="col-lg-3 col-md-6 col-xs-12">
-                    <div class="switch-container">
-                        <label class="switch">
-                            <input type="checkbox" id="checkbox-all">
-                            <div class="slider round"></div>
-                        </label>
-                        <p class="switch-label">Display all</p>
+                <div class="panel-group">
+                    <!-- Start general filter -->
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <!-- start filter DisplayAll -->
+                            <div class="col-lg-3 col-md-6 col-xs-12">
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="checkbox-all">
+                                        <div class="slider round"></div>
+                                    </label>
+                                    <p class="switch-label">Display all</p>
+                                </div>
+                            </div>
+                            <!-- end filter DisplayAll -->
+                            <!-- start filter DisplayNothing -->
+                            <div class="col-lg-3 col-md-6 col-xs-12">
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="checkbox-nothing">
+                                        <div class="slider round"></div>
+                                    </label>
+                                    <p class="switch-label">Hide everything</p>
+                                </div>
+                            </div>
+                            <!-- end filter DisplayNothing -->
+                        </div>
+                    </div>
+                    <!-- End general filter -->
+                    <!-- Start filter by extension -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-target="#extension-filter"><span style="margin-left: 5px"> Filter by extension</span>
+                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
+                            </a>
+                        </div>
+                        <div id="extension-filter" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <!-- start filter DisplayGif -->
+                                <div class="col-lg-3 col-md-6 col-xs-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input type="checkbox" id="checkbox-gif">
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <p class="switch-label">Display only .gif</p>
+                                    </div>
+                                </div>
+                                <!-- end filter DisplayGif -->
+                                <!-- start filter DisplayJpg -->
+                                <div class="col-lg-3 col-md-6 col-xs-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input type="checkbox" id="checkbox-jpg">
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <p class="switch-label">Display only .jpg</p>
+                                    </div>
+                                </div>
+                                <!-- end filter DisplayJpg -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End filter by extension -->
+                    <!-- Start filter by type -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-target="#type-filter"><span style="margin-left: 5px"> Filter by type</span>
+                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
+                            </a>
+                        </div>
+                        <div id="type-filter" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <!-- start filter DisplayImage -->
+                                <div class="col-lg-3 col-md-6 col-xs-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input checked type="checkbox" id="checkbox-image">
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <p class="switch-label">Display images files</p>
+                                    </div>
+                                </div>
+                                <!-- end filter DisplayImage -->
+                                <!-- start filter DisplayVideo -->
+                                <div class="col-lg-3 col-md-6 col-xs-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input checked type="checkbox" id="checkbox-video">
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <p class="switch-label">Display videos files</p>
+                                    </div>
+                                </div>
+                                <!-- end filter DisplayVideo -->
+                                <!-- start filter DisplayMusic -->
+                                <div class="col-lg-3 col-md-6 col-xs-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input checked type="checkbox" id="checkbox-music">
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <p class="switch-label">Display musiques files</p>
+                                    </div>
+                                </div>
+                                <!-- end filter DisplayMusic -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End filter by type -->
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-target="#tag-filter"><span style="margin-left: 5px"> Filter by tag</span>
+                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
+                            </a>
+                        </div>
+                        <div id="tag-filter" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <select class="selectpicker" multiple>
+                                    <option selected>Mustard</option>
+                                    <option selected>Ketchup</option>
+                                    <option selected>Relish</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- end filter DisplayAll -->
-                <!-- start filter DisplayGif -->
-                <div class="col-lg-3 col-md-6 col-xs-12">
-                    <div class="switch-container">
-                        <label class="switch">
-                            <input type="checkbox" id="checkbox-gif">
-                            <div class="slider round"></div>
-                        </label>
-                        <p class="switch-label">Display only .gif</p>
-                    </div>
-                </div>
-                <!-- end filter DisplayGif -->
-                <!-- start filter DisplayJpg -->
-                <div class="col-lg-3 col-md-6 col-xs-12">
-                    <div class="switch-container">
-                        <label class="switch">
-                            <input type="checkbox" id="checkbox-jpg">
-                            <div class="slider round"></div>
-                        </label>
-                        <p class="switch-label">Display only .jpg</p>
-                    </div>
-                </div>
-                <!-- end filter DisplayJpg -->
-                <!-- start filter DisplayNothing -->
-                <div class="col-lg-3 col-md-6 col-xs-12">
-                    <div class="switch-container">
-                        <label class="switch">
-                            <input type="checkbox" id="checkbox-nothing">
-                            <div class="slider round"></div>
-                        </label>
-                        <p class="switch-label">Hide everything</p>
-                    </div>
-                </div>
-                <!-- end filter DisplayNothing -->
+            </div>
+
+            <div id="gallery" hidden>
             </div>
 
             <div id="remote-control" style="background-color: lightgrey; height: 95%;" hidden>
@@ -149,19 +241,5 @@
       </div>
     </div>
     </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
-    <script>
-    	var test = document.getElementById('remote-control');
-	    var mc = new Hammer(test);
-        mc.on("swipeleft swiperight", function(ev) {
-            alert(ev.type +" gesture detected.");
-        });
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </body>
 </html>

@@ -2,13 +2,17 @@ var socket = io('/RemoteControl');
 
 var productName = "CreaStorm";
 var projectName = "";
-
 var projectNameTitle;
-var disAll, disGif, disJpg, disNot;
+
+var sidebarMenu;
+
 var getProjectsButton, displayListProject, displayProjectError, listProjects;
 var projectNameInput, createProjectButton;
 var displayServerAnswer, serverAnswerError, serverAnswerSuccess, serverAnswerErrorMessage, serverAnswerSuccessMessage;
-var sidebarMenu;
+
+var disAll, disGif, disJpg, disNot;
+
+var remoteControler, hammerControler;
 
 socket.on('returnCreated', function (value) {
 	if (value != true) {
@@ -62,7 +66,7 @@ socket.on('returnGetAll', function (value) {
 			listProjects.appendChild(input);
 			listProjects.appendChild(title);
 			listProjects.appendChild(document.createElement("br"));
-			// socket.emit('getProjectFiles', value[i][0]);
+			//socket.emit('getProjectFiles', value[i][0]);
 		}
 	} else {
 		displayListProject.hidden = true;
@@ -81,11 +85,6 @@ window.onload = function () {
 
 	sidebarMenu = document.getElementById('sidebar-menu');
 
-	disAll = document.getElementById("checkbox-all");
-	disGif = document.getElementById("checkbox-gif");
-	disJpg = document.getElementById("checkbox-jpg");
-	disNot = document.getElementById("checkbox-nothing");
-
 	getProjectsButton = document.getElementById('get-projects');
 	displayListProject = document.getElementById('display-list-projects');
 	displayProjectError = document.getElementById('display-project-error');
@@ -100,9 +99,27 @@ window.onload = function () {
 	serverAnswerErrorMessage = document.getElementById('server-answer-error-message');
 	serverAnswerSuccessMessage = document.getElementById('server-answer-success-message');
 
+	disAll = document.getElementById("checkbox-all");
+	disGif = document.getElementById("checkbox-gif");
+	disJpg = document.getElementById("checkbox-jpg");
+	disNot = document.getElementById("checkbox-nothing");
+
+	remoteControler = document.getElementById('remote-control');
+	hammerControler = new Hammer(remoteControler);
+
 	projectNameTitle.innerHTML = productName;
 	projectNameInput.value = "";
 
+	menuController();
+
+	projectManagment();
+
+	filterControl();
+
+	remoteControl();
+};
+
+function menuController() {
 	sidebarMenu.onclick = function (event) {
 		var sectionToShow = "";
 		for (var i = 0; i < this.children.length; i++) {
@@ -119,62 +136,13 @@ window.onload = function () {
 				}
 			}
 		}
+		if (window.innerWidth < 768) {
+			$('#navbar').collapse("toggle");
+		}
 	}
+}
 
-	disAll.onchange = function () {
-		if (disAll.checked) {
-			disGif.checked = false;
-			disJpg.checked = false;
-			disNot.checked = false;
-			if (projectName.length > 0) {
-				socket.emit('displayAll', projectName);
-			}
-		} else {
-			disNot.checked = true;
-			socket.emit('displayNothing');
-		}
-		socket.emit('tag', "costumes");
-	};
-
-	disGif.onchange = function () {
-		if (disGif.checked) {
-			disAll.checked = false;
-			disJpg.checked = false;
-			disNot.checked = false;
-			socket.emit('displayGif');
-		} else {
-			disNot.checked = true;
-			socket.emit('displayNothing');
-		}
-	};
-
-	disJpg.onchange = function () {
-		if (disJpg.checked) {
-			disAll.checked = false;
-			disGif.checked = false;
-			disNot.checked = false;
-			if (projectName.length > 0) {
-				socket.emit('displayJpg', projectName, "jpeg");
-			}
-		} else {
-			disNot.checked = true;
-			socket.emit('displayNothing');
-		}
-	};
-
-	disNot.onchange = function () {
-		if (disNot.checked) {
-			disAll.checked = false;
-			disGif.checked = false;
-			disJpg.checked = false;
-			socket.emit('displayNothing');
-		} else {
-			disAll.checked = true;
-			socket.emit('displayAll');
-		}
-	};
-
-
+function projectManagment() {
 	getProjectsButton.onclick = function () {
 		socket.emit('getAllProjects');
 	}
@@ -195,4 +163,75 @@ window.onload = function () {
 			}
 		}
 	}
-};
+}
+
+
+function filterControl() {
+
+	// switch "Display all"
+	disAll.onchange = function () {
+		if (disAll.checked) {
+			disGif.checked = false;
+			disJpg.checked = false;
+			disNot.checked = false;
+			if (projectName.length > 0) {
+				socket.emit('displayAll', projectName);
+			}
+		} else {
+			disNot.checked = true;
+			socket.emit('displayNothing');
+		}
+		socket.emit('tag', "costumes");
+	};
+
+	// switch "Display only .gif"
+	disGif.onchange = function () {
+		if (disGif.checked) {
+			disAll.checked = false;
+			disJpg.checked = false;
+			disNot.checked = false;
+			socket.emit('displayGif');
+		} else {
+			disNot.checked = true;
+			socket.emit('displayNothing');
+		}
+	};
+
+	// switch "Display only .jpg"
+	disJpg.onchange = function () {
+		if (disJpg.checked) {
+			disAll.checked = false;
+			disGif.checked = false;
+			disNot.checked = false;
+			if (projectName.length > 0) {
+				socket.emit('displayJpg', projectName, "jpeg");
+			}
+		} else {
+			disNot.checked = true;
+			socket.emit('displayNothing');
+		}
+	};
+
+	// switch "Hide everything"
+	disNot.onchange = function () {
+		if (disNot.checked) {
+			disAll.checked = false;
+			disGif.checked = false;
+			disJpg.checked = false;
+			socket.emit('displayNothing');
+		} else {
+			disAll.checked = true;
+			socket.emit('displayAll');
+		}
+	};
+}
+
+function remoteControl() {
+	hammerControler.on("swipeleft swiperight", function (ev) {
+		if (ev.type === 'swipeleft') {
+			console.log("go right");
+		} else {
+			console.log("go left");
+		}
+	});
+}
