@@ -35,3 +35,27 @@ h1{
     margin-right: 1em;
     margin-top: 1em;
 }
+
+/* Always be sure to give your carousel items a width and a height */
+/*.yui-carousel-element li {
+    width : auto;
+    height : auto;
+    max-width: 600px;
+    max-height: 500px;
+}*/
+
+.carousel-element {
+    display: block;
+  max-width:600px;
+  max-height:500px;
+  width: auto;
+  height: auto;
+}
+
+/*.yui-carousel-nav {
+    display : none;
+}*/
+
+.yui-carousel-element .yui-carousel-item-selected {
+    border:0; /* Override selected item's dashed border so it feels more like a photo album */
+}
