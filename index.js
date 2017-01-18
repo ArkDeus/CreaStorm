@@ -111,23 +111,25 @@ remote_control_nsp.on('connection', function (socket) {
         var isCreated = remote_server.createProject(name);
         socket.emit('returnCreated', isCreated);
     })
-    socket.on('getProjectFiles', function (name) {
-        var answer = remote_server.getAllFilesFromProject(name);
-        socket.emit('returnGetFiles', answer);
-    });
     // End manage the projects
+
     // Start listen filter
     socket.on('displayAll', function (name) {
         var answer = remote_server.getAllFilesFromProject(name);
         console.log(answer);
+        socket.emit('filterResult', answer);
         board_nsp.emit('displayAll', "../images/star_wars.jpg");
     });
-    socket.on('displayGif', function () {
+    socket.on('displayGif', function (name, ext) {
+        var answer = remote_server.getAllFilesFromProjectByExtention(name, ext);
+        console.log(answer);
+        socket.emit('filterResult', answer);
         board_nsp.emit('displayGif', "../images/star_wars.jpg");
     });
     socket.on('displayJpg', function (name, ext) {
         var answer = remote_server.getAllFilesFromProjectByExtention(name, ext);
         console.log(answer);
+        socket.emit('filterResult', answer);
         board_nsp.emit('displayJpg', "../images/star_wars.jpg");
     });
     socket.on('displayNothing', function () {
@@ -138,6 +140,14 @@ remote_control_nsp.on('connection', function (socket) {
     socket.on('tag', function (message) {
         var tab = remote_server.getTabFromTag(message);
         board_nsp.emit('tag', tab);
+    });
+
+    // Start remote control
+    socket.on('goRight', function () {
+        board_nsp.emit('goRight');
+    });
+    socket.on('goLeft', function () {
+        board_nsp.emit('goLeft');
     });
 });
 
