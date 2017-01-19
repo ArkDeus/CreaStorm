@@ -13,6 +13,7 @@
 body{
   background: #333;
   color: #ddd;
+  margin-left: 2%;
 }
 h1{
   color: white;
@@ -44,13 +45,20 @@ h1{
     overflow: visible;
 }
 
+.yui-carousel-element {
+    border: none;
+}
+
+.yui-carousel-item-selected {
+    border: none;
+}
 
 
 .carousel-element {
     height: 100%;
     overflow: visible;
     max-width: 600px;
-  max-height:500px;
+  max-height:400px;
 }
 
 /*.yui-carousel-nav {

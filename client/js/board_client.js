@@ -58,6 +58,21 @@ var socket = io('/BoardService');
 
 // });
 
+function eventFire(el, etype){
+  if (el.fireEvent) {
+    el.fireEvent('on' + etype);
+  } else {
+    var evObj = document.createEvent('Events');
+    evObj.initEvent(etype, true, false);
+    el.dispatchEvent(evObj);
+  }
+}
+
+function nextPage() {
+    console.log("jessaie de faire next page");
+    eventFire(document.getElementsByName("Next Page")[0], 'click');
+    // $('element[name="Next Page"]').click();
+}
 
 
 
@@ -94,6 +109,8 @@ socket.on('tag', function (tab) {
     carousel.show();   // display the widget
 
 });
+
+document.getElementsByName("Next Page")
 
     // // calculate how many pages will be displayed
     // var nbPages = Math.floor(tab.medias.length / 12);
