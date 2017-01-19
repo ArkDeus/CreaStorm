@@ -85,6 +85,7 @@ socket.on('tag', function (tab) {
     }
 
 
+    // $('.yui-carousel-item').css('width: ');
     var carousel = new YAHOO.widget.Carousel("container", {
         // specify number of columns and number of rows
         numVisible: [3, 2]
