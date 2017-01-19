@@ -1,12 +1,5 @@
 var socket = io('/DeviceService');
-$.getScript("tags-input/bootstrap-tagsinput.js", function(){
 
-    console.log('tagsinput loaded');
-
-});
-// ##############
-// UPLOAD SECTION
-// ##############
 var fileInput = document.querySelector('#fileInput'),
     progress = document.querySelector('#progress'),
     uploadButton = document.querySelector('#upload'),
@@ -14,8 +7,57 @@ var fileInput = document.querySelector('#fileInput'),
     fileData = "",
     img,
     imgWidth,
-    imgHeight;
+    imgHeight,
+    projectsList = [];
 
+//crée un nouveau projet
+function createProject(){
+    var projectName = prompt("New project name:");
+    if(projectName != null){
+        socket.emit('createProject',projectName);
+        updateProjectsList();
+    }
+}
+
+//demande au serveur la liste des projets
+function updateProjectsList(){
+    socket.emit("getAllProjects");
+    console.log('update');
+}
+
+//mets à jour l'affichage des projets
+function displayProjectsList(){
+    var sel = document.getElementById('projects');
+    while(sel.firstChild){
+        sel.removeChild(sel.firstChild);
+    }
+    projectsList.forEach(function(projectName,index){
+        var opt = document.createElement('option');
+        opt.innerHTML = projectName[0];
+        opt.value = projectName[0];
+        sel.appendChild(opt);
+    })
+    console.log('display');
+}
+
+//met à jour la liste des projets si le projet a bien été créé, et s'il n'existe pas déjà
+socket.on('returnCreated',function(isCreated){
+   if(isCreated.code != 'EEXIST'){
+        updateProjectsList();
+        alert('The project was successfully created');
+   } else{
+       alert('A project already has the same name');
+   }
+});
+
+//reçoit la liste des projets par le serveur et mets à jour l'affichage
+socket.on("returnGetAll",function(answer){
+    projectsList = answer;
+    displayProjectsList();
+    console.log('updated');
+});
+
+//crée un objet json avec les données de l'image
 function createJson(values){
 
   fileData += '{ "url": "'+ fileInput.value + '",'
@@ -26,9 +68,10 @@ function createJson(values){
   for( var i = 0; i<values.length-1;i++){
     fileData += '"'+values[i]+'",';
   }
-  fileData+= '"'+values[length-1]+'"]}';
+  fileData+= '"'+values[values.length-1]+'"]}';
 }
 
+//ne marche pas actuellement (censé récupérer les dimensions de l'image
 fileInput.onchange = function(){
   img = new Image();
   img.onload = function(){
@@ -38,7 +81,7 @@ fileInput.onchange = function(){
   console.log('imageupload')
 }
 
-
+//upload l'image dans le projet correspondant et met à jour le fichier json du projet
 function uploadFiles(values) {
 
 
@@ -48,6 +91,8 @@ function uploadFiles(values) {
 
     var formData = new FormData();
     formData.append('file', fileInput.files[0]);
+
+    socket.emit('projectName',document.getElementById('projects').value);
 
     $.ajax({
         url: '/DeviceService',
@@ -80,7 +125,8 @@ function uploadFiles(values) {
                     }
 
                 }
-                socket.emit('addToJson',fileData);
+
+                socket.emit('addToJson', fileData);
 
             }, false);
 

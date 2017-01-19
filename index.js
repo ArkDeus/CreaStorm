@@ -3,6 +3,9 @@ var express = require('express');
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
+var remote_server = require('./server/remote_server');
+
+var project_name;
 
 // Init globals variables for each module required
 var app = express()
@@ -33,6 +36,14 @@ app.get('/DeviceService', function (req, res) {
     res.sendFile(__dirname + '/client/device_client.html');
 });
 
+app.get('/DeviceService#Uploads', function (req, res) {
+    res.sendFile(__dirname + '/client/device_client.html');
+});
+
+app.get('/DeviceService#Projects', function (req, res) {
+    res.sendFile(__dirname + '/client/create_project.html');
+});
+
 
 app.post('/DeviceService', function (req, res) {
     // create an incoming form object
@@ -42,24 +53,13 @@ app.post('/DeviceService', function (req, res) {
     form.multiples = true;
 
     // store all uploads in the /uploads directory
-    form.imgUploadDir = path.join(__dirname, '/uploads');
+    form.imgUploadDir = path.join(__dirname, '/Projects/'+project_name);
 
 
     // every time a file has been uploaded successfully,
     // rename it to it's orignal name
     form.on('file', function (field, file) {
         fs.rename(file.path, path.join(form.imgUploadDir, file.name));
-    });
-
-
-
-    form.on('imgJson', function(field, file){
-        console.log('fonction Json');
-        var imgData = require('./medias.json');
-        var parsedImgData = JSON.parse(imgData);
-        parsedImgData['medias'].push(file.valueOf());
-        var jsonString = JSON.stringify(parsedImgData);
-        fs.writeFile('./medias.json', jsonString);
     });
 
     // log any errors that occur
@@ -108,21 +108,32 @@ var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
     socket.on('addToJson', function(message){
-        console.log("message received");
-        var imgData = require('./medias.json');
+        var imgData = require('./Projects/' + project_name + '/medias.json');
         var parsedImgData = imgData;
         parsedImgData['medias'].push(message);
         var jsonString = JSON.stringify(parsedImgData);
-        fs.writeFile('./medias.json', jsonString);
-        console.log("fin message");
+        fs.writeFile("./Projects/" +project_name + '/medias.json', jsonString);
     });
+
+    socket.on('projectName',function(name){
+        project_name = name;
+    });
+    // Quand le serveur reçoit un signal de type "message" du client
+    // Start manage the projects
+    socket.on('getAllProjects', function () {
+        var answer = remote_server.getAllProjectsName();
+        socket.emit('returnGetAll', answer);
+    })
+    socket.on('createProject', function (name) {
+        var isCreated = remote_server.createProject(name);
+        socket.emit('returnCreated', isCreated);
+    })
 });
 
 
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
-    var remote_server = require('./server/remote_server');
     console.log("un client connecté sur le RemoteControl");
 
     // Quand le serveur reçoit un signal de type "message" du client

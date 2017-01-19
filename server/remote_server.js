@@ -38,6 +38,10 @@ function _getAllFilesFromProject(name) {
 function _createProject(name) {
     try {
         filesystem.mkdirSync(projectFolder + name);
+        filesystem.writeFile(projectFolder + name + '/medias.json', '{"medias": []}', function(err){
+           if(err) console.log(err);
+           else console.log('file created');
+        });
     } catch (e) {
         return e;
     }

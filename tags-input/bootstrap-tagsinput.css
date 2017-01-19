@@ -1,19 +1,18 @@
 .bootstrap-tagsinput {
   background-color: #fff;
-  padding: 1px 1px;
+  padding: 1px 0px;
   color: #555;
-  max-width: 200px;
   cursor: text;
-  display: inline-block;
+
 }
 .bootstrap-tagsinput input {
   border: none;
   box-shadow: none;
   outline: none;
   background-color: transparent;
-  padding: 0 6px;
+  padding: 0 3px;
   margin: 0;
-  width: 200px;
+  width: auto;
   max-width: inherit;
 }
 .bootstrap-tagsinput.form-control input::-moz-placeholder {
@@ -33,10 +32,11 @@
 .bootstrap-tagsinput .tag {
   margin-right: 2px;
   color: white;
+  padding: 0 0;
 }
 .bootstrap-tagsinput .tag [data-role="remove"] {
-  margin-left: 8px;
   cursor: pointer;
+  color: #ff4634;
 }
 .bootstrap-tagsinput .tag [data-role="remove"]:after {
   content: "x";
