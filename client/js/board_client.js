@@ -40,47 +40,34 @@ var socket = io('/BoardService');
 
 
 
-// var carousel = new YAHOO.widget.Carousel("parentContainerId");
-
-// carousel.render();
-// carousel.show();
-// console.log(carousel.addItem("zhengqin", 0));
-// add an item to the Carousel
-//  console.log(carousel.addItem(li, 1));
-//  console.log(carousel.addItem(img, 0));
-// carousel.addItems(li,li,li); // add multiple items at one go
-// carousel.set("numVisible", [3, 2]);
-// render the widget inside the
-// parentContainerId container 
-
-
-// YAHOO.util.Event.onDOMReady(function (ev) {
-
-// });
-
-function eventFire(el, etype){
-  if (el.fireEvent) {
-    el.fireEvent('on' + etype);
-  } else {
-    var evObj = document.createEvent('Events');
-    evObj.initEvent(etype, true, false);
-    el.dispatchEvent(evObj);
-  }
+function eventFire(el, etype) {
+    if (el.fireEvent) {
+        el.fireEvent('on' + etype);
+    } else {
+        var evObj = document.createEvent('Events');
+        evObj.initEvent(etype, true, false);
+        el.dispatchEvent(evObj);
+    }
 }
 
 function nextPage() {
     console.log("jessaie de faire next page");
     eventFire(document.getElementsByName("Next Page")[0], 'click');
-    // $('element[name="Next Page"]').click();
 }
 
 function previousPage() {
     console.log("jessaie de faire previous page");
     eventFire(document.getElementsByName("Previous Page")[0], 'click');
-    // $('element[name="Next Page"]').click();
 }
 
+function fullScreen() {
+    document.getElementById("container").style.visibility = 'hidden';
+    var img = document.createElement("img");
+    img.src = "images/star_wars.jpg";
+    img.className = "imgFull";
 
+    document.getElementById("imgFullScreen").appendChild(img);
+}
 
 
 socket.on('tag', function (tab) {
@@ -102,7 +89,7 @@ socket.on('tag', function (tab) {
     }
 
 
-    // $('.yui-carousel-item').css('width: ');
+    $('.yui-carousel-item').css('width: ');
     var carousel = new YAHOO.widget.Carousel("container", {
         // specify number of columns and number of rows
         numVisible: [3, 2]

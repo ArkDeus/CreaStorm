@@ -32,6 +32,18 @@ h1{
     max-height: 500px;
 }*/
 
+imgFull{
+    min-height:100%;
+    min-width:100%;
+    overflow: hidden;
+    max-height:auto;
+    max-width:auto;
+    position:absolute;
+    top:-100%; bottom:-100%;
+    left:-100%; right:-100%;
+    margin:auto;
+}
+
 .yui-carousel-content {
     overflow: visible;
 
