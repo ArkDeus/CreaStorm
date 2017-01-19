@@ -1,6 +1,6 @@
 var socket = io('/RemoteControl');
 
-var appWidth;
+var appWidth, onFullScreen = false;
 
 var productName = "CreaStorm";
 var projectName = "";
@@ -72,6 +72,7 @@ socket.on('returnGetAll', function (value) {
 			listProjects.appendChild(document.createElement("br"));
 			//socket.emit('getProjectFiles', value[i][0]);
 		}
+		filterControl();
 	} else {
 		displayListProject.hidden = true;
 		displayProjectError.hidden = false;
@@ -81,12 +82,29 @@ socket.on('returnGetAll', function (value) {
 });
 
 socket.on('filterResult', function (result) {
-	console.log('result');
+	console.log(result);
+	var galleryDiv = document.getElementById('gallery');
+	galleryDiv.innerHTML = "";
+	for (var i = 0; i < result.length; i++) {
+		for (var j = 0; j < result[i].length; j++) {
+			var type = result[i][j][1].split("/")[0];
+			if (type === "image") {
+				var img = document.createElement("img");
+				img.src = result[i][j][0];
+				img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+				img.onclick = function () {
+					onFullScreen = !onFullScreen;
+					if (onFullScreen) {
+						socket.emit('showFullScreen', this.src);
+					} else {
+						socket.emit('closeFullScreen');
+					}
+				}
+				galleryDiv.appendChild(img);
+			}
+		}
+	}
 });
-
-// socket.on('returnGetFiles', function (value) {
-// 	console.log(value);
-// })
 
 window.onload = function () {
 	appWidth = window.innerWidth;
@@ -109,27 +127,27 @@ window.onload = function () {
 	serverAnswerErrorMessage = document.getElementById('server-answer-error-message');
 	serverAnswerSuccessMessage = document.getElementById('server-answer-success-message');
 
-	disAll = document.getElementById("checkbox-all");
-	disNot = document.getElementById("checkbox-nothing");
+	disAll = document.getElementById("checkbox-all"); disAll.checked = false;
+	disNot = document.getElementById("checkbox-nothing"); disNot.checked = true;
 
-	disGif = document.getElementById("checkbox-gif");
-	disJpg = document.getElementById("checkbox-jpg");
-	disPng = document.getElementById("checkbox-png");
+	disGif = document.getElementById("checkbox-gif"); disGif.checked = false;
+	disJpg = document.getElementById("checkbox-jpg"); disJpg.checked = false;
+	disPng = document.getElementById("checkbox-png"); disPng.checked = false;
 
-	disMp3 = document.getElementById("checkbox-mp3");
-	disWma = document.getElementById("checkbox-wma");
-	disFlac = document.getElementById("checkbox-flac");
-	disWav = document.getElementById("checkbox-wav");
+	disMp3 = document.getElementById("checkbox-mp3"); disMp3.checked = false;
+	disWma = document.getElementById("checkbox-wma"); disWma.checked = false;
+	disFlac = document.getElementById("checkbox-flac"); disFlac.checked = false;
+	disWav = document.getElementById("checkbox-wav"); disWav.checked = false;
 
-	disMp4 = document.getElementById("checkbox-mp4");
-	disWmv = document.getElementById("checkbox-wmv");
-	disAvi = document.getElementById("checkbox-avi");
-	disMkv = document.getElementById("checkbox-mkv");
+	disMp4 = document.getElementById("checkbox-mp4"); disMp4.checked = false;
+	disWmv = document.getElementById("checkbox-wmv"); disWmv.checked = false;
+	disAvi = document.getElementById("checkbox-avi"); disAvi.checked = false;
+	disMkv = document.getElementById("checkbox-mkv"); disMkv.checked = false;
 
 
-	disImages = document.getElementById('checkbox-image');
-	disVideos = document.getElementById('checkbox-video');
-	disMusics = document.getElementById('checkbox-music');
+	disImages = document.getElementById('checkbox-image'); disImages.checked = false;
+	disVideos = document.getElementById('checkbox-video'); disVideos.checked = false;
+	disMusics = document.getElementById('checkbox-music'); disMusics.checked = false;
 
 	remoteControler = document.getElementById('remote-control');
 	hammerControler = new Hammer(remoteControler);
@@ -209,8 +227,13 @@ function filterControl() {
 	var inputList = document.getElementsByTagName('input');
 	for (var i = 0; i < inputList.length; i++) {
 		if (inputList[i].type === "checkbox") {
-			inputList[i].onchange = function () {
-				doMagicTrick(this);
+			if (projectName.length < 5) {
+				inputList[i].disabled = true;
+			} else {
+				inputList[i].disabled = false;
+				inputList[i].onchange = function () {
+					doMagicTrick(this);
+				}
 			}
 		}
 	}
@@ -276,15 +299,17 @@ function extToFilter() {
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
-	console.log(extTab);
+	socket.emit('applyFilter', projectName, extTab);
 }
 
 function remoteControl() {
 	hammerControler.on("swipeleft swiperight", function (ev) {
-		if (ev.type === 'swipeleft') {
-			socket.emit('goRight');
-		} else {
-			socket.emit('goLeft');
+		if (projectName.length > 0) {
+			if (ev.type === 'swipeleft') {
+				socket.emit('goRight');
+			} else {
+				socket.emit('goLeft');
+			}
 		}
 	});
 };

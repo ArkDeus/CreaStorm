@@ -6,30 +6,6 @@ var json = "";
 
 var projectFolder = "Projects/";
 
-function _getAllFilesFromProjectByExtention(name, ext) {
-    var result = [];
-    try {
-        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
-            file = projectFolder + name + '/' + file;
-            var lookup = mime.lookup(file).split("/");
-            if (lookup[1] === ext) {
-                result.push([file, mime.lookup(file)]);
-            }
-        });
-    } catch (e) {
-        return e;
-    }
-    return result;
-}
-
-function _getNbFilesFromProject(name) {
-    try {
-        return filesystem.readdirSync(projectFolder + name).length;
-    } catch (e) {
-        return e;
-    }
-}
-
 function _createProject(name) {
     try {
         filesystem.mkdirSync(projectFolder + name);
@@ -50,6 +26,43 @@ function _getAllProjectsName() {
     return result;
 }
 
+function _getNbFilesFromProject(name) {
+    try {
+        return filesystem.readdirSync(projectFolder + name).length;
+    } catch (e) {
+        return e;
+    }
+}
+
+
+function _filterProjectFiles(name, filters) {
+    var result = [];
+    for (var i = 0; i < filters.length; i++) {
+        var curExtRes = _getAllFilesFromProjectByExtention(name, filters[i]);
+        if (curExtRes.length > 0) {
+            result.push(curExtRes);
+        }
+    }
+    return result;
+}
+
+function _getAllFilesFromProjectByExtention(name, ext) {
+    var result = [];
+    try {
+        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
+            file = projectFolder + name + '/' + file;
+            var lookup = mime.lookup(file).split("/");
+            if (lookup[1] === ext) {
+                result.push([file, mime.lookup(file)]);
+            }
+        });
+    } catch (e) {
+        return e;
+    }
+    return result;
+}
+
+
 function _getTabFromTag(tag) {
     var parsedJSON = require('./../medias.json');
 
@@ -69,8 +82,8 @@ module.exports = {
     createProject: function (name) {
         return _createProject(name);
     },
-    getAllFilesFromProjectByExtention: function (name, ext) {
-        return _getAllFilesFromProjectByExtention(name, ext);
+    filterProjectFiles: function (name, filters) {
+        return _filterProjectFiles(name, filters);
     },
     getTabFromTag: function (tag) {
         return _getTabFromTag(tag);
