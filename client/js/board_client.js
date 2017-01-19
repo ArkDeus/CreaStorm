@@ -74,16 +74,18 @@ function nextPage() {
     // $('element[name="Next Page"]').click();
 }
 
+function previousPage() {
+    console.log("jessaie de faire previous page");
+    eventFire(document.getElementsByName("Previous Page")[0], 'click');
+    // $('element[name="Next Page"]').click();
+}
+
 
 
 
 socket.on('tag', function (tab) {
-    // var img = document.createElement("img");
-    // var li = document.createElement("li");
-    // li.appendChild(img);
 
     var tabLi = [];
-    console.log(tab.medias.length);
     for (var i = 0; i < tab.medias.length; i++) {
         var img = document.createElement("img");
         img.src = tab.medias[i].url;
@@ -109,8 +111,6 @@ socket.on('tag', function (tab) {
     carousel.show();   // display the widget
 
 });
-
-document.getElementsByName("Next Page")
 
     // // calculate how many pages will be displayed
     // var nbPages = Math.floor(tab.medias.length / 12);

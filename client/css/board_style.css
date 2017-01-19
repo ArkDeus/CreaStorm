@@ -61,9 +61,9 @@ h1{
   max-height:400px;
 }
 
-/*.yui-carousel-nav {
+.yui-carousel-nav {
     display : none;
-}*/
+}
 
 /*.yui-carousel-element .yui-carousel-item-selected {
     border:0; 
