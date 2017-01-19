@@ -13,6 +13,7 @@
 body{
   background: #333;
   color: #ddd;
+  margin-left: 2%;
 }
 h1{
   color: white;
@@ -21,19 +22,6 @@ h1{
   margin-top: 1em;
   margin-bottom: 1em;
   text-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
-}
-.grandchild {
-    float: left;
-}
-.clearboth {
-    clear: both;
-}
-.slick-slide img {
-    display: block;
-    margin-bottom: 1em;
-    margin-left: 1em;
-    margin-right: 1em;
-    margin-top: 1em;
 }
 
 /* Always be sure to give your carousel items a width and a height */
@@ -44,18 +32,51 @@ h1{
     max-height: 500px;
 }*/
 
+imgFull{
+    min-height:100%;
+    min-width:100%;
+    overflow: hidden;
+    max-height:auto;
+    max-width:auto;
+    position:absolute;
+    top:-100%; bottom:-100%;
+    left:-100%; right:-100%;
+    margin:auto;
+}
+
+.yui-carousel-content {
+    overflow: visible;
+
+}
+
+.yui-carousel-item {
+    border: none;
+    display: inline-block;
+    width: 600px;
+    
+    overflow: visible;
+}
+
+.yui-carousel-element {
+    border: none;
+}
+
+.yui-carousel-item-selected {
+    border: none;
+}
+
+
 .carousel-element {
-    display: block;
-  max-width:600px;
-  max-height:500px;
-  width: auto;
-  height: auto;
+    height: 100%;
+    overflow: visible;
+    max-width: 600px;
+  max-height:400px;
 }
 
-/*.yui-carousel-nav {
+.yui-carousel-nav {
     display : none;
-}*/
-
-.yui-carousel-element .yui-carousel-item-selected {
-    border:0; /* Override selected item's dashed border so it feels more like a photo album */
 }
+
+/*.yui-carousel-element .yui-carousel-item-selected {
+    border:0; 
+}*/
