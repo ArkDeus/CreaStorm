@@ -106,38 +106,43 @@ remote_control_nsp.on('connection', function (socket) {
     socket.on('getAllProjects', function () {
         var answer = remote_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
-    })
+    });
     socket.on('createProject', function (name) {
         var isCreated = remote_server.createProject(name);
         socket.emit('returnCreated', isCreated);
-    })
-    socket.on('getProjectFiles', function (name) {
-        var answer = remote_server.getAllFilesFromProject(name);
-        socket.emit('returnGetFiles', answer);
     });
     // End manage the projects
+
     // Start listen filter
-    socket.on('displayAll', function (name) {
-        var answer = remote_server.getAllFilesFromProject(name);
-        console.log(answer);
-        board_nsp.emit('displayAll', "../images/star_wars.jpg");
-    });
-    socket.on('displayGif', function () {
-        board_nsp.emit('displayGif', "../images/star_wars.jpg");
-    });
-    socket.on('displayJpg', function (name, ext) {
-        var answer = remote_server.getAllFilesFromProjectByExtention(name, ext);
-        console.log(answer);
-        board_nsp.emit('displayJpg', "../images/star_wars.jpg");
-    });
-    socket.on('displayNothing', function () {
-        board_nsp.emit('hideAll', "../images/star_wars.jpg");
+    socket.on('applyFilter', function (name, extensions) {
+        var answer = remote_server.filterProjectFiles(name, extensions);
+        socket.emit('filterResult', answer);
     });
     // End listen filter
+
+    socket.on('showFullScreen', function (image) {
+        console.log("the display will show : " + image);
+        board_nsp.emit('showFullScreen', image);
+    });
+
+    socket.on('closeFullScreen', function () {
+        console.log("close the full screen mode");
+        board_nsp.emit('closeFullScreen');
+    });
 
     socket.on('tag', function (message) {
         var tab = remote_server.getTabFromTag(message);
         board_nsp.emit('tag', tab);
+    });
+
+    // Start remote control
+    socket.on('goRight', function () {
+        console.log('go right');
+        board_nsp.emit('goRight');
+    });
+    socket.on('goLeft', function () {
+        console.log('go left');
+        board_nsp.emit('goLeft');
     });
 });
 
