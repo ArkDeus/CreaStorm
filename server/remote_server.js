@@ -22,17 +22,12 @@ function _getAllFilesFromProjectByExtention(name, ext) {
     return result;
 }
 
-function _getAllFilesFromProject(name) {
-    var result = [];
+function _getNbFilesFromProject(name) {
     try {
-        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
-            file = projectFolder + name + '/' + file;
-            result.push([file, mime.lookup(file)]);
-        });
+        return filesystem.readdirSync(projectFolder + name).length;
     } catch (e) {
         return e;
     }
-    return result;
 }
 
 function _createProject(name) {
@@ -50,12 +45,10 @@ function _createProject(name) {
 
 function _getAllProjectsName() {
     var result = [];
-    var listFile;
     var objProjectAndFiles;
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
-        listFile = _getAllFilesFromProject(listProject[i]);
-        objProjectAndFiles = [listProject[i], listFile];
+        objProjectAndFiles = [listProject[i], _getNbFilesFromProject(listProject[i])];
         result.push(objProjectAndFiles);
     }
     return result;
@@ -79,9 +72,6 @@ module.exports = {
     },
     createProject: function (name) {
         return _createProject(name);
-    },
-    getAllFilesFromProject: function (name) {
-        return _getAllFilesFromProject(name);
     },
     getAllFilesFromProjectByExtention: function (name, ext) {
         return _getAllFilesFromProjectByExtention(name, ext);
