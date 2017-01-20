@@ -50,25 +50,34 @@ function eventFire(el, etype) {
     }
 }
 
-function nextPage() {
+socket.on('goRight', function () {
     console.log("jessaie de faire next page");
     eventFire(document.getElementsByName("Next Page")[0], 'click');
-}
+});
 
-function previousPage() {
+socket.on('goLeft', function () {
     console.log("jessaie de faire previous page");
     eventFire(document.getElementsByName("Previous Page")[0], 'click');
-}
+});
 
-function fullScreen() {
-    document.getElementById("container").style.visibility = 'hidden';
-    var img = document.createElement("img");
-    img.src = "images/star_wars.jpg";
-    img.className = "imgFull";
+socket.on('showFullScreen', function (url) {
+    var modal = document.getElementById('myModal');
 
-    document.getElementById("imgFullScreen").appendChild(img);
-}
+    modal.style.display = "block";
+    document.getElementById("container").style.display = 'none';
+    document.getElementById("fullscreenimg").url = url;
+    // var img = document.createElement("img");
+    // img.src = "images/star_wars.jpg";
+    // img.className = "imgFull";
 
+    // document.getElementById("imgFullScreen").appendChild(img);
+});
+
+socket.on('closeFullScreen', function () {
+    document.getElementById('myModal').style.display = "none";
+
+    document.getElementById("container").style.display = "block";
+});
 
 socket.on('tag', function (tab) {
 
@@ -76,7 +85,7 @@ socket.on('tag', function (tab) {
     for (var i = 0; i < tab.medias.length; i++) {
         var img = document.createElement("img");
         img.src = tab.medias[i].url;
-        img.className = "carousel-element";
+        img.className = "carousel-element-3";
 
         var li = document.createElement("li");
         li.appendChild(img);
@@ -88,8 +97,27 @@ socket.on('tag', function (tab) {
         document.getElementById("mycarousel").appendChild(tabLi[i]);
     }
 
+    // var i;
+    // var j = 2;
+    // var width;
+    // var height = 450;
 
-    $('.yui-carousel-item').css('width: ');
+    // if (tab.medias.length == 1) {
+    //     i = 1;
+    //     j = 1;
+    //     width = "width: 1200px;";
+    //     height = "height: 800px;";
+    // } else if (tab.medias.length <= 4) {
+    //     i = 2;
+    //     width = 900;
+    // } else if (tab.medias.length <= 6) {
+    //     i = 3;
+    //     width = 600;
+    // } else {
+    //     i = 4;
+    //     width = 400;
+    // }
+
     var carousel = new YAHOO.widget.Carousel("container", {
         // specify number of columns and number of rows
         numVisible: [3, 2]
@@ -97,7 +125,53 @@ socket.on('tag', function (tab) {
     carousel.render(); // get ready for rendering the widget
     carousel.show();   // display the widget
 
+    // var car = document.getElementsByClassName('li');
+    // for(var i = 0; i < car.length; i++){
+    //     car[i].style += "width: 1200px;";
+    //     car[i].style += height;
+    // };
+
 });
+
+window.onload = function(){
+    var img = document.getElementById("fullscreenimg");
+    var cont = document.getElementsByClassName("modal-body")[0];
+    img.className = (img.width/img.height > 16/9 ? 'wide': 'tall');
+    cont.className += (img.width/img.height > 16/9 ? ' wide': ' tall');
+    cont.style = "align-content: center;display: flex;";
+}
+
+
+// Get the modal
+// var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+// btn.onclick = function() {
+//     modal.style.display = "block";
+// }
+
+// When the user clicks on <span> (x), close the modal
+// span.onclick = function() {
+//     modal.style.display = "none";
+// }
+
+// When the user clicks anywhere outside of the modal, close it
+// window.onclick = function(event) {
+//     if (event.target == modal) {
+//         modal.style.display = "none";
+//     }
+// }
+
+
+
+
+
 
     // // calculate how many pages will be displayed
     // var nbPages = Math.floor(tab.medias.length / 12);
@@ -135,7 +209,16 @@ socket.on('tag', function (tab) {
     // // create divs with id
     // for (var n = 0; n < nbPages; n++) {
 
-    //     var divPage = document.createElement("div");
+    //     var div    // } else if ((nbElemPerPage + 1) == 1) {
+    //     elemPerRowOneMore = 1;
+    // } else {
+    //     elemPerRowOneMore = 4;
+    // }
+
+    // document.getElementsByClassName("slick-track")[0].style = "opacity: 1; width: 7080px; transform: translate3d(-1770px, 0px, 0px);";
+
+    // // create divs with id
+    // for (var n = 0; n < nbPages; n++) {Page = document.createElement("div");
     //     divPage.id = "page" + n;
 
     //     document.getElementsByClassName("slider")[0].appendChild(divPage);
