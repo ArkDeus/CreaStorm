@@ -202,8 +202,8 @@ socket.on("returnGetAll",function(answer){
 
 //crée un objet json avec les données de l'image
 function createJson(){
-
-  fileData = '{ "url": "'+ fileInput.value + '",'
+    var filename = fileInput.value.replace(/^.*[\\\/]/, '');
+  fileData = '{ "url": "'+ filename + '",'
               +'"type": "image",'
               +'"width": "'+ imgWidth + '",'
               +'"height": "'+ imgHeight + '",'
