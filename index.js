@@ -114,6 +114,10 @@ remote_control_nsp.on('connection', function (socket) {
     // End manage the projects
 
     // Start listen filter
+    socket.on('getProjectTag', function(name){
+        var answer = remote_server.getAllTagFromProject(name);
+        socket.emit('projectTag', answer);
+    });
     socket.on('applyFilter', function (name, extensions) {
         var answer = remote_server.filterProjectFiles(name, extensions);
         socket.emit('filterResult', answer);

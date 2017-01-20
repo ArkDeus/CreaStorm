@@ -62,6 +62,19 @@ function _getAllFilesFromProjectByExtention(name, ext) {
     return result;
 }
 
+function _getAllTagFromProject(name) {
+    var result = [];
+    var parsedJSON = require('./../medias.json');
+    for (var i = 0; i < parsedJSON.medias.length; i++) {
+        for (var j = 0; j < parsedJSON.medias[i].tags.length; j++) {
+            var tag = parsedJSON.medias[i].tags[j];
+            if (!result.includes(tag)) {
+                result.push(tag);
+            }
+        }
+    }
+    return result;
+}
 
 function _getTabFromTag(tag) {
     var parsedJSON = require('./../medias.json');
@@ -84,6 +97,9 @@ module.exports = {
     },
     filterProjectFiles: function (name, filters) {
         return _filterProjectFiles(name, filters);
+    },
+    getAllTagFromProject: function (name) {
+        return _getAllTagFromProject(name);
     },
     getTabFromTag: function (tag) {
         return _getTabFromTag(tag);

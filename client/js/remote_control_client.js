@@ -59,18 +59,19 @@ socket.on('returnGetAll', function (value) {
 			input.value = value[i][0];
 			input.onchange = function () {
 				projectName = this.value;
+				socket.emit('getProjectTag', projectName);
 				projectNameTitle.innerHTML = productName + " - " + projectName;
 			}
 			// check the first one by default
 			if (i === 0) {
 				projectName = value[i][0];
+				socket.emit('getProjectTag', projectName);
 				projectNameTitle.innerHTML = productName + " - " + projectName;
 				input.checked = true;
 			}
 			listProjects.appendChild(input);
 			listProjects.appendChild(title);
 			listProjects.appendChild(document.createElement("br"));
-			//socket.emit('getProjectFiles', value[i][0]);
 		}
 		filterControl();
 	} else {
@@ -79,6 +80,10 @@ socket.on('returnGetAll', function (value) {
 		projectName = "";
 		projectNameTitle.innerHTML = productName;
 	}
+});
+
+socket.on('projectTag', function(result){
+	console.log(result);
 });
 
 socket.on('filterResult', function (result) {
