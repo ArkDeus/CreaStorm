@@ -85,6 +85,7 @@ socket.on('filterResult', function (result) {
 	console.log(result);
 	var galleryDiv = document.getElementById('gallery');
 	galleryDiv.innerHTML = "";
+	var listOther = document.createElement('ul');
 	for (var i = 0; i < result.length; i++) {
 		for (var j = 0; j < result[i].length; j++) {
 			var type = result[i][j][1].split("/")[0];
@@ -101,8 +102,15 @@ socket.on('filterResult', function (result) {
 					}
 				}
 				galleryDiv.appendChild(img);
+			} else {
+				var li = document.createElement('li');
+				li.innerHTML = result[i][j][0];
+				listOther.appendChild(li);
 			}
 		}
+	}
+	if (listOther.children.length > 0) {
+		galleryDiv.appendChild(listOther);
 	}
 });
 
