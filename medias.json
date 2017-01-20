@@ -1,8 +1,8 @@
 {
       "medias": [
             {
-                  "url": "images/star_wars.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/11439.png",
+                  "type": "image/png",
                   "width": "900",
                   "height": "506",
                   "tags": [
@@ -11,8 +11,8 @@
                   ]
             },
             {
-                  "url": "images/obi_wan.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/19418.jpg",
+                  "type": "image/jpeg",
                   "width": "308",
                   "height": "398",
                   "tags": [
@@ -21,8 +21,8 @@
                   ]
             },
             {
-                  "url": "images/anakin.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/39177.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -31,8 +31,8 @@
                   ]
             },
             {
-                  "url": "images/c3po.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/653613.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -41,8 +41,8 @@
                   ]
             },
             {
-                  "url": "images/chewbacca.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/669112.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -51,8 +51,8 @@
                   ]
             },
             {
-                  "url": "images/comte_dooku.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/669177.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -61,8 +61,8 @@
                   ]
             },
             {
-                  "url": "images/darth_maul.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/670890.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -71,8 +71,8 @@
                   ]
             },
             {
-                  "url": "images/empereur_palpatine.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/699220.png",
+                  "type": "image/png",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -81,8 +81,8 @@
                   ]
             },
             {
-                  "url": "images/fett.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/719101.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [
@@ -91,138 +91,8 @@
                   ]
             },
             {
-                  "url": "images/finn.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/han_solo.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/jabba.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/jar_jar_binks.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/kylo_ren.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/leia.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/luke.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/obi_wan2.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/padme.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/qui_gon_jinn.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/r2d2.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/rey.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/yoda.jpg",
-                  "type": "image",
-                  "width": "pas utile",
-                  "height": "pas utile",
-                  "tags": [
-                        "actors",
-                        "costumes"
-                  ]
-            },
-            {
-                  "url": "images/yoda2.jpg",
-                  "type": "image",
+                  "url": "Projects/CreaStorm/82395.jpg",
+                  "type": "image/jpeg",
                   "width": "pas utile",
                   "height": "pas utile",
                   "tags": [

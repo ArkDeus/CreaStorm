@@ -61,31 +61,30 @@ socket.on('goLeft', function () {
 });
 
 socket.on('showFullScreen', function (url) {
-    var modal = document.getElementById('myModal');
-
-    modal.style.display = "block";
-    document.getElementById("container").style.display = 'none';
-    document.getElementById("fullscreenimg").url = url;
-    // var img = document.createElement("img");
-    // img.src = "images/star_wars.jpg";
-    // img.className = "imgFull";
-
-    // document.getElementById("imgFullScreen").appendChild(img);
+    console.log('open');
+    $('#myModal').collapse("show");
+    var img = document.getElementById("fullscreenimg");
+    var cont = document.getElementsByClassName("modal-body")[0];
+    img.src = url;
+    img.className = (img.width/img.height > 16/9 ? 'wide': 'tall');
+    cont.className += (img.width/img.height > 16/9 ? ' wide': ' tall');
+    cont.style = "align-content: center;display: flex;";
 });
 
 socket.on('closeFullScreen', function () {
-    document.getElementById('myModal').style.display = "none";
-
-    document.getElementById("container").style.display = "block";
+    console.log('close');
+    $('#myModal').collapse("toggle");
 });
 
 socket.on('tag', function (tab) {
-
+    // console.log(tab);
+    document.getElementById("mycarousel").innerHTML = "";
     var tabLi = [];
     for (var i = 0; i < tab.medias.length; i++) {
         var img = document.createElement("img");
         img.src = tab.medias[i].url;
-        img.className = "carousel-element-3";
+        img.style = "width:433px;height:auto";
+        // img.className = "carousel-element-3";
 
         var li = document.createElement("li");
         li.appendChild(img);
@@ -133,13 +132,13 @@ socket.on('tag', function (tab) {
 
 });
 
-window.onload = function(){
-    var img = document.getElementById("fullscreenimg");
-    var cont = document.getElementsByClassName("modal-body")[0];
-    img.className = (img.width/img.height > 16/9 ? 'wide': 'tall');
-    cont.className += (img.width/img.height > 16/9 ? ' wide': ' tall');
-    cont.style = "align-content: center;display: flex;";
-}
+// window.onload = function(){
+//     var img = document.getElementById("fullscreenimg");
+//     var cont = document.getElementsByClassName("modal-body")[0];
+//     img.className = (img.width/img.height > 16/9 ? 'wide': 'tall');
+//     cont.className += (img.width/img.height > 16/9 ? ' wide': ' tall');
+//     cont.style = "align-content: center;display: flex;";
+// }
 
 
 // Get the modal

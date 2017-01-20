@@ -1,55 +1,48 @@
 <html>
-<head>
-    <link rel="stylesheet" type="text/css" href="https://yui-s.yahooapis.com/2.9.0/build/carousel/assets/skins/sam/carousel.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link href="../client/css/board_style.css" rel="stylesheet">
-</head>
-<body>
-    <!--<input type="button" onclick=previousPage() value="previousPage"/>
-    <input type="button" onclick=nextPage() value="nextPage"/>-->
-    <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CreaStorm - Board Service</title>
 
+    <link rel="stylesheet" href="https://yui-s.yahooapis.com/2.9.0/build/carousel/assets/skins/sam/carousel.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../client/css/board_style.css">
+  </head>
+  <body>
     <!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog" style="width: 100%; height:100%; margin:0;padding:1%">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <div class="modal-body">
-        <img id="fullscreenimg" src= "" style="margin: 0 auto;"/>
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog" style="width: 100%; height:100%; margin:0;padding:1%">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-body">
+            <img id="fullscreenimg" src= "Projects/CreaStorm/11439.png" style="margin: 0 auto;" />
+          </div>
+        </div>
       </div>
     </div>
-
-  </div>
-</div>
-    <div id = "imgFullScreen">
+    <!--<div id = "imgFullScreen">
+    </div>-->
+    <div id="container" style="margin-top:30px;width:1300px; height:800px;">
+      <ol id="mycarousel">
+      </ol>
     </div>
-    <div id="container" style = "margin-top: 7%; margin-left: 3%;">
-        <ol id="mycarousel">
-        </ol>
-    </div>
+  </body>
 
+  <!-- Dependencies -->
+  <script src="https://yui-s.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+  <script src="https://yui-s.yahooapis.com/2.9.0/build/element/element-min.js"></script>
 
-</body>
+  <!-- Optional: Animation library for animating the scrolling of items -->
+  <script src="https://yui-s.yahooapis.com/2.9.0/build/animation/animation-min.js"></script>
+  <!-- Optional: Connection library for dynamically loading items -->
+  <script src="https://yui-s.yahooapis.com/2.9.0/build/connection/connection-min.js"></script>
 
+  <!-- Source file -->
+  <script src="https://yui-s.yahooapis.com/2.9.0/build/carousel/carousel-min.js"></script>
 
-
-<!-- Dependencies -->
-<script src="https://yui-s.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-<script src="https://yui-s.yahooapis.com/2.9.0/build/element/element-min.js"></script>
-
-<!-- Optional: Animation library for animating the scrolling of items -->
-<script src="https://yui-s.yahooapis.com/2.9.0/build/animation/animation-min.js"></script>
-<!-- Optional: Connection library for dynamically loading items -->
-<script src="https://yui-s.yahooapis.com/2.9.0/build/connection/connection-min.js"></script>
-
-<!-- Source file -->
-<script src="https://yui-s.yahooapis.com/2.9.0/build/carousel/carousel-min.js"></script>
-
-<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="../client/js/board_client.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="../client/js/board_client.js"></script>
 
 </html>

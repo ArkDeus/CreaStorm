@@ -4,6 +4,13 @@
   }
 }
 
+@media screen and (min-width: 1300px){
+  .container{
+    max-width: 1200px;
+    max-height: 700px;
+  }
+}
+
 /*img {
     width: 30%;
 }*/
@@ -53,8 +60,8 @@ h1{
 .yui-carousel-item {
     border: none;
     display: inline-block;
-    width: 600px;
-    max-height: 500px;
+    width: 433px;
+    max-height: 350px;
     overflow: visible;
 }
 
