@@ -3,6 +3,9 @@ var express = require('express');
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
+var remote_server = require('./server/remote_server');
+
+var project_name;
 
 // Init globals variables for each module required
 var app = express()
@@ -32,6 +35,7 @@ app.get('/SurfaceService', function (req, res) {
 app.get('/DeviceService', function (req, res) {
     res.sendFile(__dirname + '/client/device_client.html');
 });
+
 app.post('/DeviceService', function (req, res) {
     // create an incoming form object
     var form = new formidable.IncomingForm();
@@ -40,12 +44,13 @@ app.post('/DeviceService', function (req, res) {
     form.multiples = true;
 
     // store all uploads in the /uploads directory
-    form.uploadDir = path.join(__dirname, '/uploads');
+    form.imgUploadDir = path.join(__dirname, '/Projects/'+project_name);
+
 
     // every time a file has been uploaded successfully,
     // rename it to it's orignal name
     form.on('file', function (field, file) {
-        fs.rename(file.path, path.join(form.uploadDir, file.name));
+        fs.rename(file.path, path.join(form.imgUploadDir, file.name));
     });
 
     // log any errors that occur
@@ -93,12 +98,46 @@ surface_nsp.on('connection', function (socket) {
 var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
+    socket.on('addToJson', function(message){
+        var imgData = require('./Projects/' + project_name + '/medias.json');
+        imgData['medias'].push(JSON.parse(message));
+        var jsonString = JSON.stringify(imgData);
+        fs.writeFile("./Projects/" +project_name + '/medias.json', jsonString);
+    });
+
+    socket.on('projectName',function(name){
+        project_name = name;
+    });
+    // Quand le serveur reçoit un signal de type "message" du client
+    // Start manage the projects
+    socket.on('getAllProjects', function () {
+        var answer = remote_server.getAllProjectsName();
+        socket.emit('returnGetAll', answer);
+    })
+    socket.on('createProject', function (name, projectJson,  projectDirectories) {
+        console.log(projectJson);
+        console.log(projectDirectories);
+        var json = String(projectJson);
+        var isCreated = remote_server.createProject(name, projectJson, projectDirectories);
+        socket.emit('returnCreated', isCreated);
+    })
+
+    socket.on('getProjectJson', function(project){
+        var projectJson = remote_server.getProjectJson(project);
+        console.log(projectJson);
+        socket.emit('returnProjectJson', projectJson, project);
+    })
+    socket.on('getViewProjectJson', function(project){
+        var projectJson = remote_server.getProjectJson(project);
+        console.log(projectJson);
+        socket.emit('returnViewProjectJson', projectJson, project);
+    })
 });
+
 
 // manage the event on the namespace 'RemoteControl'
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
-    var remote_server = require('./server/remote_server');
     console.log("un client connecté sur le RemoteControl");
 
     // Quand le serveur reçoit un signal de type "message" du client
