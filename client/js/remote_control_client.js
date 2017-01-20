@@ -300,6 +300,7 @@ function extToFilter() {
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
 	socket.emit('applyFilter', projectName, extTab);
+	socket.emit('tag', 'costumes');
 }
 
 function remoteControl() {
