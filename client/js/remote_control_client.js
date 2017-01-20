@@ -82,7 +82,6 @@ socket.on('returnGetAll', function (value) {
 });
 
 socket.on('filterResult', function (result) {
-	console.log(result);
 	var galleryDiv = document.getElementById('gallery');
 	galleryDiv.innerHTML = "";
 	var listOther = document.createElement('ul');
