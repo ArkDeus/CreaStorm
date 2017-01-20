@@ -4,8 +4,60 @@
 
 html,
 body {
-  height: 100%;
-  background-color: #4791D2;
+  background-color: #0b3142;
+}
+
+.navbar{
+  background-color: #0f5257;
+  border: none;
+  color: #fff;
+}
+
+.uploadForm{
+  margin-top: 60px;
+}
+
+.tag{
+  display: inline-block;
+  border-radius: 2px;
+  margin: 2px 2px;
+  text-align: left;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.tag[picked=true]{
+  background-color: #fff;
+  color: #9c92a3;
+}
+
+.tag[picked=false]{
+  color: #fff;
+  background-color: #9c92a3;
+}
+
+#tags{
+  overflow-y: inherit;
+  display-inline: block;
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+
+#myNavbar li a{
+  color: #fff;
+}
+
+#brand{
+  color: #fff;
+}
+
+.icon{
+  color: #fff;
+}
+
+.imgRow{
+  margin: 2px 2px;
 }
 
 body {
@@ -13,8 +65,16 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
-.uploadForm{
-  margin: 10px;
+.formView{
+  padding: 0;
+}
+
+.textInput{
+  border: none;
+}
+
+.row{
+  margin: 5px 0px;
 }
 
 h4 {
@@ -27,27 +87,23 @@ h4 {
   cursor: hand;
   height: 20px;
   top: 0;
+  cursor: pointer;
 }
 
-.glyphicon:hover{
-  background: #fff;
-  color: #4791D2;
-  cursor: hand;
-  border-left: 1px #4791D2 solid;
-
-}
 
 .item{
-  margin-top: 10px;
+  margin: 10px 0px;
 }
 
 .inputLabel{
-  padding: 0px 6px;
+  padding: 0px 15px;
+  text-align: left;
 }
 
-h2 {
-  margin-top: 15px;
+h2{
   color: #ffffff;
+  margin-bottom: 20px;
+  margin-top: 0;
 }
 
 .panel .panel{
@@ -75,13 +131,13 @@ h2 {
 .js .input-file-container {
   position: relative;
   width: 225px;
-  margin: 20px;
+  margin: 20px 0px;
   display: inline-block;
 }
 .js .input-file-trigger {
   display: block;
   padding: 14px 45px;
-  background: #F89406;
+  background: #9c92a3;
   color: #fff;
   font-size: 1em;
   transition: all .4s;
@@ -100,7 +156,9 @@ h2 {
 .js .input-file:hover + .input-file-trigger,
 .js .input-file:focus + .input-file-trigger,
 .js .input-file-trigger:hover,
-.js .input-file-trigger:focus {
+.js .input-file-trigger:focus,
+.allButton:hover,
+#upload:hover{
   background: #34495E;
   color: #39D2B4;
 }
@@ -108,6 +166,7 @@ h2 {
 /* styles du retour visuel */
 .file-return {
   margin: 0;
+  color: white;
 }
 .file-return:not(:empty) {
   margin: 1em 0;
@@ -125,18 +184,36 @@ h2 {
   font-weight: normal;
 }
 
-#upload{
+.allButton{
   display: block;
   padding: 14px 45px;
-  background: #F89406;
+  background: #9c92a3;
   color: #fff;
   font-size: 1em;
   transition: all .4s;
   cursor: pointer;
   position: relative;
   width: 225px;
-  margin: 20px;
   display: inline-block;
   border: none;
   font-weight: bold;
+}
+
+#upload{
+  display: block;
+  padding: 14px 45px;
+  background: #9c92a3;
+  color: #fff;
+  font-size: 1em;
+  transition: all .4s;
+  cursor: pointer;
+  position: relative;
+  width: 225px;
+  display: inline-block;
+  border: none;
+  font-weight: bold;
+}
+
+#projectName{
+  color: #4c6085;
 }

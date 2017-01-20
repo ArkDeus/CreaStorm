@@ -36,15 +36,6 @@ app.get('/DeviceService', function (req, res) {
     res.sendFile(__dirname + '/client/device_client.html');
 });
 
-app.get('/DeviceService#Uploads', function (req, res) {
-    res.sendFile(__dirname + '/client/device_client.html');
-});
-
-app.get('/DeviceService#Projects', function (req, res) {
-    res.sendFile(__dirname + '/client/create_project.html');
-});
-
-
 app.post('/DeviceService', function (req, res) {
     // create an incoming form object
     var form = new formidable.IncomingForm();
@@ -109,9 +100,8 @@ device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
     socket.on('addToJson', function(message){
         var imgData = require('./Projects/' + project_name + '/medias.json');
-        var parsedImgData = imgData;
-        parsedImgData['medias'].push(message);
-        var jsonString = JSON.stringify(parsedImgData);
+        imgData['medias'].push(JSON.parse(message));
+        var jsonString = JSON.stringify(imgData);
         fs.writeFile("./Projects/" +project_name + '/medias.json', jsonString);
     });
 
@@ -124,9 +114,23 @@ device_nsp.on('connection', function (socket) {
         var answer = remote_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
     })
-    socket.on('createProject', function (name) {
-        var isCreated = remote_server.createProject(name);
+    socket.on('createProject', function (name, projectJson,  projectDirectories) {
+        console.log(projectJson);
+        console.log(projectDirectories);
+        var json = String(projectJson);
+        var isCreated = remote_server.createProject(name, projectJson, projectDirectories);
         socket.emit('returnCreated', isCreated);
+    })
+
+    socket.on('getProjectJson', function(project){
+        var projectJson = remote_server.getProjectJson(project);
+        console.log(projectJson);
+        socket.emit('returnProjectJson', projectJson, project);
+    })
+    socket.on('getViewProjectJson', function(project){
+        var projectJson = remote_server.getProjectJson(project);
+        console.log(projectJson);
+        socket.emit('returnViewProjectJson', projectJson, project);
     })
 });
 

@@ -16,64 +16,115 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" id="icon">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">CreaStorm</a>
+                <a class="navbar-brand" href="#" id="brand">CreaStorm</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="RemoteService">Projects</a></li>
+                <ul class="nav navbar-nav" id="menu">
+                    <li><a href="#CreateProjects" class="active">Create Project</a></li>
                     <li><a href="#Uploads">Upload</a></li>
+                    <li><a href="#ViewProjects" onclick="getViewProjectJson(viewProject.value)">View Projects</a></li>
                 </ul>
             </div>
         </div>
     </nav>
   <div class="container uploadForm">
-    <div class="row">
-        <div class="container col-xs-12 col-md-6 col-md-push-4">
+    <div class="row formView"  id="Uploads">
+        <div class="container col-xs-12 col-md-6 col-md-push-3">
             <h2>File <b>Uploader</b></h2>
             <div class="row item">
-                <span style="color: #fff" class="col-xs-2 inputLabel">Tags</span>
-                <div class="col-xs-10 container">
-                    <div class="row">
-                        <input type="text" data-role="tagsinput" id="tags" class="col-xs-8">
-                    </div>
-
+                <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Tags</span>
+                <div class="col-xs-12 col-md-9 container">
+                    <span id="tags"></span>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </div>
             </div>
             <div class="row item">
-                <span style="color: #fff" class="col-xs-2 inputLabel">Project</span>
-                <div class="col-xs-10 container">
+                <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Project</span>
+                <div class="col-xs-12 col-md-9 container">
                     <div class="row" id="projDiv">
-                        <select id="projects" class="col-xs-10 selectpicker" data-style="btn-warning" value="Project Name" onload="displayProjectsList()">
+                        <select id="projects" class="col-xs-12 selectpicker textInput" value="Project Name" onload="displayProjectsList('projects')">
                         </select>
-                        <span class="glyphicon glyphicon-plus col-xs-2" onclick="createProject()"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="row item">
+
+
+            <div class="row">
                 <div class="input-file-container row">
                     <input type="file" class="input-file" id="fileInput">
                     <label for="fileInput" class="input-file-trigger" tabindex="0">Select a file ...</label>
                 </div>
             </div>
 
-            <div class="row item">
+            <div class="row">
                 <p class="file-return"></p>
             </div>
             <div class="row">
-                <input type="submit" id="upload" value="Upload">
+                <input type="submit" id="upload" value="Upload" class="allButton">
             </div>
             <progress max="100" value="0" id="progress" style="display: none"></progress>
         </div>
     </div>
+      <div class="row" id="CreateProjects" hidden>
+          <div class="container col-xs-12 col-md-6 col-md-push-3 formView">
+            <h2>Create a <b>project</b></h2>
+              <div class="row item">
+                  <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Tags</span>
+                  <div class="col-xs-12 col-md-9 container">
+                      <div class="row">
+                          <input type="text" data-role="tagsinput" id="projectTags" class="col-xs-8">
+                      </div>
+
+                  </div>
+              </div>
+
+              <div class="row item">
+                  <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Directories</span>
+                  <div class="col-xs-12 col-md-9 container">
+                      <div class="row">
+                          <input type="text" data-role="tagsinput" id="projectDirectories" class="col-xs-8">
+                      </div>
+
+                  </div>
+              </div>
+
+              <div class="row item">
+                  <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Name</span>
+                  <div class="col-xs-12 col-md-9 container">
+                      <div class="row">
+                          <input type="text" id="projectName" class="col-xs-12 textInput">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <input type="submit" id="createProject" value="Create" class="allButton" onclick="createProject()">
+              </div>
+          </div>
+      </div>
+
+      <div id="ViewProjects" class="row" hidden>
+          <div class="container col-xs-12 col-md-6 col-md-push-3 formView">
+              <div class="row">
+                  <span style="color: #fff" class="col-xs-12 col-md-3 inputLabel">Select project</span>
+                  <select id="checkProjects" onload="displayProjectsList('checkProjects')" class="col-xs-12 col-md-9">
+                  </select>
+              </div>
+              <hr/>
+              <div class="row" id="projectsImages">
+
+              </div>
+          </div>
+      </div>
   </div>
 
 
@@ -86,41 +137,7 @@
   <script type="text/javascript" src="../tags-input/bootstrap-tagsinput.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/i18n/defaults-*.min.js"></script>
   <script>
-      // ajout de la classe JS à HTML
-      document.querySelector("html").classList.add('js');
 
-      window.onload = function(){
-          $('#tags').tagsinput('removeAll');
-          updateProjectsList();
-          displayProjectsList();
-      }
-
-      // initialisation des variables
-      var fileInput  = document.querySelector( ".input-file" ),
-          button     = document.querySelector( ".input-file-trigger" ),
-          the_return = document.querySelector(".file-return");
-
-      // action lorsque la "barre d'espace" ou "Entrée" est pressée
-      button.addEventListener( "keydown", function( event ) {
-          if ( event.keyCode == 13 || event.keyCode == 32 ) {
-              fileInput.focus();
-          }
-      });
-
-      // action lorsque le label est cliqué
-      button.addEventListener( "click", function( event ) {
-          fileInput.focus();
-          return false;
-      });
-
-      // affiche un retour visuel dès que input:file change
-      fileInput.addEventListener( "change", function( event ) {
-          the_return.innerHTML = this.value;
-      });
-
-      document.querySelector('#upload').onclick = function(){
-          uploadFiles($("#tags").tagsinput('items'));
-      }
 
   </script>
 </body>

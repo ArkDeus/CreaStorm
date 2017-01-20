@@ -3,7 +3,7 @@
   padding: 1px 0px;
   color: #555;
   cursor: text;
-
+  width: 100%;
 }
 .bootstrap-tagsinput input {
   border: none;
@@ -33,6 +33,7 @@
   margin-right: 2px;
   color: white;
   padding: 0 0;
+  background-color: #1b998b;
 }
 .bootstrap-tagsinput .tag [data-role="remove"] {
   cursor: pointer;
