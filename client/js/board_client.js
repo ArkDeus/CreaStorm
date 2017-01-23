@@ -2,6 +2,7 @@ var socket = io('/BoardService');
 
 var globalTab;
 var currentIndex = 0;
+var nbDisplayedElems = 0;
 
 socket.on('goRight', function () {
     displayMedias("right");
@@ -31,16 +32,27 @@ function displayMedias(navigation) {
     var endIndex;
 
     if (navigation == "right") {
+        if (currentIndex == globalTab.medias.length) {
+            return;
+        }
         startIndex = currentIndex;
         currentIndex = (currentIndex + 6);
+        nbDisplayedElems = 6;
 
         if (currentIndex > globalTab.medias.length) {
             currentIndex = globalTab.medias.length;
+            nbDisplayedElems = (globalTab.medias.length - startIndex);
+            console.log("nb elems : " + nbDisplayedElems);
         }
         endIndex = currentIndex;
     } else if (navigation == "left") {
-        endIndex = currentIndex;
-        currentIndex = (currentIndex - 6);
+        console.log("currentIndex " + currentIndex);
+        if ((currentIndex - nbDisplayedElems) <= 0) {
+            console.log("fin fonction");
+            return;
+        }
+        endIndex = (currentIndex - nbDisplayedElems);
+        currentIndex = endIndex - 6;
 
         if (currentIndex < 0) {
             currentIndex = 0;
