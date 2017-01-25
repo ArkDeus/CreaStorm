@@ -1,5 +1,6 @@
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CreaStorm - Remote control</title>
@@ -10,347 +11,40 @@
     <link href="../client/css/remote_control_style.css" rel="stylesheet">
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
     <script src="../client/js/remote_control_client.js"></script>
-  </head>
+</head>
 
-  <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a id="project-name-title" class="navbar-brand" href="#"></a>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">CreaStorm</a>
+            </div>
         </div>
-      </div>
     </nav>
 
     <div class="container-fluid">
-      <div class="row">
-        <div id="navbar" class="col-sm-3 col-md-2 sidebar collapse" style="height: auto;">
-            <ul id="sidebar-menu" class="nav nav-sidebar">
-                <li id="navProjMan" class="active"><a href="#project-management">Project management</a></li>
-                <li id="navFilter" ><a href="#filter">Filter</a></li>
-                <li id="navGallery" ><a href="#gallery">Gallery</a></li>
-                <li id="navRemCon" ><a href="#remote-control">Remote Control</a></li>
-            </ul>
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1 main">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">List of the projects</h3>
+                    </div>
+                    <div class="panel-body">
+                        <button id="get-projects" class="btn btn-default col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">Refresh</button>
+                        <div class="col-xs-10 col-xs-offset-1" hidden id="display-list-projects">
+                            <hr />
+                            <form id="list-projects">
+                            </form>
+                            <button id="project-access" class="btn btn-default col-sm-6 col-sm-offset-3 col-xs-12">Access to the project</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div  id="project-management">
-                <h1 class="page-header">Project management</h1>
-                <div class="row placeholders">
-                    <!-- start listing projects -->
-                    <div class="col-md-6 col-xs-12">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">List of the projects</h3>
-                            </div>
-                            <div class="panel-body">
-                                <button id="get-projects" class="btn btn-default col-md-6 col-xs-6">Get the list</button>
-                                <div id="display-project-error" class="col-md-6 col-xs-6" hidden>
-                                    <div class="alert alert-danger" style="padding-bottom: 6px; padding-top: 6px;" role="alert">
-                                        <p style="text-align: center;">No Project</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xs-12" hidden id="display-list-projects">
-                                    <hr />
-                                        <form id="list-projects">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end listing projects -->
-
-                    <!-- start creation project -->
-                    <div class="col-md-6 col-xs-12">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Project's name</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-md-9 col-xs-8">
-                                    <input class="form-control required" type="text" minlength="5" id="project-name-input" placeholder="The name of your project" required/>
-                                </div>
-                                <button id="create-project" class="btn btn-default col-md-3 col-xs-4">Create</button>
-
-                                <div class="col-md-12 col-xs-12" id="display-server-answer" hidden>
-                                    <hr />
-                                    <div hidden id="server-answer-error">
-                                        <div class="alert alert-danger" role="alert">
-                                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                            <span id="server-answer-error-message"></span>
-                                        </div>
-                                    </div>
-                                    <div hidden id="server-answer-success">
-                                        <div class="alert alert-success" role="alert">
-                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                            <span id="server-answer-success-message"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <!-- end creation project -->
-                </div>
-            </div>
-            <div id="filter" hidden>
-                <div class="panel-group">
-                    <!-- Start general filter -->
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <!-- start filter DisplayAll -->
-                            <div class="col-lg-3 col-md-6 col-xs-12">
-                                <div class="switch-container">
-                                    <label class="switch">
-                                        <input type="checkbox" id="checkbox-all">
-                                        <div class="slider round"></div>
-                                    </label>
-                                    <p class="switch-label">Display all</p>
-                                </div>
-                            </div>
-                            <!-- end filter DisplayAll -->
-                            <!-- start filter DisplayNothing -->
-                            <div class="col-lg-3 col-md-6 col-xs-12">
-                                <div class="switch-container">
-                                    <label class="switch">
-                                        <input type="checkbox" checked id="checkbox-nothing">
-                                        <div class="slider round"></div>
-                                    </label>
-                                    <p class="switch-label">Hide everything</p>
-                                </div>
-                            </div>
-                            <!-- end filter DisplayNothing -->
-                        </div>
-                    </div>
-                    <!-- End general filter -->
-                    <!-- Start filter by extension -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a data-toggle="collapse" data-target="#extension-filter"><span style="margin-left: 5px"> Filter by extension</span>
-                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
-                            </a>
-                        </div>
-                        <div id="extension-filter" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <!-- ############# -->
-                                <!-- FILTER IMAGES -->
-                                <!-- ############# -->
-                                <!-- start filter DisplayGif -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-gif">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .gif</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayGif -->
-                                <!-- start filter DisplayJpg -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-jpg">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .jpg</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayJpg -->
-                                <!-- start filter DisplayPng -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-png">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .png</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayPng -->
-
-                                <!-- ############# -->
-                                <!-- FILTER MUSICS -->
-                                <!-- ############# -->
-                                <!-- start filter DisplayMp3 -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-mp3">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .mp3</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayMp3 -->
-                                <!-- start filter DisplayWma -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-wma">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .wma</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayWma -->
-                                <!-- start filter DisplayFlac -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-flac">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .flac</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayFlac -->
-                                <!-- start filter DisplayWav -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-wav">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .wav</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayWav -->
-
-                                <!-- ############# -->
-                                <!-- FILTER VIDEOS -->
-                                <!-- ############# -->
-                                <!-- start filter DisplayMp4 -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-mp4">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .mp4</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayMp4 -->
-                                <!-- start filter DisplayWmv -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-wmv">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .wmv</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayWmv -->
-                                <!-- start filter DisplayAvi -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-avi">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .avi</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayAvi -->
-                                <!-- start filter DisplayMkv -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-mkv">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display .mkv</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayMkv -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End filter by extension -->
-                    <!-- Start filter by type -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a data-toggle="collapse" data-target="#type-filter"><span style="margin-left: 5px"> Filter by type</span>
-                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
-                            </a>
-                        </div>
-                        <div id="type-filter" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <!-- start filter DisplayImage -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-image">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display images files</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayImage -->
-                                <!-- start filter DisplayMusic -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-music">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display musics files</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayMusic -->
-                                <!-- start filter DisplayVideo -->
-                                <div class="col-lg-3 col-md-6 col-xs-12">
-                                    <div class="switch-container">
-                                        <label class="switch">
-                                            <input type="checkbox" id="checkbox-video">
-                                            <div class="slider round"></div>
-                                        </label>
-                                        <p class="switch-label">Display videos files</p>
-                                    </div>
-                                </div>
-                                <!-- end filter DisplayVideo -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End filter by type -->
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a data-toggle="collapse" data-target="#tag-filter"><span style="margin-left: 5px"> Filter by tag</span>
-                                <span class="indicator glyphicon glyphicon-chevron-down pull-left pad-right" id ="glyphicon"></span>
-                            </a>
-                        </div>
-                        <div id="tag-filter" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <select id="tag-selector" class="selectpicker" multiple>
-                                    <option selected>Mustard</option>
-                                    <option selected>Ketchup</option>
-                                    <option selected>Relish</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="gallery" hidden>
-            </div>
-
-            <div id="remote-control" hidden>
-                <h3 style="text-align: center; padding: 40% 5%; height: 90%">Swipe right or left no navigate in the carousel</h3>
-            </div>
-      </div>
     </div>
-    </div>
-  </body>
+</body>
 </html>

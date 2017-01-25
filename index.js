@@ -43,7 +43,7 @@ app.post('/DeviceService', function (req, res) {
     form.multiples = true;
 
     // store all uploads in the /uploads directory
-    form.imgUploadDir = path.join(__dirname, '/Projects/'+project_name);
+    form.imgUploadDir = path.join(__dirname, '/Projects/' + project_name);
 
 
     // every time a file has been uploaded successfully,
@@ -70,6 +70,11 @@ app.post('/DeviceService', function (req, res) {
 // route for the "RemoteControl" namespace
 app.get('/RemoteControl', function (req, res) {
     res.sendFile(__dirname + '/client/remote_control_client.html');
+});
+
+// route for the "RemoteControl/Manager" namespace
+app.get('/RemoteControl/Manager', function (req, res) {
+    res.sendFile(__dirname + '/client/remote_control_project.html');
 });
 
 // route for the 'BoardService' namespace
@@ -99,14 +104,14 @@ device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
     var device_server = require('./server/device_server');
 
-    socket.on('addToJson', function(message){
+    socket.on('addToJson', function (message) {
         var imgData = require('./Projects/' + project_name + '/medias.json');
         imgData['medias'].push(JSON.parse(message));
         var jsonString = JSON.stringify(imgData);
-        fs.writeFile("./Projects/" +project_name + '/medias.json', jsonString);
+        fs.writeFile("./Projects/" + project_name + '/medias.json', jsonString);
     });
 
-    socket.on('projectName',function(name){
+    socket.on('projectName', function (name) {
         project_name = name;
     });
     // Quand le serveur reçoit un signal de type "message" du client
@@ -115,7 +120,7 @@ device_nsp.on('connection', function (socket) {
         var answer = device_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
     })
-    socket.on('createProject', function (name, projectJson,  projectDirectories) {
+    socket.on('createProject', function (name, projectJson, projectDirectories) {
         console.log(projectJson);
         console.log(projectDirectories);
         var json = String(projectJson);
@@ -123,12 +128,12 @@ device_nsp.on('connection', function (socket) {
         socket.emit('returnCreated', isCreated);
     })
 
-    socket.on('getProjectJson', function(project){
+    socket.on('getProjectJson', function (project) {
         var projectJson = device_server.getProjectJson(project);
         console.log(projectJson);
         socket.emit('returnProjectJson', projectJson, project);
     })
-    socket.on('getViewProjectJson', function(project){
+    socket.on('getViewProjectJson', function (project) {
         var projectJson = device_server.getProjectJson(project);
         console.log(projectJson);
         socket.emit('returnViewProjectJson', projectJson, project);
@@ -142,25 +147,34 @@ remote_control_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le RemoteControl");
     var remote_server = require('./server/remote_server');
 
-    // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
     socket.on('getAllProjects', function () {
         var answer = remote_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
     });
-    socket.on('createProject', function (name) {
-        var isCreated = remote_server.createProject(name);
-        socket.emit('returnCreated', isCreated);
+    socket.on('selectedProject', function (name) {
+        remote_server.setProjectName(name);
     });
     // End manage the projects
+});
+
+// manage the event on the namespace 'RemoteControl/Manager'
+var remote_control_mng_nsp = io.of('/RemoteControl/Manager');
+remote_control_mng_nsp.on('connection', function (socket) {
+    console.log("un client connecté sur le RemoteControl/Manager");
+    var remote_server = require('./server/remote_server');
+
+    socket.on('getProjectName', function () {
+        socket.emit('selectedProject', remote_server.getProjectName());
+    });
 
     // Start listen filter
-    socket.on('getProjectTag', function(name){
-        var answer = remote_server.getAllTagFromProject(name);
+    socket.on('getProjectTag', function () {
+        var answer = remote_server.getAllTagFromProject();
         socket.emit('projectTag', answer);
     });
-    socket.on('applyFilter', function (name, extensions) {
-        var answer = remote_server.filterProjectFiles(name, extensions);
+    socket.on('applyFilter', function (extensions) {
+        var answer = remote_server.filterProjectFiles(extensions);
         socket.emit('filterResult', answer);
     });
     // End listen filter
@@ -175,8 +189,8 @@ remote_control_nsp.on('connection', function (socket) {
         board_nsp.emit('closeFullScreen');
     });
 
-    socket.on('tag', function (message) {
-        var tab = remote_server.getTabFromTag(message);
+    socket.on('tag', function (tag) {
+        var tab = remote_server.getTabFromTag(tag);
         board_nsp.emit('tag', tab);
     });
 

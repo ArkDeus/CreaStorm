@@ -3,39 +3,24 @@ var filesystem = require("fs");
 var mime = require('mime');
 
 var projectFolder = "Projects/";
-
-function _createProject(name) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-    } catch (e) {
-        return e;
-    }
-    return true;
-}
+var projectName = "";
 
 function _getAllProjectsName() {
     var result = [];
     var objProjectAndFiles;
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
-        objProjectAndFiles = [listProject[i], _getNbFilesFromProject(listProject[i])];
+        var projectJsonFile = require("./../" + projectFolder + listProject[i] + "/medias.json");
+        objProjectAndFiles = [projectJsonFile.name, projectJsonFile.medias.length];
         result.push(objProjectAndFiles);
     }
     return result;
 }
 
-function _getNbFilesFromProject(name) {
-    try {
-        return filesystem.readdirSync(projectFolder + name).length;
-    } catch (e) {
-        return e;
-    }
-}
-
-function _filterProjectFiles(name, filters) {
+function _filterProjectFiles(filters) {
     var result = [];
     for (var i = 0; i < filters.length; i++) {
-        var curExtRes = _getAllFilesFromProjectByExtention(name, filters[i]);
+        var curExtRes = _getAllFilesFromProjectByExtention(filters[i]);
         if (curExtRes.length > 0) {
             result.push(curExtRes);
         }
@@ -43,10 +28,10 @@ function _filterProjectFiles(name, filters) {
     return result;
 }
 
-function _getAllFilesFromProjectByExtention(name, ext) {
+function _getAllFilesFromProjectByExtention(ext) {
     var result = [];
     try {
-        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
+        filesystem.readdirSync(projectFolder + projectName).forEach(function (file) {
             file = projectFolder + name + '/' + file;
             var lookup = mime.lookup(file).split("/");
             if (lookup[1] === ext) {
@@ -59,22 +44,13 @@ function _getAllFilesFromProjectByExtention(name, ext) {
     return result;
 }
 
-function _getAllTagFromProject(name) {
-    var result = [];
-    var parsedJSON = require('./../medias.json');
-    for (var i = 0; i < parsedJSON.medias.length; i++) {
-        for (var j = 0; j < parsedJSON.medias[i].tags.length; j++) {
-            var tag = parsedJSON.medias[i].tags[j];
-            if (!result.includes(tag)) {
-                result.push(tag);
-            }
-        }
-    }
-    return result;
+function _getAllTagFromProject() {
+    var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
+    return projectJsonFile.tags;
 }
 
 function _getTabFromTag(tag) {
-    var parsedJSON = require('./../medias.json');
+    var parsedJSON = require("./../" + projectFolder + projectName + "/medias.json");
 
     for (var i = 0; i < parsedJSON.medias.length; i++) {
         if (!parsedJSON.medias[i].tags.includes(tag)) {
@@ -89,19 +65,19 @@ module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
     },
-    filterProjectFiles: function (name, filters) {
-        return _filterProjectFiles(name, filters);
+    filterProjectFiles: function (filters) {
+        return _filterProjectFiles(filters);
     },
-    getAllTagFromProject: function (name) {
-        return _getAllTagFromProject(name);
+    getAllTagFromProject: function () {
+        return _getAllTagFromProject();
     },
     getTabFromTag: function (tag) {
         return _getTabFromTag(tag);
     },
-    getProjectTags: function (project) {
-        return _getProjectTags(project);
+    getProjectName: function () {
+        return projectName;
     },
-    getProjectJson: function (project) {
-        return _getProjectJson(project);
+    setProjectName: function (name) {
+        projectName = name;
     }
 };
