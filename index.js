@@ -3,7 +3,6 @@ var express = require('express');
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
-var remote_server = require('./server/remote_server');
 
 var project_name;
 
@@ -98,6 +97,8 @@ surface_nsp.on('connection', function (socket) {
 var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
+    var device_server = require('./server/device_server');
+
     socket.on('addToJson', function(message){
         var imgData = require('./Projects/' + project_name + '/medias.json');
         imgData['medias'].push(JSON.parse(message));
@@ -111,24 +112,24 @@ device_nsp.on('connection', function (socket) {
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
     socket.on('getAllProjects', function () {
-        var answer = remote_server.getAllProjectsName();
+        var answer = device_server.getAllProjectsName();
         socket.emit('returnGetAll', answer);
     })
     socket.on('createProject', function (name, projectJson,  projectDirectories) {
         console.log(projectJson);
         console.log(projectDirectories);
         var json = String(projectJson);
-        var isCreated = remote_server.createProject(name, projectJson, projectDirectories);
+        var isCreated = device_server.createProject(name, projectJson, projectDirectories);
         socket.emit('returnCreated', isCreated);
     })
 
     socket.on('getProjectJson', function(project){
-        var projectJson = remote_server.getProjectJson(project);
+        var projectJson = device_server.getProjectJson(project);
         console.log(projectJson);
         socket.emit('returnProjectJson', projectJson, project);
     })
     socket.on('getViewProjectJson', function(project){
-        var projectJson = remote_server.getProjectJson(project);
+        var projectJson = device_server.getProjectJson(project);
         console.log(projectJson);
         socket.emit('returnViewProjectJson', projectJson, project);
     })
@@ -139,6 +140,7 @@ device_nsp.on('connection', function (socket) {
 var remote_control_nsp = io.of('/RemoteControl');
 remote_control_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le RemoteControl");
+    var remote_server = require('./server/remote_server');
 
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects

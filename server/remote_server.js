@@ -2,8 +2,6 @@
 var filesystem = require("fs");
 var mime = require('mime');
 
-var json = "";
-
 var projectFolder = "Projects/";
 
 function _createProject(name) {
@@ -24,11 +22,6 @@ function _getAllProjectsName() {
         result.push(objProjectAndFiles);
     }
     return result;
-}
-
-function _getProjectJson(project) {
-    var projectJson = require('../' + projectFolder + project + '/medias.json');
-    return projectJson;
 }
 
 function _getNbFilesFromProject(name) {
@@ -66,25 +59,6 @@ function _getAllFilesFromProjectByExtention(name, ext) {
     return result;
 }
 
-function _createProject(name, projectJson, projectDirectories) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-        for (dir in projectDirectories) {
-            filesystem.mkdirSync(projectFolder + name + '/' + projectDirectories[dir]);
-            console.log(projectDirectories[dir]);
-        }
-        console.log(projectJson);
-        console.log(projectDirectories);
-        filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function (err) {
-            if (err) console.log(err);
-            else console.log('file created');
-        });
-    } catch (e) {
-        return e;
-    }
-    return result;
-}
-
 function _getAllTagFromProject(name) {
     var result = [];
     var parsedJSON = require('./../medias.json');
@@ -114,9 +88,6 @@ function _getTabFromTag(tag) {
 module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
-    },
-    createProject: function (name, projectJson, projectDirectories) {
-        return _createProject(name, projectJson, projectDirectories);
     },
     filterProjectFiles: function (name, filters) {
         return _filterProjectFiles(name, filters);
