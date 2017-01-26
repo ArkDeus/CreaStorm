@@ -66,9 +66,18 @@ function displayMedias(navigation) {
     for (var i = startIndex; i < endIndex; i++) {
         var div = document.createElement("div");
         div.className = "media";
-        var img = document.createElement("img");
-        img.src = globalTab.medias[i].url;
-        div.appendChild(img);
+        if (globalTab.medias[i].type.includes("image")) {
+            var img = document.createElement("img");
+            img.src = globalTab.medias[i].url;
+            div.appendChild(img);
+        } else if (globalTab.medias[i].type.includes("video")) {
+            var video = document.createElement("video");
+            video.src = globalTab.medias[i].url;
+            video.muted = true;
+            video.play();
+            div.appendChild(video);
+        }
+
         container.appendChild(div);
     }
 }
@@ -79,7 +88,34 @@ socket.on('tag', function (tab) {
 
     currentIndex = 0;
 
-    displayMedias("right");
+    if (globalTab.medias.length == 1) {
+        var container = document.getElementsByClassName("mediacontainer")[0];
+        var div = document.createElement("div");
+        div.className = "mediafull";
+        var img = document.createElement("img");
+        img.src = globalTab.medias[0].url;
+        div.appendChild(img);
 
+        container.appendChild(div);
+    } else {
+        displayMedias("right");
+    }
 });
 
+socket.on('audio', function (src) {
+    document.getElementById("audio").innerHTML = "";
+
+    var audio = document.createElement("audio");
+    audio.src = src;
+    audio.controls = true;
+    audio.play();
+    document.getElementById("audio").appendChild(audio);
+});
+
+socket.on('audio-pause', function () {
+    document.getElementById("audio").pause();
+});
+
+socket.on('audio-play', function () {
+    document.getElementById("audio").play();
+});

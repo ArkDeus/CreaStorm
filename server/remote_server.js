@@ -104,7 +104,7 @@ function _getTabFromTag(tag) {
 
     for (var i = 0; i < parsedJSON.medias.length; i++) {
         if (!parsedJSON.medias[i].tags.includes(tag)) {
-            // console.log("j'ai supprime : " + parsedJSON.medias[i].url);
+            console.log("j'ai supprime : " + parsedJSON.medias[i].url);
             parsedJSON.medias.splice(i, 1);
         }
     }
