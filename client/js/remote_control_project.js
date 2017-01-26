@@ -33,6 +33,7 @@ socket.on('projectTag', function (result) {
 });
 
 socket.on('filterResult', function (result) {
+	console.log(result);
 	var galleryDiv = document.getElementById('gallery');
 	galleryDiv.innerHTML = "";
 	var listOther = document.createElement('ul');
@@ -101,12 +102,10 @@ window.onload = function () {
 	socket.emit('getProjectName');
 };
 
-window.onhashchange = function(){
-	console.log(historyManager);
-	console.log(window.history.length);
-	if(historyManager >= window.history.length){
+window.onhashchange = function () {
+	if (historyManager >= window.history.length) {
 		window.open('/RemoteControl', '_self');
-	}else{
+	} else {
 		historyManager = window.history.length;
 	}
 }
@@ -137,13 +136,8 @@ function filterControl() {
 	var inputList = document.getElementsByTagName('input');
 	for (var i = 0; i < inputList.length; i++) {
 		if (inputList[i].type === "checkbox") {
-			if (projectName.length < 5) {
-				inputList[i].disabled = true;
-			} else {
-				inputList[i].disabled = false;
-				inputList[i].onchange = function () {
-					doMagicTrick(this);
-				}
+			inputList[i].onchange = function () {
+				doMagicTrick(this);
 			}
 		}
 	}
@@ -210,7 +204,7 @@ function extToFilter() {
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
 	socket.emit('applyFilter', extTab);
-	socket.emit('tag', 'costumes');
+	socket.emit('tag', 'darth');
 }
 
 function remoteControl() {

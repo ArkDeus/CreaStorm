@@ -13,7 +13,7 @@
     "medias": [
         {
             "url": "photo 1.JPG",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "2592",
             "height": "1936",
             "tags": [
@@ -23,7 +23,7 @@
         },
         {
             "url": "IMG_20170105_104426.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "3264",
             "height": "2448",
             "tags": []

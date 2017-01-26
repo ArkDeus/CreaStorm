@@ -10,7 +10,7 @@
     "medias": [
         {
             "url": "11439.png",
-            "type": "image",
+            "type": "image/png",
             "width": "2048",
             "height": "1536",
             "tags": [
@@ -19,7 +19,7 @@
         },
         {
             "url": "39177.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "1600",
             "height": "1200",
             "tags": [
@@ -28,7 +28,7 @@
         },
         {
             "url": "19418.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "1600",
             "height": "1200",
             "tags": [
@@ -37,7 +37,7 @@
         },
         {
             "url": "82395.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "1920",
             "height": "1200",
             "tags": [
@@ -46,7 +46,7 @@
         },
         {
             "url": "653613.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "2560",
             "height": "1440",
             "tags": [
@@ -56,7 +56,7 @@
         },
         {
             "url": "669112.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "1920",
             "height": "1080",
             "tags": [
@@ -66,7 +66,7 @@
         },
         {
             "url": "669177.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "2560",
             "height": "1440",
             "tags": [
@@ -75,7 +75,7 @@
         },
         {
             "url": "670890.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "1920",
             "height": "1080",
             "tags": [
@@ -84,7 +84,7 @@
         },
         {
             "url": "719101.jpg",
-            "type": "image",
+            "type": "image/jpeg",
             "width": "5760",
             "height": "3840",
             "tags": [
@@ -93,7 +93,7 @@
         },
         {
             "url": "699220.png",
-            "type": "image",
+            "type": "image/png",
             "width": "1920",
             "height": "1080",
             "tags": [
@@ -102,21 +102,28 @@
         },
         {
             "url": "Andy_G_Cohen_-_06_-_Just_A_Blip.mp3",
-            "type": "audio",
+            "type": "audio/mpeg",
             "width": "",
             "height": "",
             "tags": []
         },
         {
             "url": "Andy_G_Cohen_-_07_-_A_Human_Being.mp3",
-            "type": "audio",
+            "type": "audio/mpeg",
             "width": "",
-            "height": "180",
+            "height": "",
             "tags": []
         },
         {
-            "url": "Andy_G_Cohen_-_07_-_A_Human_Being.mp3",
-            "type": "audio",
+            "url": "Andy_G_Cohen_-_11_-_Space_Outro.mp3",
+            "type": "audio/mpeg",
+            "width": "",
+            "height": "",
+            "tags": []
+        },
+        {
+            "url": "big_buck_bunny_480p_10mb.mp4",
+            "type": "video/mp4",
             "width": "",
             "height": "",
             "tags": []
