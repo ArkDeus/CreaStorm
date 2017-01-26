@@ -179,14 +179,20 @@ remote_control_mng_nsp.on('connection', function (socket) {
     });
     // End listen filter
 
-    socket.on('showFullScreen', function (image) {
+    // manage click image
+    socket.on('showFullScreen', function (image, type) {
         console.log("the display will show : " + image);
-        board_nsp.emit('showFullScreen', image);
+        board_nsp.emit('showFullScreen', image, type);
     });
 
     socket.on('closeFullScreen', function () {
         console.log("close the full screen mode");
         board_nsp.emit('closeFullScreen');
+    });
+
+    // manage click music
+    socket.on('playAudio', function (src) {
+        board_nsp.emit('audio', src);
     });
 
     socket.on('tag', function (tag) {

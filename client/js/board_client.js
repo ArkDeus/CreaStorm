@@ -32,16 +32,16 @@ function displayMedias(navigation) {
     var endIndex;
 
     if (navigation == "right") {
-        if (currentIndex == globalTab.medias.length) {
+        if (currentIndex == globalTab.length) {
             return;
         }
         startIndex = currentIndex;
         currentIndex = (currentIndex + 6);
         nbDisplayedElems = 6;
 
-        if (currentIndex > globalTab.medias.length) {
-            currentIndex = globalTab.medias.length;
-            nbDisplayedElems = (globalTab.medias.length - startIndex);
+        if (currentIndex > globalTab.length) {
+            currentIndex = globalTab.length;
+            nbDisplayedElems = (globalTab.length - startIndex);
             console.log("nb elems : " + nbDisplayedElems);
         }
         endIndex = currentIndex;
@@ -66,13 +66,13 @@ function displayMedias(navigation) {
     for (var i = startIndex; i < endIndex; i++) {
         var div = document.createElement("div");
         div.className = "media";
-        if (globalTab.medias[i].type.includes("image")) {
+        if (globalTab[i].type.includes("image")) {
             var img = document.createElement("img");
-            img.src = globalTab.medias[i].url;
+            img.src = globalTab[i].url;
             div.appendChild(img);
-        } else if (globalTab.medias[i].type.includes("video")) {
+        } else if (globalTab[i].type.includes("video")) {
             var video = document.createElement("video");
-            video.src = globalTab.medias[i].url;
+            video.src = globalTab[i].url;
             video.muted = true;
             video.play();
             div.appendChild(video);
@@ -88,12 +88,12 @@ socket.on('tag', function (tab) {
 
     currentIndex = 0;
 
-    if (globalTab.medias.length == 1) {
+    if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];
         var div = document.createElement("div");
         div.className = "mediafull";
         var img = document.createElement("img");
-        img.src = globalTab.medias[0].url;
+        img.src = globalTab[0].url;
         div.appendChild(img);
 
         container.appendChild(div);

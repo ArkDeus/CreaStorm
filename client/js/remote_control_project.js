@@ -13,6 +13,8 @@ var disAll, disNot;
 var disGif, disJpg, disPng, disMp3, disWma, disFlac, disWav, disMp4, disWmv, disAvi, disMkv;
 var disImages, disVideos, disMusics;
 
+var tagFilterDiv, listSelectedTag = [];
+
 var remoteControler, hammerControler;
 
 socket.on('selectedProject', function (name) {
@@ -29,7 +31,26 @@ socket.on('selectedProject', function (name) {
 });
 
 socket.on('projectTag', function (result) {
-	console.log(result);
+	tagFilterDiv = document.getElementById('tag-filter').firstElementChild;
+	for (var i = 0; i < result.length; i++) {
+		var btnTag = document.createElement('button');
+		btnTag.className = "btn-default btn";
+		btnTag.style = "margin:5px;";
+		btnTag.value = result[i];
+		btnTag.innerHTML = result[i];
+		btnTag.onclick = function () {
+			if ($(this).hasClass("active")) {
+				$(this).removeClass('active');
+				listSelectedTag.splice(listSelectedTag.indexOf(this.value), 1);
+			} else {
+				$(this).addClass('active');
+				listSelectedTag.push(this.value);
+			}
+			console.log(listSelectedTag);
+			socket.emit('tag', this.value);
+		}
+		tagFilterDiv.appendChild(btnTag);
+	}
 });
 
 socket.on('filterResult', function (result) {
@@ -48,12 +69,20 @@ socket.on('filterResult', function (result) {
 				img.onclick = function () {
 					onFullScreen = !onFullScreen;
 					if (onFullScreen) {
-						socket.emit('showFullScreen', this.alt);
+						socket.emit('showFullScreen', this.alt, "image");
 					} else {
 						socket.emit('closeFullScreen');
 					}
 				}
 				galleryDiv.appendChild(img);
+			} else if (type === 'audio') {
+				var btn = document.createElement("button");
+				btn.value = result[i][j][0];
+				btn.innerHTML = "play music";
+				btn.onclick = function () {
+					socket.emit('playAudio', this.value);
+				}
+				galleryDiv.appendChild(btn);
 			} else {
 				var li = document.createElement('li');
 				li.innerHTML = result[i][j][0];
@@ -95,6 +124,8 @@ window.onload = function () {
 	disImages = document.getElementById('checkbox-image'); disImages.checked = false;
 	disVideos = document.getElementById('checkbox-video'); disVideos.checked = false;
 	disMusics = document.getElementById('checkbox-music'); disMusics.checked = false;
+
+	tagFilterDiv = document.getElementById('tag-filter').firstElementChild;
 
 	remoteControler = document.getElementById('remote-control');
 	hammerControler = new Hammer(remoteControler);
@@ -203,8 +234,11 @@ function extToFilter() {
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
+	// Tags
+
+
 	socket.emit('applyFilter', extTab);
-	socket.emit('tag', 'darth');
+	socket.emit('tag', '');
 }
 
 function remoteControl() {

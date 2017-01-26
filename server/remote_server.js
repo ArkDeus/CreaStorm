@@ -52,8 +52,10 @@ function _getTabFromTag(tag) {
     var result = [];
     var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     for (var i = 0; i < projectJsonFile.medias.length; i++) {
-        if (projectJsonFile.medias[i].tags.includes(tag)) {
-            result.push(projectJsonFile.medias[i]);
+        if ((projectJsonFile.medias[i].tags.includes(tag) || tag.length === 0) && projectJsonFile.medias[i].type.split("/")[0] != 'audio') {
+            var currentMedia = Object.assign({}, projectJsonFile.medias[i]);
+            currentMedia.url = projectFolder + projectName + "/" + currentMedia.url;
+            result.push(currentMedia);
         }
     }
     return result;

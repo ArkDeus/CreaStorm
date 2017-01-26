@@ -2,7 +2,8 @@
     "name": "CreaStorm",
     "tags": [
         "darth",
-        "storm"
+        "storm",
+        "custom"
     ],
     "directories": [
         "a"
@@ -14,7 +15,8 @@
             "width": "2048",
             "height": "1536",
             "tags": [
-                "darth"
+                "darth",
+                "custom"
             ]
         },
         {
