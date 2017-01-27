@@ -251,7 +251,7 @@ h2{
 /* styles du retour visuel */
 .file-return {
   margin: 0;
-  color: white;
+  color: #0b3142;
 }
 .file-return:not(:empty) {
   margin: 1em 0;

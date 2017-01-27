@@ -106,6 +106,10 @@ device_nsp.on('connection', function (socket) {
         fs.writeFile("./Projects/" +project + '/medias.json', jsonString);
     });
 
+    socket.on('projectName', function(projectName){
+        project_name = projectName;
+    });
+
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
     socket.on('getAllProjects', function () {

@@ -166,6 +166,7 @@ function createProject(){
     if(projectName != null){
         socket.emit('createProject',projectName, projectJson);
         uploadFiles(projectName, projectIcon.files[0]);
+        projectModal.style.display = "none";
     }
 
 }
@@ -237,7 +238,7 @@ socket.on('returnCreated',function(isCreated){
         updateProjectsList();
         alert('The project was successfully created');
         fileData = "";
-        projectModal.hidden = true;
+        projectModal.style.display = "none";
    } else{
        alert('A project already has the same name');
    }
@@ -373,7 +374,7 @@ document.querySelector('#upload').onclick = function(){
     uploadFiles(currentProjectName.innerHTML, fileInput.files[0]);
     socket.emit('addToJson', fileData, currentProjectName.innerHTML);
     fileModal.style.display= "none";
-    updateProjectsList()
+    updateProjectsList();
 }
 
 
@@ -434,5 +435,5 @@ window.onclick = function(event) {
 
 document.getElementById('brand').onclick = function(){
     document.getElementById('ViewProjects').hidden = false;
-    document.getElementById('ProjectDetail').hidden = false;
+    document.getElementById('ProjectDetail').hidden = true;
 }
