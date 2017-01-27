@@ -98,7 +98,7 @@ function _getAllTagFromProject() {
 function _getFilterProjectMediasWithoutAudio(list) {
     var result = [];
     for (var i = 0; i < list.length; i++) {
-        if(list[i].type.split("/")[0] != 'audio'){
+        if (list[i].type.split("/")[0] != 'audio') {
             result.push(list[i]);
         }
     }
