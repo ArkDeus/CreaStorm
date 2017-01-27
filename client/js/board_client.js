@@ -135,6 +135,7 @@ socket.on('tag', function (tab) {
     nbPages = Math.ceil(globalTab.length/6);
     console.log("il y aura nbPages : " + nbPages);
     currentIndex = 0;
+    currentPage = 0;
     $('.media').remove();
     if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];

@@ -32,13 +32,19 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fileUpload
 # Idea files
 .idea*
 
 # Images folder
 images/
 
+<<<<<<< HEAD
 *.mp3
 *.mp4
 
+=======
+>>>>>>> fileUpload

@@ -1,6 +1,7 @@
 var socket = io('/DeviceService');
 
 var fileInput = document.querySelector('#fileInput'),
+    projectIcon = document.querySelector('#projectIcon'),
     progress = document.querySelector('#progress'),
     uploadButton = document.querySelector('#upload'),
     tags = document.getElementById('tags'),
@@ -8,14 +9,18 @@ var fileInput = document.querySelector('#fileInput'),
     imgWidth,
     imgHeight,
     projectsList = [],
+    projectsJsonList = [],
     menu = document.getElementById('menu'),
     tagsList,
-    projects = document.getElementById('projects'),
     project,
     projectJson,
     viewProjectJson,
-    projectImages = document.getElementById('projectsImages'),
-    viewProject = document.getElementById('checkProjects');
+    currentProjectName = document.getElementById('currentProjectName'),
+    viewTags = document.getElementById('viewTags'),
+    projectImages = document.getElementById('imgList'),
+    viewProject = document.getElementById('checkProjects'),
+    fileType;
+
 window.URL = window.URL || window.webkitURL;
 
 
@@ -24,12 +29,7 @@ document.querySelector("html").classList.add('js');
 
 window.onload = function(){
     updateProjectsList();
-    displayProjectsList('projects');
-    displayProjectsList('checkProjects');
-}
-
-viewProject.onchange = function(){
-    getViewProjectJson(this.value);
+    displayProjectsList();
 }
 
 function getProjectJson(project){
@@ -40,43 +40,68 @@ function getViewProjectJson(project){
     socket.emit('getViewProjectJson', project);
 }
 
-projects.onchange = function(){
-    console.log('selectChange');
-    project = projects.value;
-    getProjectJson(project);
-}
-
 socket.on('returnProjectJson',function (answer, project) {
     projectJson = answer;
-    displayTags(projectJson['tags']);
+    displayTags(projectJson['tags'], tags);
 });
 
 socket.on('returnViewProjectJson', function(answer, project){
     viewProjectJson = answer;
+    displayTags(viewProjectJson['tags'], viewTags)
     displayProjectsImages();
 });
 
-function displayProjectsImages(){
-    var images = viewProjectJson.medias;
+function displayProjectsImages(project){
+    var medias = "";
+    var json;
+    currentProjectName.innerHTML = project;
+    for(var i = 0; i < projectsJsonList.length; i++){
+        if(projectsJsonList[i].name == project){
+            json = projectsJsonList[i];
+            break;
+        }
+    }
+
+    medias = json.medias;
+
     while(projectImages.firstChild){
         projectImages.removeChild(projectImages.firstChild);
     }
-    for(var i = 0; i < images.length; i++){
-        console.log(images[i].url);
+    for(var i = 0; i < medias.length; i++){
+        var currentMedia;
+
+        if(medias[i].type.startsWith("audio")){
+            currentMedia = document.createElement('audio');
+            currentMedia.setAttribute('controls','controls');
+            currentMedia.innerHTML = medias[i].url;
+        }
+        if(medias[i].type.startsWith("image")){
+            currentMedia = document.createElement('img');
+            currentMedia.className = "img-responsive";
+        }
+        if(medias[i].type.startsWith("video")){
+            currentMedia = document.createElement('video');
+            currentMedia.setAttribute('controls','controls');
+        }
+
+        currentMedia.src = 'Projects/'+ json.name +'/'+medias[i].url;
+
+
         var currentImgRow = document.createElement('div');
-        currentImgRow.id = images[i].url;
+        currentImgRow.id = medias[i].url;
         currentImgRow.className = "imgRow";
-        var currentImg = document.createElement('img');
-        currentImg.src = 'Projects/'+viewProject.value +'/'+images[i].url;
-        currentImg.className = "img-responsive";
-        currentImgRow.appendChild(currentImg);
+        currentImgRow.appendChild(currentMedia);
+
         projectImages.appendChild(currentImgRow);
     }
+    console.log(currentProjectName.innerHTML + "_" + currentProjectName.value);
+    document.getElementById('ViewProjects').hidden=true;
+    document.getElementById('ProjectDetail').hidden=false;
 }
 
-function displayTags(values){
-    while(tags.firstChild){
-        tags.removeChild(tags.firstChild);
+function displayTags(values, span){
+    while(span.firstChild){
+        span.removeChild(span.firstChild);
     }
     for(tag in values){
         var newTag = document.createElement('p');
@@ -85,7 +110,7 @@ function displayTags(values){
         newTag.className = 'tag';
         newTag.setAttribute('picked',false);
         newTag.setAttribute('onclick', 'pickTag("'+ values[tag] + '")');
-        tags.appendChild(newTag);
+        span.appendChild(newTag);
     }
 }
 
@@ -125,8 +150,9 @@ menu.onclick = function (event) {
 function createProject(){
     var projectName = document.getElementById('projectName').value;
     var projectTags = $('#projectTags').tagsinput('items');
-    var projectDirectories = $('#projectDirectories').tagsinput('items');
-    var projectJson = '{"name": ' + '"' + projectName + '",'
+    var projectIconName = projectIcon.value.replace(/^.*[\\\/]/, '');
+    var projectJson = '{"name": ' + '"' + projectName + '",' +
+        '"iconUrl": "' + projectIconName +'",'
                     + '"tags": [';
 
     for( var i = 0; i<projectTags.length-1;i++){
@@ -134,26 +160,15 @@ function createProject(){
     }
 
     projectJson+= '"'+projectTags[projectTags.length-1]+'"],' +
-        '"directories": [';
-
-    for( var i = 0; i<projectDirectories.length-1;i++){
-        projectJson += '"'+projectDirectories[i]+'",';
-    }
-
-    projectJson+= '"'+projectDirectories[projectDirectories.length-1]+'"],' +
         '"medias": []}';
 
 
     if(projectName != null){
-        socket.emit('createProject',projectName, projectJson, projectDirectories);
+        socket.emit('createProject',projectName, projectJson);
+        uploadFiles(projectName, projectIcon.files[0]);
+        projectModal.style.display = "none";
     }
 
-
-
-    console.log(projectName);
-    console.log(projectTags);
-    console.log(projectDirectories);
-    console.log(projectJson);
 }
 
 //demande au serveur la liste des projets
@@ -163,7 +178,7 @@ function updateProjectsList(){
 }
 
 //mets à jour l'affichage des projets
-function displayProjectsList(id){
+function displayProjectsListBis(id){
     var sel = document.getElementById(id);
     while(sel.firstChild){
         sel.removeChild(sel.firstChild);
@@ -178,6 +193,43 @@ function displayProjectsList(id){
         getProjectJson(projectsList[0][0]);
     }
     console.log('display');
+    console.log(projectsList);
+}
+
+//mets à jour l'affichage des projets
+function displayProjectsList(){
+    var list = document.getElementById('projectsList');
+    while(list.firstChild){
+        list.removeChild(list.firstChild);
+    }
+    projectsJsonList.forEach(function(project,index){
+        console.log(index);
+        var listElement = document.createElement('div');
+        var projectImage = document.createElement('img');
+        var projectName = document.createElement('p');
+        var hr = document.createElement('hr');
+
+        projectImage.src = "Projects/" + project.name + '/' + project.iconUrl;
+        projectImage.className = "col-xs-4 img-responsive";
+
+        projectName.innerHTML = project.name;
+        projectName.className = 'col-xs-8 projectNames';
+
+        listElement.id = project.name;
+        listElement.className = 'projectElement row';
+        listElement.setAttribute('onclick',"displayProjectsImages('"+project.name+"')");
+
+        listElement.appendChild(projectImage);
+        listElement.appendChild(projectName);
+
+        list.appendChild(listElement);
+        list.appendChild(hr);
+
+    })
+    if(projectsList.length > 0){
+        getProjectJson(projectsList[0][0]);
+    }
+    console.log('display');
 }
 
 //met à jour la liste des projets si le projet a bien été créé, et s'il n'existe pas déjà
@@ -186,17 +238,17 @@ socket.on('returnCreated',function(isCreated){
         updateProjectsList();
         alert('The project was successfully created');
         fileData = "";
-        getProjectJson(viewProject.value);
+        projectModal.style.display = "none";
    } else{
        alert('A project already has the same name');
    }
 });
 
 //reçoit la liste des projets par le serveur et mets à jour l'affichage
-socket.on("returnGetAll",function(answer){
-    projectsList = answer;
-    displayProjectsList('projects');
-    displayProjectsList('checkProjects');
+socket.on("returnGetAll",function(names, jsonList){
+    projectsList = names;
+    projectsJsonList = jsonList;
+    displayProjectsList();
     console.log('updated');
 });
 
@@ -204,7 +256,7 @@ socket.on("returnGetAll",function(answer){
 function createJson(){
     var filename = fileInput.value.replace(/^.*[\\\/]/, '');
   fileData = '{ "url": "'+ filename + '",'
-              +'"type": "image",'
+              +'"type": "'+ fileType +'",'
               +'"width": "'+ imgWidth + '",'
               +'"height": "'+ imgHeight + '",'
               +'"tags": [';
@@ -236,24 +288,22 @@ fileInput.onchange = function(){
         img.onload = function() {
             imgWidth = this.width;
             imgHeight = this.height;
-
             window.URL.revokeObjectURL( img.src );
         }
     }
+    fileType = this.files[0].type;
 }
 
 
 //upload l'image dans le projet correspondant et met à jour le fichier json du projet
-function uploadFiles() {
-
-    createJson();
+function uploadFiles(projectName, file) {
 
     console.log(fileData);
 
     var formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+    formData.append('file', file);
 
-    socket.emit('projectName',document.getElementById('projects').value);
+    socket.emit('projectName', projectName);
 
     $.ajax({
         url: '/DeviceService',
@@ -263,6 +313,8 @@ function uploadFiles() {
         contentType: false,
         success: function(data){
             console.log('upload successful!\n' + data);
+            alert('Upload Succesful !');
+            displayProjectsImages(currentProjectName.innerHTML);
         },
         xhr: function() {
             // create an XMLHttpRequest
@@ -287,9 +339,6 @@ function uploadFiles() {
 
                 }
 
-                socket.emit('addToJson', fileData);
-                console.log('addToJson');
-
             }, false);
 
             return xhr;
@@ -298,28 +347,93 @@ function uploadFiles() {
 };
 
 // initialisation des variables
-var fileInput  = document.querySelector( ".input-file" ),
+var fileInputButton  = document.querySelector( ".input-file" ),
     button     = document.querySelector( ".input-file-trigger" ),
     the_return = document.querySelector(".file-return");
 
 // action lorsque la "barre d'espace" ou "Entrée" est pressée
 button.addEventListener( "keydown", function( event ) {
     if ( event.keyCode == 13 || event.keyCode == 32 ) {
-        fileInput.focus();
+        fileInputButton.focus();
     }
 });
 
 // action lorsque le label est cliqué
 button.addEventListener( "click", function( event ) {
-    fileInput.focus();
+    fileInputButton.focus();
     return false;
 });
 
 // affiche un retour visuel dès que input:file change
-fileInput.addEventListener( "change", function( event ) {
+fileInputButton.addEventListener( "change", function( event ) {
     the_return.innerHTML = this.value;
 });
 
 document.querySelector('#upload').onclick = function(){
-    uploadFiles();
+    createJson();
+    uploadFiles(currentProjectName.innerHTML, fileInput.files[0]);
+    socket.emit('addToJson', fileData, currentProjectName.innerHTML);
+    fileModal.style.display= "none";
+    updateProjectsList();
+}
+
+
+// Get the modal
+var projectModal = document.getElementById('projectModal');
+var fileModal = document.getElementById('fileModal');
+
+// Get the button that opens the modal
+var projectBtn = document.getElementById("addProject");
+var fileBtn = document.getElementById("uploadFile");
+
+// Get the <span> element that closes the modal
+var projectSpan = document.getElementsByClassName("closeProject")[0];
+var fileSpan = document.getElementsByClassName("closeFile")[0];
+
+// When the user clicks on the button, open the modal
+projectBtn.onclick = function() {
+    projectModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+projectSpan.onclick = function() {
+    projectModal.style.display = "none";
+}
+
+
+
+// When the user clicks on the button, open the modal
+fileBtn.onclick = function() {
+    fileModal.style.display = "block";
+    displayTags(getProjectTags(currentProjectName.innerHTML), tags);
+}
+
+function getProjectTags(project){
+    for(var i = 0; i < projectsJsonList.length; i++){
+        if(projectsJsonList[i].name == project){
+            return projectsJsonList[i].tags;
+        }
+    }
+}
+
+// When the user clicks on <span> (x), close the modal
+fileSpan.onclick = function() {
+    fileModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == projectModal) {
+        projectModal.style.display = "none";
+    }
+    if (event.target == projectModal) {
+        fileModal.style.display = "none";
+    }
+
+
+}
+
+document.getElementById('brand').onclick = function(){
+    document.getElementById('ViewProjects').hidden = false;
+    document.getElementById('ProjectDetail').hidden = true;
 }

@@ -103,28 +103,32 @@ var device_nsp = io.of('/DeviceService');
 device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
     var device_server = require('./server/device_server');
+    var remote_server = require('./server/remote_server');
 
-    socket.on('addToJson', function (message) {
-        var imgData = require('./Projects/' + project_name + '/medias.json');
+    socket.on('addToJson', function(message, project){
+        var imgData = require('./Projects/' + project + '/medias.json');
         imgData['medias'].push(JSON.parse(message));
         var jsonString = JSON.stringify(imgData);
-        fs.writeFile("./Projects/" + project_name + '/medias.json', jsonString);
+        project_name = project;
+        fs.writeFile("./Projects/" +project + '/medias.json', jsonString);
     });
 
-    socket.on('projectName', function (name) {
-        project_name = name;
+    socket.on('projectName', function(projectName){
+        project_name = projectName;
     });
+
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
     socket.on('getAllProjects', function () {
-        var answer = device_server.getAllProjectsName();
-        socket.emit('returnGetAll', answer);
+        var names = remote_server.getAllProjectsName();
+        var jsonList = remote_server.getAllProjectsJson();
+        socket.emit('returnGetAll', names, jsonList);
     })
-    socket.on('createProject', function (name, projectJson, projectDirectories) {
+    socket.on('createProject', function (name, projectJson) {
         console.log(projectJson);
-        console.log(projectDirectories);
         var json = String(projectJson);
-        var isCreated = device_server.createProject(name, projectJson, projectDirectories);
+        //var isCreated = device_server.createProject(name, projectJson, projectDirectories);
+        var isCreated = remote_server.createProject(name, projectJson);
         socket.emit('returnCreated', isCreated);
     })
 
