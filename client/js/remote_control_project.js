@@ -54,11 +54,13 @@ socket.on('projectTag', function (result) {
 });
 
 socket.on("resultMedias", function (result) {
-	console.log("resultMedias");
-	console.log(result);
-	var galleryDiv = document.getElementById('gallery');
-	galleryDiv.innerHTML = "";
-	var listOther = document.createElement('ul');
+	var galleryImageDiv = document.getElementById('galleryImage');
+	var galleryAudioDiv = document.getElementById('galleryAudio');
+	var galleryVideoDiv = document.getElementById('galleryVideo');
+	galleryImageDiv.innerHTML = "";
+	galleryAudioDiv.innerHTML = "";
+	galleryVideoDiv.innerHTML = "";
+
 	for (var i = 0; i < result.length; i++) {
 		var type = result[i].type.split("/")[0];
 		if (type === "image") {
@@ -69,12 +71,12 @@ socket.on("resultMedias", function (result) {
 			img.onclick = function () {
 				onFullScreen = !onFullScreen;
 				if (onFullScreen) {
-					socket.emit('showFullScreen', this.alt, "image");
+					socket.emit('showFullScreen', this.alt);
 				} else {
 					socket.emit('closeFullScreen');
 				}
 			}
-			galleryDiv.appendChild(img);
+			galleryImageDiv.appendChild(img);
 		} else if (type === 'audio') {
 			var btn = document.createElement("button");
 			btn.value = result[i].url;
@@ -82,15 +84,17 @@ socket.on("resultMedias", function (result) {
 			btn.onclick = function () {
 				socket.emit('playAudio', this.value);
 			}
-			galleryDiv.appendChild(btn);
+			galleryAudioDiv.appendChild(btn);
 		} else {
-			var li = document.createElement('li');
-			li.innerHTML = result[i].url;
-			listOther.appendChild(li);
+			var btn = document.createElement("button");
+			btn.value = result[i].url;
+			btn.innerHTML = "play video";
+			btn.onclick = function () {
+				onFullScreen = true;
+				socket.emit('playVideo', this.value);
+			}
+			galleryVideoDiv.appendChild(btn);
 		}
-	}
-	if (listOther.children.length > 0) {
-		galleryDiv.appendChild(listOther);
 	}
 });
 
@@ -159,8 +163,6 @@ function menuController() {
 		}
 	}
 };
-
-
 
 function filterControl() {
 	var inputList = document.getElementsByTagName('input');

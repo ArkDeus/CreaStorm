@@ -6,6 +6,7 @@
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="../client/css/remote_control_style.css" rel="stylesheet">
 
@@ -271,10 +272,17 @@
             </div>
 
             <div id="gallery" hidden>
+                <div id="galleryImage"></div>
+                <div id="galleryAudio"></div>
+                <div id="galleryVideo"></div>
             </div>
 
             <div id="remote-control" hidden>
-                <h3 style="text-align: center; padding: 40% 5%; height: 80%">Swipe right or left no navigate in the carousel</h3>
+                <h3 style="text-align: center; padding: 40% 5%;">Swipe right or left no navigate in the carousel</h3>
+                <div id="player-control">
+                        <i id="control-play" class="material-icons md-light md-50">play_circle_filled</i>
+                        <i id="control-pause" class="material-icons md-light md-50">pause_circle_filled</i>
+                </div>
             </div>
       </div>
     </div>

@@ -14,24 +14,30 @@ socket.on('goLeft', function () {
 
 socket.on('showFullScreen', function (url, type) {
     $('#myModal').collapse("show");
-    var cont = document.getElementsByClassName("modal-body")[0];
+    var cont = document.getElementsByClassName("modal-body");
 
     cont.style = "align-content: center;display: flex;";
-
     if (type == "image") {
         var img = document.getElementById("fullscreenimg");
         img.src = url;
         img.className = (img.width / img.height > 16 / 9 ? 'wide' : 'tall');
-        cont.className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+        cont[0].className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+        cont[0].style = "align-content: center;display: flex; margin-bottom:1%;";
+        cont[1].style = "display: none;";
+        document.getElementById("fullscreenvideo").pause();
     } else if (type == "video") {
         var video = document.getElementById("fullscreenvideo");
         video.src = url;
+        video.play();
         video.className = (video.videoWidth / video.videoHeight > 16 / 9 ? 'wide' : 'tall');
-        cont.className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
+        cont[1].className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
+        cont[1].style = "align-content: center;display: flex; margin-bottom:1%;";
+        cont[0].style = "display: none;";
     }
 });
 
 socket.on('closeFullScreen', function () {
+    document.getElementById("fullscreenvideo").pause();
     $('#myModal').collapse("toggle");
 });
 
@@ -123,11 +129,12 @@ socket.on('audio', function (src) {
     // document.getElementById("audiocontainer").innerHTML = "";
     var title = src.split("/");
 
-    document.getElementById("musictitle").innerText = title[title.length-1];
+    document.getElementById("musictitle").innerText = title[title.length - 1];
     var audio = document.getElementById("audio");
     audio.src = src;
     audio.controls = true;
     audio.play();
+    document.getElementById("audiocontainer").hidden = false;
     // document.getElementById("audio").appendChild(audio);
 });
 
@@ -142,7 +149,7 @@ socket.on('audio-play', function () {
 socket.on('audio-stop', function () {
     document.getElementById("audio").pause();
     document.getElementById("audio").currentTime = 0;
-    document.getElementById("audiocontainer").controls = false;
+    document.getElementById("audiocontainer").hidden = true;
 });
 
 socket.on('video-pause', function () {
