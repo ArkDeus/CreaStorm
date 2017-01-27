@@ -13,7 +13,7 @@ function init() {
     socket.on("returnProjectList",function(projectList){
         for (var i =0; i<projectList.length;i++){
             console.log(projectList[i][0]);
-            projectListDropdown.innerHTML += "<li><a onclick='displayTags(\""+projectList[i][0]+ "\")'>"+projectList[i][0]+"</a></li>"
+            projectListDropdown.innerHTML += "<li><a onclick='displayImages(\""+projectList[i][0]+ "\")'>"+projectList[i][0]+"</a></li>"
         }
     });
 

@@ -18,45 +18,6 @@ function _getAllProjectsName() {
     return result;
 }
 
-function _getProjectJson(project){
-    var projectJson = require('../' + projectFolder + project + '/medias.json');
-    return projectJson;
-}
-
-function _getAllProjectsJson(){
-    var result = [];
-    var listProject = filesystem.readdirSync('Projects');
-    for(var i = 0; i < listProject.length; i++){
-        var json = require('../'+ projectFolder + listProject[i] + '/medias.json');
-        result.push(json);
-        console.log(json);
-    }
-    return result;
-}
-
-function _createProject(name, projectJson) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-        console.log(projectJson);
-        filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function(err){
-           if(err) console.log(err);
-           else console.log('file created');
-        });
-    } catch (e) {
-        return e;
-    }
-    return true;
-}
-
-
-function _getNbFilesFromProject(name) {
-    try {
-        return filesystem.readdirSync(projectFolder + name).length;
-    } catch (e) {
-        return e;
-    }
-}
-
 function _filterProjectMedias(ext, tags) {
     var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     var result = [];
@@ -123,15 +84,5 @@ module.exports = {
     },
     setProjectName: function (name) {
         projectName = name;
-    },
-
-    createProject: function (name, projectJson){
-        return _createProject(name, projectJson);
-    },
-    getProjectJson: function(project) {
-        return _getProjectJson(project);
-    },
-    getAllProjectsJson: function(){
-        return _getAllProjectsJson();
     }
 };
