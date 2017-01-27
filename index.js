@@ -165,7 +165,8 @@ remote_control_mng_nsp.on('connection', function (socket) {
     var remote_server = require('./server/remote_server');
 
     socket.on('getProjectName', function () {
-        socket.emit('selectedProject', remote_server.getProjectName());
+        var answer = remote_server.getProjectName();
+        socket.emit('selectedProject', answer);
     });
 
     // Start listen filter

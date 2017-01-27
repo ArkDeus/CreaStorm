@@ -12,14 +12,23 @@ socket.on('goLeft', function () {
     displayMedias("left");
 });
 
-socket.on('showFullScreen', function (url) {
+socket.on('showFullScreen', function (url, type) {
     $('#myModal').collapse("show");
-    var img = document.getElementById("fullscreenimg");
     var cont = document.getElementsByClassName("modal-body")[0];
-    img.src = url;
-    img.className = (img.width / img.height > 16 / 9 ? 'wide' : 'tall');
-    cont.className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+
     cont.style = "align-content: center;display: flex;";
+
+    if (type == "image") {
+        var img = document.getElementById("fullscreenimg");
+        img.src = url;
+        img.className = (img.width / img.height > 16 / 9 ? 'wide' : 'tall');
+        cont.className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+    } else if (type == "video") {
+        var video = document.getElementById("fullscreenvideo");
+        video.src = url;
+        video.className = (video.videoWidth / video.videoHeight > 16 / 9 ? 'wide' : 'tall');
+        cont.className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
+    }
 });
 
 socket.on('closeFullScreen', function () {
@@ -87,14 +96,22 @@ socket.on('tag', function (tab) {
     globalTab = tab;
 
     currentIndex = 0;
-
+    $('.media').remove();
     if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];
         var div = document.createElement("div");
         div.className = "mediafull";
-        var img = document.createElement("img");
-        img.src = globalTab[0].url;
-        div.appendChild(img);
+        if (globalTab[0].type.includes("image")) {
+            var img = document.createElement("img");
+            img.src = globalTab[0].url;
+            div.appendChild(img);
+        } else if (globalTab[i].type.includes("video")) {
+            var video = document.createElement("video");
+            video.src = globalTab[0].url;
+            video.play();
+            document.getElementById("audio").pause();
+            div.appendChild(video);
+        }
 
         container.appendChild(div);
     } else {
@@ -103,13 +120,15 @@ socket.on('tag', function (tab) {
 });
 
 socket.on('audio', function (src) {
-    document.getElementById("audio").innerHTML = "";
+    // document.getElementById("audiocontainer").innerHTML = "";
+    var title = src.split("/");
 
-    var audio = document.createElement("audio");
+    document.getElementById("musictitle").innerText = title[title.length-1];
+    var audio = document.getElementById("audio");
     audio.src = src;
     audio.controls = true;
     audio.play();
-    document.getElementById("audio").appendChild(audio);
+    // document.getElementById("audio").appendChild(audio);
 });
 
 socket.on('audio-pause', function () {
@@ -118,4 +137,18 @@ socket.on('audio-pause', function () {
 
 socket.on('audio-play', function () {
     document.getElementById("audio").play();
+});
+
+socket.on('audio-stop', function () {
+    document.getElementById("audio").pause();
+    document.getElementById("audio").currentTime = 0;
+    document.getElementById("audiocontainer").controls = false;
+});
+
+socket.on('video-pause', function () {
+    document.getElementById("fullscreenvideo").pause();
+});
+
+socket.on('video-play', function () {
+    document.getElementById("fullscreenvideo").play();
 });
