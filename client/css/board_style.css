@@ -4,10 +4,12 @@
   }
 }
 
-/*img {
-    width: 30%;
-}*/
-
+@media screen and (min-width: 1300px){
+  .container{
+    max-width: 1200px;
+    max-height: 700px;
+  }
+}
 
 
 body{
@@ -24,85 +26,37 @@ h1{
   text-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
 }
 
-/* Always be sure to give your carousel items a width and a height */
-/*.yui-carousel-element li {
-    width : auto;
-    height : auto;
-    max-width: 600px;
-    max-height: 500px;
-}*/
-
-/*imgFull{
-    min-height:100%;
-    min-width:100%;
-    overflow: hidden;
-    max-height:auto;
-    max-width:auto;
-    position:absolute;
-    top:-100%; bottom:-100%;
-    left:-100%; right:-100%;
-    margin:auto;
-}*/
-
-/*.yui-carousel-content {
-    overflow: visible;
-    border: none;
-
-}*/
-
-.yui-carousel-item {
-    border: none;
-    display: inline-block;
-    width: 600px;
-    max-height: 500px;
-    overflow: visible;
+.mediacontainer {
+  height: 90%;
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5%;
 }
 
-/*.yui-carousel-element li {
-    height: 205px;
-    width: 200px;
-}*/
-
-
-.yui-carousel-element {
-    
-    border: none;
+.media {
+  margin: 10px;
+  flex-shrink: 1;
+  width: 30%;
 }
 
-.yui-carousel-item-selected {
-    border: none;
+.mediafull {
+    /*margin: 10px;*/
+    flex-shrink: 1;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-
-.carousel-element-3 {
-    height: 100%;
-    overflow: visible;
-    max-width: 600px;
-  max-height:450px;
+img {
+  width: 100%;
+  height: auto;
 }
 
-/*.carousel-element-2 {
-    height: 100%;
-    overflow: visible;
-    max-width: 1200px;
-  max-height:450px;
+video {
+  width: 100%;
+  height: auto;
 }
-
-.carousel-element-4 {
-    height: 100%;
-    overflow: visible;
-    max-width: 300px;
-  max-height:300px;
-}*/
-
-.yui-carousel-nav {
-    display : none;
-}
-
-/*.yui-carousel-element .yui-carousel-item-selected {
-    border:0; 
-}*/
-
 
 
 .wide {

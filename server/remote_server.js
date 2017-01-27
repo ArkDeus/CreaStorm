@@ -2,35 +2,21 @@
 var filesystem = require("fs");
 var mime = require('mime');
 
-var json = "";
-
 var projectFolder = "Projects/";
+var projectName = "";
 
-function _createProject(name) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-    } catch (e) {
-        return e;
-    }
-    return true;
-}
 
 function _getAllProjectsName() {
     var result = [];
     var objProjectAndFiles;
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
-        objProjectAndFiles = [listProject[i], _getNbFilesFromProject(listProject[i])];
+        var currentProjectJson = require("./../" + projectFolder + listProject[i] + "/medias.json");
+        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.medias.length];
         result.push(objProjectAndFiles);
     }
     return result;
 }
-
-function _getProjectJson(project){
-    var projectJson = require('../' + projectFolder + project + '/medias.json');
-    return projectJson;
-}
-
 
 function _getNbFilesFromProject(name) {
     try {
@@ -41,100 +27,72 @@ function _getNbFilesFromProject(name) {
 }
 
 
-function _filterProjectFiles(name, filters) {
+
+function _filterProjectMedias(ext, tags) {
+    var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     var result = [];
-    for (var i = 0; i < filters.length; i++) {
-        var curExtRes = _getAllFilesFromProjectByExtention(name, filters[i]);
+    for (var i = 0; i < ext.length; i++) {
+        var curExtRes = _getProjectFilesByExtAndTags(ext[i], tags);
         if (curExtRes.length > 0) {
-            result.push(curExtRes);
+            result.push.apply(result, curExtRes);
         }
     }
     return result;
 }
 
-function _getAllFilesFromProjectByExtention(name, ext) {
+function _getProjectFilesByExtAndTags(ext, tags) {
     var result = [];
-    try {
-        filesystem.readdirSync(projectFolder + name).forEach(function (file) {
-            file = projectFolder + name + '/' + file;
-            var lookup = mime.lookup(file).split("/");
-            if (lookup[1] === ext) {
-                result.push([file, mime.lookup(file)]);
-            }
-        });
-    } catch (e) {
-        return e;
-    }
-    return result;
-}
-function _createProject(name, projectJson, projectDirectories) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-        for(dir in projectDirectories){
-            filesystem.mkdirSync(projectFolder+ name + '/' + projectDirectories[dir]);
-            console.log(projectDirectories[dir]);
-        }
-        console.log(projectJson);
-        console.log(projectDirectories);
-        filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function(err){
-           if(err) console.log(err);
-           else console.log('file created');
-        });
-    } catch (e) {
-        return e;
-    }
-    return result;
-}
-
-function _getAllTagFromProject(name) {
-    var result = [];
-    var parsedJSON = require('./../medias.json');
-    for (var i = 0; i < parsedJSON.medias.length; i++) {
-        for (var j = 0; j < parsedJSON.medias[i].tags.length; j++) {
-            var tag = parsedJSON.medias[i].tags[j];
-            if (!result.includes(tag)) {
-                result.push(tag);
+    var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
+    for (var i = 0; i < projectJsonFile.medias.length; i++) {
+        var currentMedia = projectJsonFile.medias[i];
+        var lookup = currentMedia.type.split("/");
+        if (lookup[1] === ext) {
+            var hasTag = false;
+            for (var j = 0; j < tags.length && !hasTag; j++) {
+                if (currentMedia.tags.includes(tags[j])) {
+                    var currentMedia = Object.assign({}, projectJsonFile.medias[i]);
+                    currentMedia.url = "./../" + projectFolder + projectName + "/" + currentMedia.url;
+                    result.push(currentMedia);
+                    hasTag = true;
+                }
             }
         }
     }
     return result;
 }
 
-function _getTabFromTag(tag) {
-    var parsedJSON = require('./../medias.json');
+function _getAllTagFromProject() {
+    var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
+    return projectJsonFile.tags;
+}
 
-    for (var i = 0; i < parsedJSON.medias.length; i++) {
-        if (!parsedJSON.medias[i].tags.includes(tag)) {
-            // console.log("j'ai supprime : " + parsedJSON.medias[i].url);
-            parsedJSON.medias.splice(i, 1);
+function _getFilterProjectMediasWithoutAudio(list) {
+    var result = [];
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].type.split("/")[0] != 'audio') {
+            result.push(list[i]);
         }
     }
-    return parsedJSON;
+    return result;
 }
 
 module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
     },
-    createProject: function (name, projectJson, projectDirectories) {
-        return _createProject(name, projectJson, projectDirectories);
+    filterProjectMedias: function (ext, tags) {
+        return _filterProjectMedias(ext, tags);
     },
-    filterProjectFiles: function (name, filters) {
-        return _filterProjectFiles(name, filters);
+    getAllTagFromProject: function () {
+        return _getAllTagFromProject();
     },
-    getAllTagFromProject: function (name) {
-        return _getAllTagFromProject(name);
+    getFilterProjectMediasWithoutAudio: function (listMedias) {
+        return _getFilterProjectMediasWithoutAudio(listMedias);
     },
-    getTabFromTag: function (tag) {
-        return _getTabFromTag(tag);
+    getProjectName: function () {
+        return projectName;
     },
-    getProjectTags: function(project){
-        return _getProjectTags(project);
-    },
-    getProjectJson: function(project) {
-        return _getProjectJson(project);
-    },
-    getAllImages: function(project) {
-        return _getAllImages(project);
+    setProjectName: function (name) {
+        projectName = name;
     }
 };
