@@ -2,6 +2,7 @@ var socket = io('/RemoteControl/Manager');
 
 var onFullScreen = false;
 var historyManager = 0;
+var count = 0;
 
 var projectName, projectNameTitle;
 
@@ -136,12 +137,12 @@ window.onload = function () {
 	socket.emit('getProjectName');
 };
 
+// manage history
 window.onhashchange = function () {
-	if (historyManager >= window.history.length) {
+	if (historyManager >= count) {
 		window.open('/RemoteControl', '_self');
-	} else {
-		historyManager = window.history.length;
 	}
+	++historyManager;
 }
 
 function menuController() {
@@ -161,6 +162,7 @@ function menuController() {
 				}
 			}
 		}
+		count = historyManager + 1;
 	}
 };
 
