@@ -173,9 +173,10 @@ remote_control_mng_nsp.on('connection', function (socket) {
         var answer = remote_server.getAllTagFromProject();
         socket.emit('projectTag', answer);
     });
-    socket.on('applyFilter', function (extensions) {
-        var answer = remote_server.filterProjectFiles(extensions);
-        socket.emit('filterResult', answer);
+    socket.on('filterMedias', function (extension, tags) {
+        var answer = remote_server.filterProjectMedias(extension, tags);
+        socket.emit("resultMedias", answer);
+        board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer));
     });
     // End listen filter
 
@@ -184,7 +185,6 @@ remote_control_mng_nsp.on('connection', function (socket) {
         console.log("the display will show : " + image);
         board_nsp.emit('showFullScreen', image, type);
     });
-
     socket.on('closeFullScreen', function () {
         console.log("close the full screen mode");
         board_nsp.emit('closeFullScreen');
@@ -193,11 +193,6 @@ remote_control_mng_nsp.on('connection', function (socket) {
     // manage click music
     socket.on('playAudio', function (src) {
         board_nsp.emit('audio', src);
-    });
-
-    socket.on('tag', function (tag) {
-        var tab = remote_server.getTabFromTag(tag);
-        board_nsp.emit('tag', tab);
     });
 
     // Start remote control

@@ -54,8 +54,8 @@ window.onload = function () {
 	}
 
 	accessToSelectedProject.onclick = function () {
-		window.open('/RemoteControl/Manager', '_self');
 		socket.emit('selectedProject', projectName);
+		window.open('/RemoteControl/Manager', '_self');
 	}
 
 	socket.emit('getAllProjects');

@@ -34,10 +34,11 @@ socket.on('projectTag', function (result) {
 	tagFilterDiv = document.getElementById('tag-filter').firstElementChild;
 	for (var i = 0; i < result.length; i++) {
 		var btnTag = document.createElement('button');
-		btnTag.className = "btn-default btn";
+		btnTag.className = "btn-default btn active";
 		btnTag.style = "margin:5px;";
 		btnTag.value = result[i];
 		btnTag.innerHTML = result[i];
+		listSelectedTag.push(result[i]);
 		btnTag.onclick = function () {
 			if ($(this).hasClass("active")) {
 				$(this).removeClass('active');
@@ -46,48 +47,46 @@ socket.on('projectTag', function (result) {
 				$(this).addClass('active');
 				listSelectedTag.push(this.value);
 			}
-			console.log(listSelectedTag);
-			socket.emit('tag', this.value);
+			extToFilter();
 		}
 		tagFilterDiv.appendChild(btnTag);
 	}
 });
 
-socket.on('filterResult', function (result) {
+socket.on("resultMedias", function (result) {
+	console.log("resultMedias");
 	console.log(result);
 	var galleryDiv = document.getElementById('gallery');
 	galleryDiv.innerHTML = "";
 	var listOther = document.createElement('ul');
 	for (var i = 0; i < result.length; i++) {
-		for (var j = 0; j < result[i].length; j++) {
-			var type = result[i][j][1].split("/")[0];
-			if (type === "image") {
-				var img = document.createElement("img");
-				img.src = result[i][j][0];
-				img.alt = result[i][j][0];
-				img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
-				img.onclick = function () {
-					onFullScreen = !onFullScreen;
-					if (onFullScreen) {
-						socket.emit('showFullScreen', this.alt, "image");
-					} else {
-						socket.emit('closeFullScreen');
-					}
+		var type = result[i].type.split("/")[0];
+		if (type === "image") {
+			var img = document.createElement("img");
+			img.src = result[i].url;
+			img.alt = result[i].url;
+			img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+			img.onclick = function () {
+				onFullScreen = !onFullScreen;
+				if (onFullScreen) {
+					socket.emit('showFullScreen', this.alt, "image");
+				} else {
+					socket.emit('closeFullScreen');
 				}
-				galleryDiv.appendChild(img);
-			} else if (type === 'audio') {
-				var btn = document.createElement("button");
-				btn.value = result[i][j][0];
-				btn.innerHTML = "play music";
-				btn.onclick = function () {
-					socket.emit('playAudio', this.value);
-				}
-				galleryDiv.appendChild(btn);
-			} else {
-				var li = document.createElement('li');
-				li.innerHTML = result[i][j][0];
-				listOther.appendChild(li);
 			}
+			galleryDiv.appendChild(img);
+		} else if (type === 'audio') {
+			var btn = document.createElement("button");
+			btn.value = result[i].url;
+			btn.innerHTML = "play music";
+			btn.onclick = function () {
+				socket.emit('playAudio', this.value);
+			}
+			galleryDiv.appendChild(btn);
+		} else {
+			var li = document.createElement('li');
+			li.innerHTML = result[i].url;
+			listOther.appendChild(li);
 		}
 	}
 	if (listOther.children.length > 0) {
@@ -234,11 +233,7 @@ function extToFilter() {
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
-	// Tags
-
-
-	socket.emit('applyFilter', extTab);
-	socket.emit('tag', '');
+	socket.emit('filterMedias', extTab, listSelectedTag);
 }
 
 function remoteControl() {

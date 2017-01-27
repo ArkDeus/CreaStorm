@@ -107,28 +107,36 @@
             "type": "audio/mpeg",
             "width": "",
             "height": "",
-            "tags": []
+            "tags": [
+                "custom"
+            ]
         },
         {
             "url": "Andy_G_Cohen_-_07_-_A_Human_Being.mp3",
             "type": "audio/mpeg",
             "width": "",
             "height": "",
-            "tags": []
+            "tags": [
+                "custom"
+            ]
         },
         {
             "url": "Andy_G_Cohen_-_11_-_Space_Outro.mp3",
             "type": "audio/mpeg",
             "width": "",
             "height": "",
-            "tags": []
+            "tags": [
+                "darth"
+            ]
         },
         {
             "url": "big_buck_bunny_480p_10mb.mp4",
             "type": "video/mp4",
             "width": "",
             "height": "",
-            "tags": []
+            "tags": [
+                "storm"
+            ]
         }
     ]
 }

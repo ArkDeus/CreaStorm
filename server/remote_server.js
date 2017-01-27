@@ -18,26 +18,34 @@ function _getAllProjectsName() {
     return result;
 }
 
-function _filterProjectFiles(filters) {
+function _filterProjectMedias(ext, tags) {
     var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     var result = [];
-    for (var i = 0; i < filters.length; i++) {
-        var curExtRes = _getAllFilesFromProjectByExtention(filters[i]);
+    for (var i = 0; i < ext.length; i++) {
+        var curExtRes = _getProjectFilesByExtAndTags(ext[i], tags);
         if (curExtRes.length > 0) {
-            result.push(curExtRes);
+            result.push.apply(result, curExtRes);
         }
     }
     return result;
 }
 
-function _getAllFilesFromProjectByExtention(ext) {
+function _getProjectFilesByExtAndTags(ext, tags) {
     var result = [];
     var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     for (var i = 0; i < projectJsonFile.medias.length; i++) {
         var currentMedia = projectJsonFile.medias[i];
         var lookup = currentMedia.type.split("/");
         if (lookup[1] === ext) {
-            result.push(["./../" + projectFolder + projectName + "/" + currentMedia.url, currentMedia.type]);
+            var hasTag = false;
+            for (var j = 0; j < tags.length && !hasTag; j++) {
+                if (currentMedia.tags.includes(tags[j])) {
+                    var currentMedia = Object.assign({}, projectJsonFile.medias[i]);
+                    currentMedia.url = "./../" + projectFolder + projectName + "/" + currentMedia.url;
+                    result.push(currentMedia);
+                    hasTag = true;
+                }
+            }
         }
     }
     return result;
@@ -48,14 +56,11 @@ function _getAllTagFromProject() {
     return projectJsonFile.tags;
 }
 
-function _getTabFromTag(tag) {
+function _getFilterProjectMediasWithoutAudio(list) {
     var result = [];
-    var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
-    for (var i = 0; i < projectJsonFile.medias.length; i++) {
-        if ((projectJsonFile.medias[i].tags.includes(tag) || tag.length === 0) && projectJsonFile.medias[i].type.split("/")[0] != 'audio') {
-            var currentMedia = Object.assign({}, projectJsonFile.medias[i]);
-            currentMedia.url = projectFolder + projectName + "/" + currentMedia.url;
-            result.push(currentMedia);
+    for (var i = 0; i < list.length; i++) {
+        if(list[i].type.split("/")[0] != 'audio'){
+            result.push(list[i]);
         }
     }
     return result;
@@ -65,14 +70,14 @@ module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
     },
-    filterProjectFiles: function (filters) {
-        return _filterProjectFiles(filters);
+    filterProjectMedias: function (ext, tags) {
+        return _filterProjectMedias(ext, tags);
     },
     getAllTagFromProject: function () {
         return _getAllTagFromProject();
     },
-    getTabFromTag: function (tag) {
-        return _getTabFromTag(tag);
+    getFilterProjectMediasWithoutAudio: function (listMedias) {
+        return _getFilterProjectMediasWithoutAudio(listMedias);
     },
     getProjectName: function () {
         return projectName;
