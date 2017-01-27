@@ -12,14 +12,23 @@ socket.on('goLeft', function () {
     displayMedias("left");
 });
 
-socket.on('showFullScreen', function (url) {
+socket.on('showFullScreen', function (url, type) {
     $('#myModal').collapse("show");
-    var img = document.getElementById("fullscreenimg");
     var cont = document.getElementsByClassName("modal-body")[0];
-    img.src = url;
-    img.className = (img.width / img.height > 16 / 9 ? 'wide' : 'tall');
-    cont.className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+
     cont.style = "align-content: center;display: flex;";
+
+    if (type == "image") {
+        var img = document.getElementById("fullscreenimg");
+        img.src = url;
+        img.className = (img.width / img.height > 16 / 9 ? 'wide' : 'tall');
+        cont.className += (img.width / img.height > 16 / 9 ? ' wide' : ' tall');
+    } else if (type == "video") {
+        var video = document.getElementById("fullscreenvideo");
+        video.src = url;
+        video.className = (video.videoWidth / video.videoHeight > 16 / 9 ? 'wide' : 'tall');
+        cont.className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
+    }
 });
 
 socket.on('closeFullScreen', function () {
@@ -118,4 +127,12 @@ socket.on('audio-pause', function () {
 
 socket.on('audio-play', function () {
     document.getElementById("audio").play();
+});
+
+socket.on('video-pause', function () {
+    document.getElementById("fullscreenvideo").pause();
+});
+
+socket.on('video-play', function () {
+    document.getElementById("fullscreenvideo").play();
 });
