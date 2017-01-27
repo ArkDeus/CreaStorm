@@ -82,6 +82,7 @@ socket.on("resultMedias", function (result) {
 			var btn = document.createElement("button");
 			btn.value = result[i].url;
 			btn.innerHTML = "play music";
+			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				socket.emit('playAudio', this.value);
 			}
@@ -90,6 +91,7 @@ socket.on("resultMedias", function (result) {
 			var btn = document.createElement("button");
 			btn.value = result[i].url;
 			btn.innerHTML = "play video";
+			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				onFullScreen = true;
 				socket.emit('playVideo', this.value);

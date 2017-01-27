@@ -30,6 +30,7 @@ socket.on('showFullScreen', function (url, type) {
     } else if (type == "video") {
         var video = document.getElementById("fullscreenvideo");
         video.src = url;
+        document.getElementById("audio").pause();
         video.play();
         video.className = (video.videoWidth / video.videoHeight > 16 / 9 ? 'wide' : 'tall');
         cont[1].className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
@@ -39,7 +40,6 @@ socket.on('showFullScreen', function (url, type) {
 });
 
 socket.on('closeFullScreen', function () {
-    document.getElementById("audio").pause();
     document.getElementById("fullscreenvideo").pause();
     $('#myModal').collapse("toggle");
 });
@@ -138,6 +138,7 @@ socket.on('tag', function (tab) {
     $('.media').remove();
     if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];
+        container.innerHTML = "";
         var div = document.createElement("div");
         div.className = "mediafull";
         if (globalTab[0].type.includes("image")) {
