@@ -96,7 +96,7 @@ socket.on('tag', function (tab) {
     globalTab = tab;
 
     currentIndex = 0;
-
+    $('.media').remove();
     if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];
         var div = document.createElement("div");
@@ -137,6 +137,12 @@ socket.on('audio-pause', function () {
 
 socket.on('audio-play', function () {
     document.getElementById("audio").play();
+});
+
+socket.on('audio-stop', function () {
+    document.getElementById("audio").pause();
+    document.getElementById("audio").currentTime = 0;
+    document.getElementById("audiocontainer").controls = false;
 });
 
 socket.on('video-pause', function () {
