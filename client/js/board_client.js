@@ -101,9 +101,17 @@ socket.on('tag', function (tab) {
         var container = document.getElementsByClassName("mediacontainer")[0];
         var div = document.createElement("div");
         div.className = "mediafull";
-        var img = document.createElement("img");
-        img.src = globalTab[0].url;
-        div.appendChild(img);
+        if (globalTab[0].type.includes("image")) {
+            var img = document.createElement("img");
+            img.src = globalTab[0].url;
+            div.appendChild(img);
+        } else if (globalTab[i].type.includes("video")) {
+            var video = document.createElement("video");
+            video.src = globalTab[0].url;
+            video.play();
+            document.getElementById("audio").pause();
+            div.appendChild(video);
+        }
 
         container.appendChild(div);
     } else {
@@ -112,13 +120,15 @@ socket.on('tag', function (tab) {
 });
 
 socket.on('audio', function (src) {
-    document.getElementById("audio").innerHTML = "";
+    // document.getElementById("audiocontainer").innerHTML = "";
+    var title = src.split("/");
 
-    var audio = document.createElement("audio");
+    document.getElementById("musictitle").innerText = title[title.length-1];
+    var audio = document.getElementById("audio");
     audio.src = src;
     audio.controls = true;
     audio.play();
-    document.getElementById("audio").appendChild(audio);
+    // document.getElementById("audio").appendChild(audio);
 });
 
 socket.on('audio-pause', function () {
