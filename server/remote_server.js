@@ -31,15 +31,6 @@ function _getProjectJson(project){
     return projectJson;
 }
 
-function _getAllImages(project){
-    var projectJson=_getProjectJson(project);
-    var medias = projectJson.medias;
-    var images = [];
-    for (var i=0; i<medias.length;i++){
-        images.push(medias[i].url);
-    }
-    return images;
-}
 
 function _getNbFilesFromProject(name) {
     try {

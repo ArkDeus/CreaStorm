@@ -2,6 +2,7 @@
 var filesystem = require("fs");
 
 var json = "";
+var projectFolder = "Projects/";
 
 function _getAllFilesFromFolder(dir) {
     // remove the last "," when we have a recursion
@@ -35,10 +36,32 @@ function _getAllFilesFromFolder(dir) {
     return json;
 }
 
+function _getProjectJson(project){
+    var projectJson = require('../' + projectFolder + project + '/medias.json');
+    return projectJson;
+}
+
+function _getAllImages(project){
+    var projectJson=_getProjectJson(project);
+    var medias = projectJson.medias;
+    var images = [];
+    for (var i=0; i<medias.length;i++){
+        images.push(medias[i].url);
+    }
+    return images;
+}
+
+function _getAllTags(project){
+    var projectJson=_getProjectJson(project);
+}
+
 module.exports = {
     getAllFilesFromFolder: function (dir) {
         // clear the json
         json = "";
         return _getAllFilesFromFolder(dir);
+    },
+    getAllImages: function(project) {
+        return _getAllImages(project);
     }
 };

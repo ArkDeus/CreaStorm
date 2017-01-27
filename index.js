@@ -4,6 +4,7 @@ var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
 var remote_server = require('./server/remote_server');
+var surface_server = require('./server/surface_server');
 
 var project_name;
 
@@ -92,9 +93,14 @@ surface_nsp.on('connection', function (socket) {
 
     socket.on("getImagesFromProject",function(projectname){
         console.log(projectname);
-       var images = remote_server.getAllImages(projectname);
+       var images = surface_server.getAllImages(projectname);
         socket.emit("returnAllImages",images);
     });
+
+    socket.on("getAllTags",function(projectname){
+        var tags = surface_server.getAllTagFromProject(projectname);
+        socket.emit("returnAllTags", tags);
+    })
 
 
 });
