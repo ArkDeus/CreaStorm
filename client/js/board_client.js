@@ -37,6 +37,7 @@ socket.on('showFullScreen', function (url, type) {
 });
 
 socket.on('closeFullScreen', function () {
+    document.getElementById("audio").pause();
     document.getElementById("fullscreenvideo").pause();
     $('#myModal').collapse("toggle");
 });
@@ -135,7 +136,7 @@ socket.on('audio', function (src) {
     audio.controls = true;
     audio.play();
     document.getElementById("audiocontainer").hidden = false;
-    // document.getElementById("audio").appendChild(audio);
+    document.getElementById("fullscreenvideo").pause();
 });
 
 socket.on('audio-pause', function () {
