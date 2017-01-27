@@ -85,13 +85,18 @@ surface_nsp.on('connection', function (socket) {
     var surface_server = require('./server/surface_server');
     console.log("un client connecté sur le SurfaceService");
 
-    // Quand le serveur reçoit un signal de type "message" du client
-    socket.on('message', function (message) {
-        var result = surface_server.getAllFilesFromFolder("uploads");
-        // send the json to the client
-        // hack : remove the 2 last characters to remove the last ",}" and replace by "}}"
-        socket.emit('folder', "{" + result.substring(0, result.length - 2) + "}}");
+    socket.on("getProjectList",function(){
+        var projectList = remote_server.getAllProjectsName();
+        socket.emit("returnProjectList",projectList);
     });
+
+    socket.on("getImagesFromProject",function(projectname){
+        console.log(projectname);
+       var images = remote_server.getAllImages(projectname);
+        socket.emit("returnAllImages",images);
+    });
+
+
 });
 
 // manage the event on the namespace 'DeviceService'

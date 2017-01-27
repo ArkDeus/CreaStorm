@@ -6,12 +6,28 @@
         <title>Surface</title>
         <script type="text/javascript" src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="../client/js/surface_client.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../client/css/surface_style.css">
+
     </head>
 
     <body>
-        <h1>Partie Surface, socket.io</h1>
-        <p><input type="button" value="Obtenir la structure d'un dossier" id="datasend" /></p>
-        <div id="data"></div>
+
+    <h1>CreaStorm Surface</h1>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Choose your project :
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="projectListDropdown">
+        </ul>
+    </div>
+
+    <div id="workbench"></div>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     </body>
 
