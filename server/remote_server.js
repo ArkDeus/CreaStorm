@@ -35,15 +35,10 @@ function _getNbFilesFromProject(name) {
     }
 }
 
-function _createProject(name, projectJson, projectDirectories) {
+function _createProject(name, projectJson) {
     try {
         filesystem.mkdirSync(projectFolder + name);
-        for(dir in projectDirectories){
-            filesystem.mkdirSync(projectFolder+ name + '/' + projectDirectories[dir]);
-            console.log(projectDirectories[dir]);
-        }
         console.log(projectJson);
-        console.log(projectDirectories);
         filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function(err){
            if(err) console.log(err);
            else console.log('file created');
@@ -61,6 +56,18 @@ function _getAllProjectsName() {
     for (var i = 0; i < listProject.length; i++) {
         objProjectAndFiles = [listProject[i], _getNbFilesFromProject(listProject[i])];
         result.push(objProjectAndFiles);
+        console.log(objProjectAndFiles[0]);
+    }
+    return result;
+}
+
+function _getAllProjectsJson(){
+    var result = [];
+    var listProject = filesystem.readdirSync('Projects');
+    for(var i = 0; i < listProject.length; i++){
+        var json = require('../'+ projectFolder + listProject[i] + '/medias.json');
+        result.push(json);
+        console.log(json);
     }
     return result;
 }
@@ -95,5 +102,8 @@ module.exports = {
     },
     getProjectJson: function(project) {
         return _getProjectJson(project);
+    },
+    getAllProjectsJson: function(){
+        return _getAllProjectsJson();
     }
 };

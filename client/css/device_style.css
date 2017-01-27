@@ -5,6 +5,7 @@
 html,
 body {
   background-color: #0b3142;
+  color: white;
 }
 
 .navbar{
@@ -17,6 +18,69 @@ body {
   margin-top: 60px;
 }
 
+.projectElement{
+  list-style: none;
+  text-align: left;
+  color: white;
+  font-size: 30px;
+  padding: 20px 0px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.projectElement:hover{
+  background-color: white;
+  color: #0b3142;
+}
+
+.modal h2{
+  color: #0b3142;
+}
+
+.modal input{
+  border: 1px solid #0b3142;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  color: #0b3142;
+}
+
+/* The Close Button */
+.closeFile, .closeProject {
+  color: #0b3142;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeFile:hover,
+.closeFile:focus,
+.closeProject:hover,
+.closeProject:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .tag{
   display: inline-block;
   border-radius: 2px;
@@ -26,9 +90,23 @@ body {
   cursor: pointer;
 }
 
+#addProject, #uploadFile{
+  padding: 20px 0px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#addProject:hover, #uploadFile:hover{
+  background-color: white;
+  color: #0b3142;
+}
+
+
+
 .tag[picked=true]{
   background-color: #fff;
   color: #9c92a3;
+  border: 1px solid #0b3142;
 }
 
 .tag[picked=false]{
@@ -42,6 +120,11 @@ body {
   float: left;
   width: 100%;
   padding: 0;
+}
+
+video{
+  width: 100%;
+  height: auto;
 }
 
 #myNavbar li a{
@@ -142,6 +225,8 @@ h2{
   font-size: 1em;
   transition: all .4s;
   cursor: pointer;
+  border: 1px solid #0b3142;
+
 }
 .js .input-file {
   position: absolute;
@@ -210,7 +295,7 @@ h2{
   position: relative;
   width: 225px;
   display: inline-block;
-  border: none;
+  border: 1px solid #0b3142;
   font-weight: bold;
 }
 
