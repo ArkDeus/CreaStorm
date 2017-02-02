@@ -1,3 +1,20 @@
+/**
+ * @author Christian Brel <ch.brel@gmail.com>
+ * @author Vincent Forquet
+ * @author Nicolas Forget
+ */
+
+// Import JQuery
+import $ from 'jquery/dist/jquery.min';
+
+// Import TUIOManager
+import TUIOManager from 'tuiomanager/core/TUIOManager';
+
+/** TUIOManager starter **/
+const tuioManager = new TUIOManager();
+tuioManager.start();
+
+/** App Code **/
 var socket = io('/SurfaceService');
 var offset = [0,0];
 var zindex = 0;
@@ -13,7 +30,7 @@ function init() {
     socket.on("returnProjectList",function(projectList){
         for (var i =0; i<projectList.length;i++){
             console.log(projectList[i][0]);
-            projectListDropdown.innerHTML += "<li><a onclick='displayTags(\""+projectList[i][0]+ "\")'>"+projectList[i][0]+"</a></li>"
+            projectListDropdown.innerHTML += "<li><a onclick='displayImages(\""+projectList[i][0]+ "\")'>"+projectList[i][0]+"</a></li>"
         }
     });
 

@@ -65,6 +65,7 @@ function _getAllImages(project) {
 
 function _getAllTags(project) {
     var projectJson = _getProjectJson(project);
+    return projectJson.tags;
 }
 
 module.exports = {
