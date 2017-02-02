@@ -41,7 +41,7 @@ app.post('/DeviceService', function (req, res) {
 
     // specify that we want to allow the user to upload multiple files in a single request
     form.multiples = true;
-    
+
     // store all uploads in the /uploads directory
     form.imgUploadDir = path.join(__dirname, '/Projects/' + project_name);
 
@@ -163,6 +163,10 @@ remote_control_nsp.on('connection', function (socket) {
         remote_server.setProjectName(name);
     });
     // End manage the projects
+
+    socket.on('clearBoard', function () {
+        board_nsp.emit('clearBoard');
+    });
 });
 
 // manage the event on the namespace 'RemoteControl/Manager'
@@ -203,10 +207,22 @@ remote_control_mng_nsp.on('connection', function (socket) {
     socket.on('playAudio', function (src) {
         board_nsp.emit('audio', src);
     });
+    socket.on('playInAudio', function () {
+        board_nsp.emit('audio-play');
+    });
+    socket.on('pauseInAudio', function () {
+        board_nsp.emit('audio-pause');
+    });
 
     // manage click video
     socket.on('playVideo', function (video) {
         board_nsp.emit('showFullScreen', video, 'video');
+    });
+    socket.on('playInVideo', function () {
+        board_nsp.emit('video-play');
+    });
+    socket.on('pauseInVideo', function () {
+        board_nsp.emit('video-pause');
     });
 
     // Start remote control

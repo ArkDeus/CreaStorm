@@ -1,6 +1,7 @@
 var socket = io('/RemoteControl/Manager');
 
 var onFullScreen = false;
+var isPlaying = false;
 var historyManager = 0;
 var count = 0;
 
@@ -14,7 +15,9 @@ var disImages, disVideos, disMusics;
 
 var tagFilterDiv, listSelectedTag = [];
 
-var remoteControler, hammerControler;
+var remoteControler, hammerControler, playButton, pauseButton;
+
+var selectedIndex, resultMedias = [];
 
 socket.on('selectedProject', function (name) {
 	projectName = name;
@@ -69,19 +72,25 @@ socket.on("resultMedias", function (result) {
 		}
 	}
 
+	var index = 0;
+	resultMedias = [];
+
 	for (var i = 0; i < result.length; i++) {
 		var type = result[i].type.split("/")[0];
 		if (type === "image") {
 			var img = document.createElement("img");
+			img.id = index++;
 			img.src = result[i].url;
 			img.alt = result[i].url;
 			img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 			img.onclick = function () {
 				onFullScreen = true;
+				selectedIndex = this.id;
 				socket.emit('showFullScreen', this.alt);
 				buttonCloseModal.style.display = "block";
 			}
 			galleryImageDiv.appendChild(img);
+			resultMedias.push([result[i].url, 'image']);
 		} else if (type === 'audio') {
 			var btn = document.createElement("button");
 			btn.value = result[i].url;
@@ -89,19 +98,26 @@ socket.on("resultMedias", function (result) {
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				socket.emit('playAudio', this.value);
+				isPlaying = true;
+				controlMedia();
 			}
 			galleryAudioDiv.appendChild(btn);
 		} else {
 			var btn = document.createElement("button");
+			btn.id = index++;
 			btn.value = result[i].url;
 			btn.innerHTML = "play video";
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				onFullScreen = true;
+				selectedIndex = this.id;
 				buttonCloseModal.style.display = "block";
 				socket.emit('playVideo', this.value);
+				isPlaying = true;
+				controlMedia();
 			}
 			galleryVideoDiv.appendChild(btn);
+			resultMedias.push([result[i].url, 'video']);
 		}
 	}
 });
@@ -140,6 +156,10 @@ window.onload = function () {
 
 	remoteControler = document.getElementById('remote-control');
 	hammerControler = new Hammer(remoteControler);
+	playButton = document.getElementById('control-play');
+	pauseButton = document.getElementById('control-pause');
+	playButton.style.opacity = 0.5;
+	pauseButton.style.opacity = 0.5;
 
 	socket.emit('getProjectName');
 };
@@ -251,10 +271,50 @@ function remoteControl() {
 	hammerControler.on("swipeleft swiperight", function (ev) {
 		if (projectName.length > 0) {
 			if (ev.type === 'swipeleft') {
-				socket.emit('goRight');
+				if (onFullScreen) {
+					selectedIndex = (++selectedIndex) % resultMedias.length;
+					(resultMedias[selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+				} else {
+					socket.emit('goRight');
+				}
 			} else {
-				socket.emit('goLeft');
+				if (onFullScreen) {
+					if (selectedIndex == 0) selectedIndex = resultMedias.length;
+					(resultMedias[--selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+				} else {
+					socket.emit('goLeft');
+				}
 			}
 		}
 	});
 };
+
+function controlMedia() {
+	if (isPlaying) {
+		pauseButton.style.opacity = 1;
+		pauseButton.onclick = function () {
+			if (!onFullScreen) {
+				socket.emit('pauseInAudio');
+			} else {
+				socket.emit('pauseInVideo');
+			}
+			controlMedia();
+		}
+		playButton.style.opacity = 0.5;
+		playButton.onclick = "";
+		isPlaying = false;
+	} else {
+		playButton.style.opacity = 1;
+		playButton.onclick = function () {
+			if (!onFullScreen) {
+				socket.emit('playInAudio');
+			} else {
+				socket.emit('playInVideo');
+			}
+			controlMedia();
+		}
+		pauseButton.style.opacity = 0.5;
+		pauseButton.onclick = "";
+		isPlaying = true;
+	}
+}

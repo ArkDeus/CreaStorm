@@ -10,7 +10,6 @@ socket.on('returnGetAll', function (value) {
 	if (value.length > 0) {
 		displayListProject.hidden = false;
 		for (var i = 0; i < value.length; i++) {
-			console.log(value[i]);
 			var listElement = document.createElement('div');
 			var projectImage = document.createElement('img');
 			var projectName = document.createElement('span');
@@ -57,6 +56,6 @@ window.onload = function () {
 	getProjectsButton.onclick = function () {
 		socket.emit('getAllProjects');
 	}
-
+	socket.emit('clearBoard');
 	socket.emit('getAllProjects');
 };
