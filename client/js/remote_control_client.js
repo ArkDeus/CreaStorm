@@ -2,38 +2,44 @@ var socket = io('/RemoteControl');
 
 var projectName = "";
 
-var getProjectsButton, displayListProject, listProjects, accessToSelectedProject;
+var getProjectsButton, displayListProject, listProjects;
 
 socket.on('returnGetAll', function (value) {
+	// clear the list
+	listProjects.innerHTML = "";
 	if (value.length > 0) {
 		displayListProject.hidden = false;
-		// clear the list
-		listProjects.innerHTML = "";
 		for (var i = 0; i < value.length; i++) {
-			// create the title for the radio button
-			var title = document.createElement('label');
-			title.style = "margin-left : 5px;";
-			if (value[i][1] > 1) {
-				title.appendChild(document.createTextNode(value[i][0] + " (" + value[i][1] + " files)"));
-			} else {
-				title.appendChild(document.createTextNode(value[i][0] + " (" + value[i][1] + " file)"));
+			console.log(value[i]);
+			var listElement = document.createElement('div');
+			var projectImage = document.createElement('img');
+			var projectName = document.createElement('span');
+			var hr = document.createElement('hr');
+
+
+			projectImage.src = value[i][2];
+			projectImage.className = "col-xs-5 img-responsive";
+
+			projectName.innerHTML = value[i][0] + " (" + value[i][1];
+			if(value[i][1] < 2){
+				projectName.innerHTML += " file)";
+			}else{
+				projectName.innerHTML += " files)";
 			}
-			// create the radio button
-			var input = document.createElement("input");
-			input.type = "radio";
-			input.name = "project";
-			input.value = value[i][0];
-			input.onchange = function () {
-				projectName = this.value;
+			projectName.className = 'col-xs-7 projectName';
+
+			listElement.id = value[i][0];
+			listElement.className = 'row';
+
+			listElement.appendChild(projectImage);
+			listElement.appendChild(projectName);
+			listElement.onclick = function () {
+				socket.emit('selectedProject', this.id);
+				window.open('/RemoteControl/Manager', '_self');
 			}
-			// check the first one by default
-			if (i === 0) {
-				projectName = value[i][0];
-				input.checked = true;
-			}
-			listProjects.appendChild(input);
-			listProjects.appendChild(title);
-			listProjects.appendChild(document.createElement("br"));
+
+			listProjects.appendChild(listElement);
+			listProjects.appendChild(hr);
 		}
 	} else {
 		displayListProject.hidden = true;
@@ -46,16 +52,10 @@ socket.on('returnGetAll', function (value) {
 window.onload = function () {
 	getProjectsButton = document.getElementById('get-projects');
 	displayListProject = document.getElementById('display-list-projects');
-	listProjects = document.getElementById('list-projects');
-	accessToSelectedProject = document.getElementById('project-access');
+	listProjects = document.getElementById('listProjects');
 
 	getProjectsButton.onclick = function () {
 		socket.emit('getAllProjects');
-	}
-
-	accessToSelectedProject.onclick = function () {
-		socket.emit('selectedProject', projectName);
-		window.open('/RemoteControl/Manager', '_self');
 	}
 
 	socket.emit('getAllProjects');

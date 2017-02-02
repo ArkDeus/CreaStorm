@@ -8,8 +8,6 @@ var projectName, projectNameTitle;
 
 var tabbarMenu;
 
-var getProjectsButton, displayListProject, listProjects;
-
 var disAll, disNot;
 var disGif, disJpg, disPng, disMp3, disWma, disFlac, disWav, disMp4, disWmv, disAvi, disMkv;
 var disImages, disVideos, disMusics;
@@ -58,9 +56,18 @@ socket.on("resultMedias", function (result) {
 	var galleryImageDiv = document.getElementById('galleryImage');
 	var galleryAudioDiv = document.getElementById('galleryAudio');
 	var galleryVideoDiv = document.getElementById('galleryVideo');
+	var buttonCloseModal = document.getElementById('closeFullScreen');
 	galleryImageDiv.innerHTML = "";
 	galleryAudioDiv.innerHTML = "";
 	galleryVideoDiv.innerHTML = "";
+
+	if (result.length > 0) {
+		buttonCloseModal.onclick = function () {
+			onFullScreen = false;
+			socket.emit('closeFullScreen');
+			this.style.display = "none";
+		}
+	}
 
 	for (var i = 0; i < result.length; i++) {
 		var type = result[i].type.split("/")[0];
@@ -70,12 +77,9 @@ socket.on("resultMedias", function (result) {
 			img.alt = result[i].url;
 			img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 			img.onclick = function () {
-				onFullScreen = !onFullScreen;
-				if (onFullScreen) {
-					socket.emit('showFullScreen', this.alt);
-				} else {
-					socket.emit('closeFullScreen');
-				}
+				onFullScreen = true;
+				socket.emit('showFullScreen', this.alt);
+				buttonCloseModal.style.display = "block";
 			}
 			galleryImageDiv.appendChild(img);
 		} else if (type === 'audio') {
@@ -94,6 +98,7 @@ socket.on("resultMedias", function (result) {
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				onFullScreen = true;
+				buttonCloseModal.style.display = "block";
 				socket.emit('playVideo', this.value);
 			}
 			galleryVideoDiv.appendChild(btn);
