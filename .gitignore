@@ -32,7 +32,6 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-
 # Idea files
 .idea*
 
@@ -42,3 +41,4 @@ images/
 
 *.mp3
 *.mp4
+

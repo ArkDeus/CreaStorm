@@ -3,6 +3,8 @@ var socket = io('/BoardService');
 var globalTab;
 var currentIndex = 0;
 var nbDisplayedElems = 0;
+var nbPages = 0;
+var currentPage = 0;
 
 socket.on('goRight', function () {
     displayMedias("right");
@@ -28,6 +30,7 @@ socket.on('showFullScreen', function (url, type) {
     } else if (type == "video") {
         var video = document.getElementById("fullscreenvideo");
         video.src = url;
+        document.getElementById("audio").pause();
         video.play();
         video.className = (video.videoWidth / video.videoHeight > 16 / 9 ? 'wide' : 'tall');
         cont[1].className += (video.videoWidth / video.videoHeight > 16 / 9 ? ' wide' : ' tall');
@@ -37,7 +40,6 @@ socket.on('showFullScreen', function (url, type) {
 });
 
 socket.on('closeFullScreen', function () {
-    document.getElementById("audio").pause();
     document.getElementById("fullscreenvideo").pause();
     $('#myModal').collapse("toggle");
 });
@@ -47,7 +49,20 @@ function displayMedias(navigation) {
     var startIndex;
     var endIndex;
 
+    // if ((currentIndex + 6) < globalTab.length) {
+    //     console.log("afficher fleche droite");
+    //     document.getElementById("rightarrow").hidden = false;
+    // } else {
+    //     document.getElementById("rightarrow").hidden = true;
+    // }
+    // if ((currentIndex - nbDisplayedElems) >= 0) {
+    //     document.getElementById("leftarrow").hidden = false;
+    // } else {
+    //     document.getElementById("leftarrow").hidden = true;
+    // }
+
     if (navigation == "right") {
+        console.log("right : currentIndex " + currentIndex);
         if (currentIndex == globalTab.length) {
             return;
         }
@@ -61,21 +76,37 @@ function displayMedias(navigation) {
             console.log("nb elems : " + nbDisplayedElems);
         }
         endIndex = currentIndex;
+        console.log("right : currentIndex " + currentIndex);
+        currentPage++;
     } else if (navigation == "left") {
-        console.log("currentIndex " + currentIndex);
+        console.log("left : currentIndex " + currentIndex);
         if ((currentIndex - nbDisplayedElems) <= 0) {
-            console.log("fin fonction");
             return;
         }
         endIndex = (currentIndex - nbDisplayedElems);
-        currentIndex = endIndex - 6;
-
-        if (currentIndex < 0) {
-            currentIndex = 0;
+        currentIndex = endIndex;
+        startIndex = endIndex - 6;
+        nbDisplayedElems = 6;
+        if (startIndex < 0) {
+            startIndex = 0;
+            nbDisplayedElems = endIndex;
         }
-        startIndex = currentIndex;
+        // startIndex = currentIndex;
+        console.log("left : currentIndex " + currentIndex);
+        currentPage--;
     }
-
+    console.log("current page = " + currentPage + " et nbPages = " + nbPages);
+    if (currentPage <= 1) {
+        document.getElementById("leftarrow").hidden = true;
+    } else {
+        document.getElementById("leftarrow").hidden = false;
+    }
+    if (currentPage >= nbPages) {
+        document.getElementById("rightarrow").hidden = true;
+    } else {
+        document.getElementById("rightarrow").hidden = false;
+    }
+    
 
     $('.media').remove();
     console.log("start " + startIndex + " end " + endIndex);
@@ -101,18 +132,21 @@ function displayMedias(navigation) {
 
 socket.on('tag', function (tab) {
     globalTab = tab;
-
+    nbPages = Math.ceil(globalTab.length/6);
+    console.log("il y aura nbPages : " + nbPages);
     currentIndex = 0;
+    currentPage = 0;
     $('.media').remove();
     if (globalTab.length == 1) {
         var container = document.getElementsByClassName("mediacontainer")[0];
+        container.innerHTML = "";
         var div = document.createElement("div");
         div.className = "mediafull";
         if (globalTab[0].type.includes("image")) {
             var img = document.createElement("img");
             img.src = globalTab[0].url;
             div.appendChild(img);
-        } else if (globalTab[i].type.includes("video")) {
+        } else if (globalTab[0].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[0].url;
             video.play();

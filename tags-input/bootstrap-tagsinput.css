@@ -4,6 +4,7 @@
   color: #555;
   cursor: text;
   width: 100%;
+  border: 1px solid #0b3142;
 }
 .bootstrap-tagsinput input {
   border: none;

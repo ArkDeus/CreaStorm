@@ -41,10 +41,9 @@ app.post('/DeviceService', function (req, res) {
 
     // specify that we want to allow the user to upload multiple files in a single request
     form.multiples = true;
-
+    
     // store all uploads in the /uploads directory
     form.imgUploadDir = path.join(__dirname, '/Projects/' + project_name);
-
 
     // every time a file has been uploaded successfully,
     // rename it to it's orignal name
@@ -89,18 +88,17 @@ surface_nsp.on('connection', function (socket) {
     var surface_server = require('./server/surface_server');
     console.log("un client connecté sur le SurfaceService");
 
-    socket.on("getProjectList",function(){
+    socket.on("getProjectList", function () {
         var projectList = surface_server.getAllProjectsName();
-        socket.emit("returnProjectList",projectList);
+        socket.emit("returnProjectList", projectList);
     });
 
-    socket.on("getImagesFromProject",function(projectname){
-        console.log(projectname);
-       var images = surface_server.getAllImages(projectname);
-        socket.emit("returnAllImages",images);
+    socket.on("getImagesFromProject", function (projectname) {
+        var images = surface_server.getAllImages(projectname);
+        socket.emit("returnAllImages", images);
     });
 
-    socket.on("getAllTags",function(projectname){
+    socket.on("getAllTags", function (projectname) {
         var tags = surface_server.getAllTagFromProject(projectname);
         socket.emit("returnAllTags", tags);
     })
@@ -114,38 +112,37 @@ device_nsp.on('connection', function (socket) {
     console.log("un client connecté sur le DeviceService");
     var device_server = require('./server/device_server');
 
-    socket.on('addToJson', function (message) {
-        var imgData = require('./Projects/' + project_name + '/medias.json');
+    socket.on('addToJson', function (message, project) {
+        var imgData = require('./Projects/' + project + '/medias.json');
         imgData['medias'].push(JSON.parse(message));
         var jsonString = JSON.stringify(imgData);
-        fs.writeFile("./Projects/" + project_name + '/medias.json', jsonString);
+        project_name = project;
+        fs.writeFile("./Projects/" + project + '/medias.json', jsonString);
     });
 
-    socket.on('projectName', function (name) {
-        project_name = name;
+    socket.on('projectName', function (projectName) {
+        project_name = projectName;
     });
+
     // Quand le serveur reçoit un signal de type "message" du client
     // Start manage the projects
     socket.on('getAllProjects', function () {
-        var answer = device_server.getAllProjectsName();
-        socket.emit('returnGetAll', answer);
+        var names = device_server.getAllProjectsName();
+        var jsonList = device_server.getAllProjectsJson();
+        socket.emit('returnGetAll', names, jsonList);
     })
-    socket.on('createProject', function (name, projectJson, projectDirectories) {
-        console.log(projectJson);
-        console.log(projectDirectories);
+    socket.on('createProject', function (name, projectJson) {
         var json = String(projectJson);
-        var isCreated = device_server.createProject(name, projectJson, projectDirectories);
+        var isCreated = device_server.createProject(name, projectJson);
         socket.emit('returnCreated', isCreated);
     })
 
     socket.on('getProjectJson', function (project) {
         var projectJson = device_server.getProjectJson(project);
-        console.log(projectJson);
         socket.emit('returnProjectJson', projectJson, project);
     })
     socket.on('getViewProjectJson', function (project) {
         var projectJson = device_server.getProjectJson(project);
-        console.log(projectJson);
         socket.emit('returnViewProjectJson', projectJson, project);
     })
 });

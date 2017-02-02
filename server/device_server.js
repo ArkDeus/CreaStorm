@@ -3,32 +3,31 @@ var filesystem = require("fs");
 
 var projectFolder = "Projects/";
 
+function _createProject(name, projectJson) {
+    try {
+        filesystem.mkdirSync(projectFolder + name);
+        filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function (err) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log('file created');
+            }
+        });
+    } catch (e) {
+        return e;
+    }
+    return true;
+}
+
 function _getAllProjectsName() {
     var result = [];
     var objProjectAndFiles;
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
-        objProjectAndFiles = [listProject[i], _getNbFilesFromProject(listProject[i])];
+        var currentProjectJson = require("./../" + projectFolder + listProject[i] + "/medias.json");
+        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.medias.length];
         result.push(objProjectAndFiles);
-    }
-    return result;
-}
-
-function _createProject(name, projectJson, projectDirectories) {
-    try {
-        filesystem.mkdirSync(projectFolder + name);
-        for (dir in projectDirectories) {
-            filesystem.mkdirSync(projectFolder + name + '/' + projectDirectories[dir]);
-            console.log(projectDirectories[dir]);
-        }
-        console.log(projectJson);
-        console.log(projectDirectories);
-        filesystem.writeFile(projectFolder + name + '/medias.json', projectJson, function (err) {
-            if (err) console.log(err);
-            else console.log('file created');
-        });
-    } catch (e) {
-        return e;
     }
     return result;
 }
@@ -38,14 +37,27 @@ function _getProjectJson(project) {
     return projectJson;
 }
 
+function _getAllProjectsJson() {
+    var result = [];
+    var listProject = filesystem.readdirSync('Projects');
+    for (var i = 0; i < listProject.length; i++) {
+        var json = require('../' + projectFolder + listProject[i] + '/medias.json');
+        result.push(json);
+    }
+    return result;
+}
+
 module.exports = {
+    createProject: function (name, projectJson) {
+        return _createProject(name, projectJson);
+    },
     getAllProjectsName: function () {
         return _getAllProjectsName();
     },
-    createProject: function (name, projectJson, projectDirectories) {
-        return _createProject(name, projectJson, projectDirectories);
-    },
     getProjectJson: function (project) {
         return _getProjectJson(project);
+    },
+    getAllProjectsJson: function () {
+        return _getAllProjectsJson();
     }
 };

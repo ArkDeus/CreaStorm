@@ -18,16 +18,6 @@ function _getAllProjectsName() {
     return result;
 }
 
-function _getNbFilesFromProject(name) {
-    try {
-        return filesystem.readdirSync(projectFolder + name).length;
-    } catch (e) {
-        return e;
-    }
-}
-
-
-
 function _filterProjectMedias(ext, tags) {
     var projectJsonFile = require("./../" + projectFolder + projectName + "/medias.json");
     var result = [];
