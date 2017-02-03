@@ -81,6 +81,25 @@ app.get('/BoardService', function (req, res) {
     res.sendFile(__dirname + '/client/board_client.html');
 });
 
+
+/** SURFACE SERVICE
+ * ── ── ── ── ── ██ ██ ██ ██ ██ ██ ── ── ── ── ──
+ ── ── ── ██ ██ ██ ▓▓ ░░ ░░ ▓▓ ██ ██ ██ ── ── ──
+ ── ── ██ ██ ▓▓ ▓▓ ▓▓ ░░ ░░ ▓▓ ▓▓ ▓▓ ██ ██ ── ──
+ ── ██ ██ ░░ ▓▓ ▓▓ ░░ ░░ ░░ ░░ ▓▓ ▓▓ ░░ ██ ██ ──
+ ── ██ ▓▓ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ▓▓ ██ ──
+ ██ ██ ▓▓ ▓▓ ░░ ░░ ▓▓ ▓▓ ▓▓ ▓▓ ░░ ░░ ▓▓ ▓▓ ██ ██
+ ██ ▓▓ ▓▓ ▓▓ ░░ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ░░ ▓▓ ▓▓ ▓▓ ██
+ ██ ▓▓ ▓▓ ▓▓ ░░ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ░░ ▓▓ ▓▓ ▓▓ ██
+ ██ ▓▓ ▓▓ ░░ ░░ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ▓▓ ░░ ░░ ▓▓ ▓▓ ██
+ ██ ░░ ░░ ░░ ░░ ░░ ▓▓ ▓▓ ▓▓ ▓▓ ░░ ░░ ░░ ░░ ░░ ██
+ ██ ░░ ░░ ██ ██ ██ ██ ██ ██ ██ ██ ██ ██ ░░ ░░ ██
+ ██ ██ ██ ██ ░░ ░░ ██ ░░ ░░ ██ ░░ ░░ ██ ██ ██ ██
+ ── ██ ██ ░░ ░░ ░░ ██ ░░ ░░ ██ ░░ ░░ ░░ ██ ██ ──
+ ── ── ██ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ██ ── ──
+ ── ── ██ ██ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ██ ██ ── ──
+ ── ── ── ██ ██ ██ ██ ██ ██ ██ ██ ██ ██ ── ── ──
+ */
 // namespace
 // manage the event on the namespace 'SurfaceService'
 var surface_nsp = io.of('/SurfaceService');
@@ -102,8 +121,6 @@ surface_nsp.on('connection', function (socket) {
         var tags = surface_server.getAllTagFromProject(projectname);
         socket.emit("returnAllTags", tags);
     })
-
-
 });
 
 // manage the event on the namespace 'DeviceService'

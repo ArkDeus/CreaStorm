@@ -42,10 +42,23 @@ function _getAllProjectsName() {
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
         var currentProjectJson = require("./../" + projectFolder + listProject[i] + "/medias.json");
-        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.medias.length];
+        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.iconUrl];
         result.push(objProjectAndFiles);
     }
     return result;
+}
+
+function _getProjectsAndIcon(){
+    var result = [];
+    var objProjectAndFiles;
+    var listProject = filesystem.readdirSync('Projects');
+    for (var i = 0; i < listProject.length; i++) {
+        var currentProjectJson = require("./../" + projectFolder + listProject[i] + "/medias.json");
+        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.iconUrl];
+        result.push(objProjectAndFiles);
+    }
+    return result;
+
 }
 
 function _getProjectJson(project) {
@@ -67,6 +80,7 @@ function _getAllImages(project) {
 
 function _getAllTags(project) {
     var projectJson = _getProjectJson(project);
+    return projectJson.tags;
 }
 
 module.exports = {
