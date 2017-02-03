@@ -19,6 +19,8 @@ var tagFilterDiv, listSelectedTag = [];
 
 var remoteControler, hammerControler, playButton, pauseButton;
 
+var layoutSelect;
+
 var selectedIndex, resultMedias = [];
 
 socket.on('selectedProject', function (name) {
@@ -32,6 +34,8 @@ socket.on('selectedProject', function (name) {
 	filterControl();
 
 	remoteControl();
+
+	layoutSelection();
 });
 
 socket.on('projectTag', function (result) {
@@ -167,6 +171,8 @@ window.onload = function () {
 	playButton = document.getElementById('control-play');
 	pauseButton = document.getElementById('control-pause');
 
+	layoutSelect = document.getElementById('selection-layout');
+
 	socket.emit('getProjectName');
 };
 
@@ -300,6 +306,20 @@ function remoteControl() {
 		}
 	});
 };
+
+function layoutSelection() {
+	layoutSelect.onclick = function (event) {
+		for (var i = 0; i < this.children.length; i++) {
+			for (var j = 0; j < this.children[i].children.length; j++) {
+				if (this.children[i].children[j].firstElementChild == event.target) {
+					this.children[i].children[j].firstElementChild.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+				} else {
+					this.children[i].children[j].firstElementChild.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
+				}
+			}
+		}
+	};
+}
 
 function controlMedia() {
 	if (isPlaying) {
