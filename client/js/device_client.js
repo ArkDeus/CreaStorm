@@ -10,7 +10,6 @@ var fileInput = document.querySelector('#fileInput'),
     imgHeight,
     projectsList = [],
     projectsJsonList = [],
-    menu = document.getElementById('menu'),
     tagsList,
     project,
     projectJson,
@@ -34,10 +33,6 @@ window.onload = function () {
 
 function getProjectJson(project) {
     socket.emit('getProjectJson', project);
-}
-
-function getViewProjectJson(project) {
-    socket.emit('getViewProjectJson', project);
 }
 
 socket.on('returnProjectJson', function (answer, project) {
@@ -85,6 +80,7 @@ function displayProjectsImages(project) {
             currentMedia.setAttribute('controls', 'controls');
         }
 
+        currentMedia.className = 'col-xs-12 col-md-6';
         currentMedia.src = 'Projects/' + json.name + '/' + medias[i].url;
 
 
@@ -104,6 +100,7 @@ function displayTags(values, span) {
     while (span.firstChild) {
         span.removeChild(span.firstChild);
     }
+
     for (tag in values) {
         var newTag = document.createElement('p');
         newTag.innerHTML = values[tag];
@@ -125,7 +122,7 @@ function pickTag(id) {
     }
 }
 
-menu.onclick = function (event) {
+/*menu.onclick = function (event) {
     var sectionToShow = "";
     for (var i = 0; i < this.children.length; i++) {
         sectionToShow = this.children[i].firstChild.attributes.getNamedItem('href').value.slice(1);
@@ -144,7 +141,7 @@ menu.onclick = function (event) {
     if (window.innerWidth < 768) {
         $('#myNavbar').collapse("toggle");
     }
-}
+}*/
 
 
 //crée un nouveau projet
