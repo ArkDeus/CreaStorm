@@ -124,6 +124,11 @@ socket.on('changelayout1', function() {
     document.getElementById("layout1").style += "display: flex;";
 });
 
+socket.on('changelayout0', function() {
+    document.getElementById("layout0").style += "display: flex;";
+    document.getElementById("layout1").style += "display: none;";
+});
+
 socket.on('tag', function (tab, indexLayout) {
     console.log("voici l'index du layout : " + indexLayout);
     globalTab = tab;
