@@ -41,7 +41,7 @@ socket.on('showFullScreen', function (url, type) {
 
 socket.on('closeFullScreen', function () {
     document.getElementById("fullscreenvideo").pause();
-    $('#myModal').collapse("toggle");
+    $('#myModal').collapse("hide");
 });
 
 function displayMedias(navigation) {

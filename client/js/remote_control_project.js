@@ -2,6 +2,8 @@ var socket = io('/RemoteControl/Manager');
 
 var onFullScreen = false;
 var isPlaying = false;
+var videoPlaying = false;
+var audioRunning = false;
 var historyManager = 0;
 var count = 0;
 
@@ -69,6 +71,7 @@ socket.on("resultMedias", function (result) {
 			onFullScreen = false;
 			socket.emit('closeFullScreen');
 			this.style.display = "none";
+			controlMedia();
 		}
 	}
 
@@ -97,9 +100,13 @@ socket.on("resultMedias", function (result) {
 			btn.innerHTML = "play music";
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
-				socket.emit('playAudio', this.value);
-				isPlaying = true;
-				controlMedia();
+				if (!videoPlaying) {
+					socket.emit('playAudio', this.value);
+					videoPlaying = false;
+					audioRunning = true;
+					isPlaying = true;
+					controlMedia();
+				}
 			}
 			galleryAudioDiv.appendChild(btn);
 		} else {
@@ -113,6 +120,7 @@ socket.on("resultMedias", function (result) {
 				selectedIndex = this.id;
 				buttonCloseModal.style.display = "block";
 				socket.emit('playVideo', this.value);
+				videoPlaying = true;
 				isPlaying = true;
 				controlMedia();
 			}
@@ -158,8 +166,6 @@ window.onload = function () {
 	hammerControler = new Hammer(remoteControler);
 	playButton = document.getElementById('control-play');
 	pauseButton = document.getElementById('control-pause');
-	playButton.style.opacity = 0.5;
-	pauseButton.style.opacity = 0.5;
 
 	socket.emit('getProjectName');
 };
@@ -274,6 +280,9 @@ function remoteControl() {
 				if (onFullScreen) {
 					selectedIndex = (++selectedIndex) % resultMedias.length;
 					(resultMedias[selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+					videoPlaying = (resultMedias[selectedIndex][1] == 'video');
+					isPlaying = videoPlaying;
+					controlMedia();
 				} else {
 					socket.emit('goRight');
 				}
@@ -281,6 +290,9 @@ function remoteControl() {
 				if (onFullScreen) {
 					if (selectedIndex == 0) selectedIndex = resultMedias.length;
 					(resultMedias[--selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+					videoPlaying = (resultMedias[selectedIndex][1] == 'video');
+					isPlaying = videoPlaying;
+					controlMedia();
 				} else {
 					socket.emit('goLeft');
 				}
@@ -291,30 +303,60 @@ function remoteControl() {
 
 function controlMedia() {
 	if (isPlaying) {
-		pauseButton.style.opacity = 1;
-		pauseButton.onclick = function () {
-			if (!onFullScreen) {
-				socket.emit('pauseInAudio');
-			} else {
-				socket.emit('pauseInVideo');
+		if (onFullScreen) {
+			pauseButton.style.opacity = 1;
+			pauseButton.onclick = function () {
+				if (videoPlaying) {
+					socket.emit('pauseInVideo');
+				} else {
+					socket.emit('pauseInAudio');
+				}
+				isPlaying = false;
+				controlMedia();
 			}
-			controlMedia();
+			playButton.style.opacity = 0.5;
+			playButton.onclick = "";
+		} else {
+			if (audioRunning) {
+				pauseButton.style.opacity = 1;
+				pauseButton.onclick = function () {
+					socket.emit('pauseInAudio');
+					isPlaying = false;
+					controlMedia();
+				}
+				playButton.style.opacity = 0.5;
+				playButton.onclick = "";
+			} else {
+				playButton.style.opacity = 0.5;
+				playButton.onclick = "";
+				pauseButton.style.opacity = 0.5;
+				pauseButton.onclick = "";
+			}
 		}
-		playButton.style.opacity = 0.5;
-		playButton.onclick = "";
-		isPlaying = false;
 	} else {
-		playButton.style.opacity = 1;
-		playButton.onclick = function () {
-			if (!onFullScreen) {
-				socket.emit('playInAudio');
-			} else {
-				socket.emit('playInVideo');
+		if (onFullScreen) {
+			playButton.style.opacity = 1;
+			playButton.onclick = function () {
+				if (videoPlaying) {
+					socket.emit('playInVideo');
+				} else {
+					socket.emit('playInAudio');
+				}
+				isPlaying = true;
+				controlMedia();
 			}
-			controlMedia();
+			pauseButton.style.opacity = 0.5;
+			pauseButton.onclick = "";
+		} else {
+			playButton.style.opacity = 1;
+			playButton.onclick = function () {
+				socket.emit('playInAudio');
+				isPlaying = true;
+				controlMedia();
+			}
+			pauseButton.style.opacity = 0.5;
+			pauseButton.onclick = "";
+
 		}
-		pauseButton.style.opacity = 0.5;
-		pauseButton.onclick = "";
-		isPlaying = true;
 	}
 }

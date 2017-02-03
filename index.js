@@ -165,7 +165,8 @@ remote_control_nsp.on('connection', function (socket) {
     // End manage the projects
 
     socket.on('clearBoard', function () {
-        board_nsp.emit('clearBoard');
+        board_nsp.emit('closeFullScreen');
+        board_nsp.emit('tag', []);
     });
 });
 
@@ -188,6 +189,7 @@ remote_control_mng_nsp.on('connection', function (socket) {
     socket.on('filterMedias', function (extension, tags) {
         var answer = remote_server.filterProjectMedias(extension, tags);
         socket.emit("resultMedias", answer);
+        board_nsp.emit('closeFullScreen');
         board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer));
 
     });
@@ -195,11 +197,9 @@ remote_control_mng_nsp.on('connection', function (socket) {
 
     // manage click image
     socket.on('showFullScreen', function (image) {
-        console.log("the display will show : " + image);
         board_nsp.emit('showFullScreen', image, 'image');
     });
     socket.on('closeFullScreen', function () {
-        console.log("close the full screen mode");
         board_nsp.emit('closeFullScreen');
     });
 
@@ -227,11 +227,9 @@ remote_control_mng_nsp.on('connection', function (socket) {
 
     // Start remote control
     socket.on('goRight', function () {
-        console.log('go right');
         board_nsp.emit('goRight');
     });
     socket.on('goLeft', function () {
-        console.log('go left');
         board_nsp.emit('goLeft');
     });
 });
