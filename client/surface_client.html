@@ -13,19 +13,17 @@
 
     <body>
 
-    <h1>CreaStorm Surface</h1>
-
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Choose your project :
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="projectListDropdown">
-        </ul>
-    </div>
-    <div id="tags"></div>
-
+    <h1>CreaStorm Surface - Liste des projets</h1>
+    <div id="projectSelector"></div>
     <div id="workbench"></div>
+
+
+    <template id="projectTemplate">
+        <div class="project">
+        <img src=""/>
+        <p></p>
+        </div>
+    </template>
 
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
