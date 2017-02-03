@@ -119,12 +119,13 @@ function displayMedias(navigation, indexLayout) {
 }
 
 
-socket.on('changelayout', function() {
-    document.getElementById("layout0").hidden = !document.getElementById("layout0").hidden;
-    document.getElementById("layout1").hidden = !document.getElementById("layout1").hidden;
+socket.on('changelayout1', function() {
+    document.getElementById("layout0").style += "display: none;";
+    document.getElementById("layout1").style += "display: flex;";
 });
 
 socket.on('tag', function (tab, indexLayout) {
+    console.log("voici l'index du layout : " + indexLayout);
     globalTab = tab;
     nbPages = Math.ceil(globalTab.length/6);
     console.log("il y aura nbPages : " + nbPages);
