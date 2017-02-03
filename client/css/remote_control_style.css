@@ -23,10 +23,18 @@
   margin: 10px;
 }
 
-.panel-body > button.active {
+.panel-body > button.active, .panel-body > button.active:focus {
   background-color: #428bca;
   border-color: royalblue;
   color: white;
+  outline: 0;
+}
+
+.panel-body > button:focus {
+  outline: 0;
+  background-color: white;
+  border-color: rgb(204, 204, 204);
+  color: black;
 }
 
 /* Rules for sizing the icon. */
