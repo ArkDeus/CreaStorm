@@ -6,6 +6,7 @@ var videoPlaying = false;
 var audioRunning = false;
 var historyManager = 0;
 var count = 0;
+var selectedLayout = 0;
 
 var projectName, projectNameTitle;
 
@@ -172,6 +173,9 @@ window.onload = function () {
 	pauseButton = document.getElementById('control-pause');
 
 	layoutSelect = document.getElementById('selection-layout');
+	document.getElementById("zoneSelected").oninput = function () {
+		selectedLayout = this.value;
+	}
 
 	socket.emit('getProjectName');
 };
@@ -276,7 +280,7 @@ function extToFilter() {
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
-	socket.emit('filterMedias', extTab, listSelectedTag);
+	socket.emit('filterMedias', extTab, listSelectedTag, selectedLayout);
 }
 
 function remoteControl() {
@@ -290,7 +294,7 @@ function remoteControl() {
 					isPlaying = videoPlaying;
 					controlMedia();
 				} else {
-					socket.emit('goRight');
+					socket.emit('goRight', selectedLayout);
 				}
 			} else {
 				if (onFullScreen) {
@@ -300,7 +304,7 @@ function remoteControl() {
 					isPlaying = videoPlaying;
 					controlMedia();
 				} else {
-					socket.emit('goLeft');
+					socket.emit('goLeft', selectedLayout);
 				}
 			}
 		}
@@ -311,10 +315,22 @@ function layoutSelection() {
 	layoutSelect.onclick = function (event) {
 		for (var i = 0; i < this.children.length; i++) {
 			for (var j = 0; j < this.children[i].children.length; j++) {
-				if (this.children[i].children[j].firstElementChild == event.target) {
-					this.children[i].children[j].firstElementChild.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+				var current = this.children[i].children[j].firstElementChild;
+				if (current == event.target) {
+					current.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+					if (current.id == "layout0") {
+						selectedLayout = 0;
+						document.getElementById('zoneSelection').style.display = "none";
+						socket.emit('useLayout0');
+					}
+					if (current.id == "layout2") {
+						selectedLayout = 1;
+						document.getElementById("zoneSelected").value = 1;
+						document.getElementById('zoneSelection').style.display = "block";
+						socket.emit("useLayout2");
+					}
 				} else {
-					this.children[i].children[j].firstElementChild.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
+					current.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
 				}
 			}
 		}

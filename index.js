@@ -166,7 +166,11 @@ remote_control_nsp.on('connection', function (socket) {
 
     socket.on('clearBoard', function () {
         board_nsp.emit('closeFullScreen');
-        board_nsp.emit('tag', []);
+        board_nsp.emit('tag', [], 0);
+        board_nsp.emit('tag', [], 1);
+        board_nsp.emit('tag', [], 2);
+        board_nsp.emit('tag', [], 3);
+        board_nsp.emit('audio-stop');
     });
 });
 
@@ -186,11 +190,11 @@ remote_control_mng_nsp.on('connection', function (socket) {
         var answer = remote_server.getAllTagFromProject();
         socket.emit('projectTag', answer);
     });
-    socket.on('filterMedias', function (extension, tags) {
+    socket.on('filterMedias', function (extension, tags, index) {
         var answer = remote_server.filterProjectMedias(extension, tags);
         socket.emit("resultMedias", answer);
         board_nsp.emit('closeFullScreen');
-        board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer));
+        board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer), index);
 
     });
     // End listen filter
@@ -226,11 +230,19 @@ remote_control_mng_nsp.on('connection', function (socket) {
     });
 
     // Start remote control
-    socket.on('goRight', function () {
-        board_nsp.emit('goRight');
+    socket.on('goRight', function (index) {
+        board_nsp.emit('goRight', index);
     });
-    socket.on('goLeft', function () {
-        board_nsp.emit('goLeft');
+    socket.on('goLeft', function (index) {
+        board_nsp.emit('goLeft', index);
+    });
+
+    //Manage layout selection
+    socket.on('useLayout0', function () {
+        board_nsp.emit('changelayout0');
+    });
+    socket.on('useLayout2', function () {
+        board_nsp.emit('changelayout1');
     });
 });
 
