@@ -71,9 +71,7 @@ function _getAllImages(project) {
     var medias = projectJson.medias;
     var images = [];
     for (var i = 0; i < medias.length; i++) {
-        if (medias[i].type.split("/")[0] == 'image') {
-            images.push(medias[i].url);
-        }
+        images.push(medias[i]);
     }
     return images;
 }
