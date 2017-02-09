@@ -71,11 +71,29 @@ function _getAllImages(project) {
     var medias = projectJson.medias;
     var images = [];
     for (var i = 0; i < medias.length; i++) {
-        if (medias[i].type.split("/")[0] == 'image') {
             images.push(medias[i].url);
-        }
     }
     return images;
+}
+
+function _getImageTags(projectAndImage){
+    var projectJson = _getProjectJson(projectAndImage[0]);
+    var medias = projectJson.medias;
+    for (var i=0;i<medias.length;i++) {
+        if(medias[i].url == projectAndImage[1]){
+            return medias[i].tags;
+        }
+    }
+}
+
+function _getImageSize(projectAndImage){
+    var projectJson = _getProjectJson(projectAndImage[0]);
+    var medias = projectJson.medias;
+    for (var i=0;i<medias.length;i++) {
+        if(medias[i].url == projectAndImage[1]){
+            return medias[i].tags;
+        }
+    }
 }
 
 function _getAllTags(project) {
@@ -100,5 +118,8 @@ module.exports = {
     },
     getProjectJson: function (project) {
         return _getProjectJson(project);
+    },
+    getImageTags: function (projectAndImage){
+        return _getImageTags(projectAndImage);
     }
 };
