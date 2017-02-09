@@ -144,8 +144,6 @@ socket.on('tag', function (tab, indexLayout) {
     var container = document.getElementById(indexLayout);
     container.innerHTML = "";
     if (globalTab.length == 1) {
-        // var container = document.getElementById(indexLayout);
-        // container.innerHTML = "";
         var div = document.createElement("div");
         div.className = "mediafull";
         if (globalTab[0].type.includes("image")) {
