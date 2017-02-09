@@ -6,12 +6,12 @@ var nbDisplayedElems = 0;
 var nbPages = 0;
 var currentPage = 0;
 
-socket.on('goRight', function () {
-    displayMedias("right");
+socket.on('goRight', function (indexLayout) {
+    displayMedias("right", indexLayout);
 });
 
-socket.on('goLeft', function () {
-    displayMedias("left");
+socket.on('goLeft', function (indexLayout) {
+    displayMedias("left", indexLayout);
 });
 
 socket.on('showFullScreen', function (url, type) {
@@ -41,25 +41,15 @@ socket.on('showFullScreen', function (url, type) {
 
 socket.on('closeFullScreen', function () {
     document.getElementById("fullscreenvideo").pause();
-    $('#myModal').collapse("toggle");
+    $('#myModal').collapse("hide");
 });
 
-function displayMedias(navigation) {
-    var container = document.getElementsByClassName("mediacontainer")[0];
+function displayMedias(navigation, indexLayout) {
+    // var container = document.getElementsByClassName("mediacontainer")[0];
+    var container = document.getElementById(indexLayout);
+
     var startIndex;
     var endIndex;
-
-    // if ((currentIndex + 6) < globalTab.length) {
-    //     console.log("afficher fleche droite");
-    //     document.getElementById("rightarrow").hidden = false;
-    // } else {
-    //     document.getElementById("rightarrow").hidden = true;
-    // }
-    // if ((currentIndex - nbDisplayedElems) >= 0) {
-    //     document.getElementById("leftarrow").hidden = false;
-    // } else {
-    //     document.getElementById("leftarrow").hidden = true;
-    // }
 
     if (navigation == "right") {
         console.log("right : currentIndex " + currentIndex);
@@ -97,18 +87,18 @@ function displayMedias(navigation) {
     }
     console.log("current page = " + currentPage + " et nbPages = " + nbPages);
     if (currentPage <= 1) {
-        document.getElementById("leftarrow").hidden = true;
+        document.getElementById("leftarrow" + indexLayout).style.display = "none";
     } else {
-        document.getElementById("leftarrow").hidden = false;
+        document.getElementById("leftarrow" + indexLayout).style.display = "block";
     }
     if (currentPage >= nbPages) {
-        document.getElementById("rightarrow").hidden = true;
+        document.getElementById("rightarrow" + indexLayout).style.display = "none";
     } else {
-        document.getElementById("rightarrow").hidden = false;
+        document.getElementById("rightarrow" + indexLayout).style.display = "block";
     }
-    
 
-    $('.media').remove();
+
+    container.innerHTML = "";
     console.log("start " + startIndex + " end " + endIndex);
     for (var i = startIndex; i < endIndex; i++) {
         var div = document.createElement("div");
@@ -130,16 +120,32 @@ function displayMedias(navigation) {
 }
 
 
-socket.on('tag', function (tab) {
+socket.on('changelayout1', function () {
+    document.getElementById("layout0").style.display = "none";
+    document.getElementById("layout1").style.display = "flex";
+});
+
+socket.on('changelayout0', function () {
+    document.getElementById("layout0").style.display = "flex";
+    document.getElementById("layout1").style.display = "none";
+});
+
+socket.on('tag', function (tab, indexLayout) {
+    console.log("voici l'index du layout : " + indexLayout);
     globalTab = tab;
-    nbPages = Math.ceil(globalTab.length/6);
+    nbPages = Math.ceil(globalTab.length / 6);
     console.log("il y aura nbPages : " + nbPages);
     currentIndex = 0;
     currentPage = 0;
-    $('.media').remove();
-    if (globalTab.length == 1) {
-        var container = document.getElementsByClassName("mediacontainer")[0];
+
+    document.getElementById("leftarrow" + indexLayout).style.display = "none";
+    document.getElementById("rightarrow" + indexLayout).style.display = "none";
+
+    var container = document.getElementById(indexLayout);
         container.innerHTML = "";
+    if (globalTab.length == 1) {
+        // var container = document.getElementById(indexLayout);
+        // container.innerHTML = "";
         var div = document.createElement("div");
         div.className = "mediafull";
         if (globalTab[0].type.includes("image")) {
@@ -156,7 +162,7 @@ socket.on('tag', function (tab) {
 
         container.appendChild(div);
     } else {
-        displayMedias("right");
+        displayMedias("right", indexLayout);
     }
 });
 

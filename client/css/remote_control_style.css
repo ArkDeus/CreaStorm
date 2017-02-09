@@ -1,3 +1,8 @@
+.projectName{
+  font: normal 1em verdana;
+  padding: 15px 0 0 5px;
+}
+
 #remote-control{
   background-color: lightgrey; 
   height: 80%;
@@ -9,6 +14,29 @@
   width: 140px;
   align-items: stretch;
 }
+
+#closeFullScreen{
+  display: none; 
+  position: fixed; 
+  right: 0;
+  bottom: 0; 
+  margin: 10px;
+}
+
+.panel-body > button.active, .panel-body > button.active:focus {
+  background-color: #428bca;
+  border-color: royalblue;
+  color: white;
+  outline: 0;
+}
+
+.panel-body > button:focus {
+  outline: 0;
+  background-color: white;
+  border-color: rgb(204, 204, 204);
+  color: black;
+}
+
 
 /* Rules for sizing the icon. */
 .material-icons.md-50 { font-size: 50px; }

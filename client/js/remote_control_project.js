@@ -1,14 +1,16 @@
 var socket = io('/RemoteControl/Manager');
 
 var onFullScreen = false;
+var isPlaying = false;
+var videoPlaying = false;
+var audioRunning = false;
 var historyManager = 0;
 var count = 0;
+var selectedLayout = 0;
 
 var projectName, projectNameTitle;
 
 var tabbarMenu;
-
-var getProjectsButton, displayListProject, listProjects;
 
 var disAll, disNot;
 var disGif, disJpg, disPng, disMp3, disWma, disFlac, disWav, disMp4, disWmv, disAvi, disMkv;
@@ -16,7 +18,11 @@ var disImages, disVideos, disMusics;
 
 var tagFilterDiv, listSelectedTag = [];
 
-var remoteControler, hammerControler;
+var remoteControler, hammerControler, playButton, pauseButton;
+
+var layoutSelect;
+
+var selectedIndex, resultMedias = [];
 
 socket.on('selectedProject', function (name) {
 	projectName = name;
@@ -29,6 +35,8 @@ socket.on('selectedProject', function (name) {
 	filterControl();
 
 	remoteControl();
+
+	layoutSelection();
 });
 
 socket.on('projectTag', function (result) {
@@ -58,45 +66,71 @@ socket.on("resultMedias", function (result) {
 	var galleryImageDiv = document.getElementById('galleryImage');
 	var galleryAudioDiv = document.getElementById('galleryAudio');
 	var galleryVideoDiv = document.getElementById('galleryVideo');
+	var buttonCloseModal = document.getElementById('closeFullScreen');
 	galleryImageDiv.innerHTML = "";
 	galleryAudioDiv.innerHTML = "";
 	galleryVideoDiv.innerHTML = "";
+
+	if (result.length > 0) {
+		buttonCloseModal.onclick = function () {
+			onFullScreen = false;
+			socket.emit('closeFullScreen');
+			this.style.display = "none";
+			controlMedia();
+		}
+	}
+
+	var index = 0;
+	resultMedias = [];
 
 	for (var i = 0; i < result.length; i++) {
 		var type = result[i].type.split("/")[0];
 		if (type === "image") {
 			var img = document.createElement("img");
+			img.id = index++;
 			img.src = result[i].url;
 			img.alt = result[i].url;
 			img.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 			img.onclick = function () {
-				onFullScreen = !onFullScreen;
-				if (onFullScreen) {
-					socket.emit('showFullScreen', this.alt);
-				} else {
-					socket.emit('closeFullScreen');
-				}
+				onFullScreen = true;
+				selectedIndex = this.id;
+				socket.emit('showFullScreen', this.alt);
+				buttonCloseModal.style.display = "block";
 			}
 			galleryImageDiv.appendChild(img);
+			resultMedias.push([result[i].url, 'image']);
 		} else if (type === 'audio') {
 			var btn = document.createElement("button");
 			btn.value = result[i].url;
 			btn.innerHTML = "play music";
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
-				socket.emit('playAudio', this.value);
+				if (!videoPlaying) {
+					socket.emit('playAudio', this.value);
+					videoPlaying = false;
+					audioRunning = true;
+					isPlaying = true;
+					controlMedia();
+				}
 			}
 			galleryAudioDiv.appendChild(btn);
 		} else {
 			var btn = document.createElement("button");
+			btn.id = index++;
 			btn.value = result[i].url;
 			btn.innerHTML = "play video";
 			btn.style = "margin:15px;";
 			btn.onclick = function () {
 				onFullScreen = true;
+				selectedIndex = this.id;
+				buttonCloseModal.style.display = "block";
 				socket.emit('playVideo', this.value);
+				videoPlaying = true;
+				isPlaying = true;
+				controlMedia();
 			}
 			galleryVideoDiv.appendChild(btn);
+			resultMedias.push([result[i].url, 'video']);
 		}
 	}
 });
@@ -135,6 +169,13 @@ window.onload = function () {
 
 	remoteControler = document.getElementById('remote-control');
 	hammerControler = new Hammer(remoteControler);
+	playButton = document.getElementById('control-play');
+	pauseButton = document.getElementById('control-pause');
+
+	layoutSelect = document.getElementById('selection-layout');
+	document.getElementById("zoneSelected").oninput = function () {
+		selectedLayout = this.value;
+	}
 
 	socket.emit('getProjectName');
 };
@@ -239,17 +280,119 @@ function extToFilter() {
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
 
-	socket.emit('filterMedias', extTab, listSelectedTag);
+	socket.emit('filterMedias', extTab, listSelectedTag, selectedLayout);
 }
 
 function remoteControl() {
 	hammerControler.on("swipeleft swiperight", function (ev) {
 		if (projectName.length > 0) {
 			if (ev.type === 'swipeleft') {
-				socket.emit('goRight');
+				if (onFullScreen) {
+					selectedIndex = (++selectedIndex) % resultMedias.length;
+					(resultMedias[selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+					videoPlaying = (resultMedias[selectedIndex][1] == 'video');
+					isPlaying = videoPlaying;
+					controlMedia();
+				} else {
+					socket.emit('goRight', selectedLayout);
+				}
 			} else {
-				socket.emit('goLeft');
+				if (onFullScreen) {
+					if (selectedIndex == 0) selectedIndex = resultMedias.length;
+					(resultMedias[--selectedIndex][1] == 'image' ? socket.emit('showFullScreen', resultMedias[selectedIndex % resultMedias.length][0]) : socket.emit('playVideo', resultMedias[selectedIndex % resultMedias.length][0]));
+					videoPlaying = (resultMedias[selectedIndex][1] == 'video');
+					isPlaying = videoPlaying;
+					controlMedia();
+				} else {
+					socket.emit('goLeft', selectedLayout);
+				}
 			}
 		}
 	});
 };
+
+function layoutSelection() {
+	layoutSelect.onclick = function (event) {
+		for (var i = 0; i < this.children.length; i++) {
+			for (var j = 0; j < this.children[i].children.length; j++) {
+				var current = this.children[i].children[j].firstElementChild;
+				if (current == event.target) {
+					current.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+					if (current.id == "layout0") {
+						selectedLayout = 0;
+						document.getElementById('zoneSelection').style.display = "none";
+						socket.emit('useLayout0');
+					}
+					if (current.id == "layout2") {
+						selectedLayout = 1;
+						document.getElementById("zoneSelected").value = 1;
+						document.getElementById('zoneSelection').style.display = "block";
+						socket.emit("useLayout2");
+					}
+				} else {
+					current.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
+				}
+			}
+		}
+	};
+}
+
+function controlMedia() {
+	if (isPlaying) {
+		if (onFullScreen) {
+			pauseButton.style.opacity = 1;
+			pauseButton.onclick = function () {
+				if (videoPlaying) {
+					socket.emit('pauseInVideo');
+				} else {
+					socket.emit('pauseInAudio');
+				}
+				isPlaying = false;
+				controlMedia();
+			}
+			playButton.style.opacity = 0.5;
+			playButton.onclick = "";
+		} else {
+			if (audioRunning) {
+				pauseButton.style.opacity = 1;
+				pauseButton.onclick = function () {
+					socket.emit('pauseInAudio');
+					isPlaying = false;
+					controlMedia();
+				}
+				playButton.style.opacity = 0.5;
+				playButton.onclick = "";
+			} else {
+				playButton.style.opacity = 0.5;
+				playButton.onclick = "";
+				pauseButton.style.opacity = 0.5;
+				pauseButton.onclick = "";
+			}
+		}
+	} else {
+		if (onFullScreen) {
+			playButton.style.opacity = 1;
+			playButton.onclick = function () {
+				if (videoPlaying) {
+					socket.emit('playInVideo');
+				} else {
+					socket.emit('playInAudio');
+				}
+				isPlaying = true;
+				controlMedia();
+			}
+			pauseButton.style.opacity = 0.5;
+			pauseButton.onclick = "";
+		} else {
+			playButton.style.opacity = 1;
+			playButton.onclick = function () {
+				socket.emit('playInAudio');
+				isPlaying = true;
+				controlMedia();
+			}
+			pauseButton.style.opacity = 0.5;
+			pauseButton.onclick = "";
+
+		}
+	}
+}

@@ -12,7 +12,7 @@ function _getAllProjectsName() {
     var listProject = filesystem.readdirSync('Projects');
     for (var i = 0; i < listProject.length; i++) {
         var currentProjectJson = require("./../" + projectFolder + listProject[i] + "/medias.json");
-        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.medias.length];
+        objProjectAndFiles = [currentProjectJson.name, currentProjectJson.medias.length, "./../" + projectFolder + listProject[i] + "/" + currentProjectJson.iconUrl];
         result.push(objProjectAndFiles);
     }
     return result;

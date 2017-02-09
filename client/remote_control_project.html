@@ -31,7 +31,8 @@
         <ul id="tabbar-menu" class="nav nav-tabs">
             <li role="presentation" class="active"><a href="#filter">Filter</a></li>
             <li role="presentation"><a href="#gallery">Gallery</a></li>
-            <li role="presentation"><a href="#remote-control">Remote control</a></li>
+            <li role="presentation"><a href="#remote-control">Remote</a></li>
+            <li role="presentation"><a href="#layout-manager">Layout</a></li>
         </ul>
       <div class="row">
         <div class="col-xs-10 col-xs-offset-1 main">
@@ -256,7 +257,7 @@
                         </div>
                     </div>
                     <!-- End filter by type -->
-
+                    <!-- Start filter by tag -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <a data-toggle="collapse" data-target="#tag-filter"><span style="margin-left: 5px"> Filter by tag</span>
@@ -268,6 +269,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- End filter by tag -->
                 </div>
             </div>
 
@@ -275,14 +277,53 @@
                 <div id="galleryImage"></div>
                 <div id="galleryAudio"></div>
                 <div id="galleryVideo"></div>
+                <button id="closeFullScreen" class="btn btn-default">X</button>
             </div>
 
             <div id="remote-control" hidden>
                 <h3 style="text-align: center; padding: 40% 5%;">Swipe right or left no navigate in the carousel</h3>
                 <div id="player-control">
-                        <i id="control-play" class="material-icons md-light md-50">play_circle_filled</i>
-                        <i id="control-pause" class="material-icons md-light md-50">pause_circle_filled</i>
+                        <i id="control-play" class="material-icons md-light md-50" style="opacity: 0.5;">play_circle_filled</i>
+                        <i id="control-pause" class="material-icons md-light md-50" style="opacity: 0.5;">pause_circle_filled</i>
                 </div>
+            </div>
+
+            <div id="layout-manager" hidden>
+                <div class="panel-group">
+                    <!-- Start layout alignment -->
+                    <div class="panel panel-default">
+                        <div class=" panel-heading">
+                            <span>Layout selection</span>
+                        </div>
+                        <div id="selection-layout" class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <img class="img-responsive" id="layout0" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" src="./../images/1.png"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <img class="img-responsive" id="layout1" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);" src="./../images/1-1.png"/>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <img class="img-responsive" id="layout2" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);" src="./../images/1-2.png"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <img class="img-responsive" id="layout3" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);" src="./../images/2-1.png"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="zoneSelection" class="panel panel-default" style="display: none;">
+                        <div class=" panel-heading">
+                            <span>Zone selection</span>
+                        </div>
+                        <div class="panel-body">
+                            <input id="zoneSelected" type="range" min="1" max="3" step="1"/>
+                        </div>
+                    </div>
             </div>
       </div>
     </div>

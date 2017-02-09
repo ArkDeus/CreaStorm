@@ -41,7 +41,7 @@ app.post('/DeviceService', function (req, res) {
 
     // specify that we want to allow the user to upload multiple files in a single request
     form.multiples = true;
-    
+
     // store all uploads in the /uploads directory
     form.imgUploadDir = path.join(__dirname, '/Projects/' + project_name);
 
@@ -180,6 +180,15 @@ remote_control_nsp.on('connection', function (socket) {
         remote_server.setProjectName(name);
     });
     // End manage the projects
+
+    socket.on('clearBoard', function () {
+        board_nsp.emit('closeFullScreen');
+        board_nsp.emit('tag', [], 0);
+        board_nsp.emit('tag', [], 1);
+        board_nsp.emit('tag', [], 2);
+        board_nsp.emit('tag', [], 3);
+        board_nsp.emit('audio-stop');
+    });
 });
 
 // manage the event on the namespace 'RemoteControl/Manager'
@@ -198,21 +207,20 @@ remote_control_mng_nsp.on('connection', function (socket) {
         var answer = remote_server.getAllTagFromProject();
         socket.emit('projectTag', answer);
     });
-    socket.on('filterMedias', function (extension, tags) {
+    socket.on('filterMedias', function (extension, tags, index) {
         var answer = remote_server.filterProjectMedias(extension, tags);
         socket.emit("resultMedias", answer);
-        board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer));
+        board_nsp.emit('closeFullScreen');
+        board_nsp.emit('tag', remote_server.getFilterProjectMediasWithoutAudio(answer), index);
 
     });
     // End listen filter
 
     // manage click image
     socket.on('showFullScreen', function (image) {
-        console.log("the display will show : " + image);
         board_nsp.emit('showFullScreen', image, 'image');
     });
     socket.on('closeFullScreen', function () {
-        console.log("close the full screen mode");
         board_nsp.emit('closeFullScreen');
     });
 
@@ -220,20 +228,38 @@ remote_control_mng_nsp.on('connection', function (socket) {
     socket.on('playAudio', function (src) {
         board_nsp.emit('audio', src);
     });
+    socket.on('playInAudio', function () {
+        board_nsp.emit('audio-play');
+    });
+    socket.on('pauseInAudio', function () {
+        board_nsp.emit('audio-pause');
+    });
 
     // manage click video
     socket.on('playVideo', function (video) {
         board_nsp.emit('showFullScreen', video, 'video');
     });
+    socket.on('playInVideo', function () {
+        board_nsp.emit('video-play');
+    });
+    socket.on('pauseInVideo', function () {
+        board_nsp.emit('video-pause');
+    });
 
     // Start remote control
-    socket.on('goRight', function () {
-        console.log('go right');
-        board_nsp.emit('goRight');
+    socket.on('goRight', function (index) {
+        board_nsp.emit('goRight', index);
     });
-    socket.on('goLeft', function () {
-        console.log('go left');
-        board_nsp.emit('goLeft');
+    socket.on('goLeft', function (index) {
+        board_nsp.emit('goLeft', index);
+    });
+
+    //Manage layout selection
+    socket.on('useLayout0', function () {
+        board_nsp.emit('changelayout0');
+    });
+    socket.on('useLayout2', function () {
+        board_nsp.emit('changelayout1');
     });
 });
 

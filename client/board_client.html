@@ -13,32 +13,62 @@
   <!-- Modal -->
   <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width: 100%; height:100%; margin:0;padding:1% 1% 2% 1%">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div id="fullscreenimg-container" class="modal-body">
-          <img id="fullscreenimg" src="" style="margin: 0 auto;" />
+<!-- Modal content-->
+<div class="modal-content">
+  <div id="fullscreenimg-container" class="modal-body">
+    <img id="fullscreenimg" src="" style="margin: 0 auto;" />
+</div>
+<div id="fullscreenvideo-container" class="modal-body">
+  <video id="fullscreenvideo" src="" style="margin: 0 auto;" />
+</div>
+</div>
+</div>
+</div>
+<div id="layout0">
+  <div id="0" class="mediacontainer">
+
+  </div>
+  <div style="position: fixed; right: 0; bottom: 0; width: 200px;">
+  <img id="rightarrow0" src="images/rightarrow.png" style="float: right; width: auto; height: auto; margin-right: 4%; display:none;"/>
+  <img id="leftarrow0" src="images/leftarrow.png" style="float: right; width: auto; height: auto; margin-right: 1%;   display:none;"/>
+  </div>
+</div>
+
+    
+<div id="layout1" class="mediacontainer" style="display: none;">
+
+  <div id="containerlayout1-1" class="col-md-6">
+    <div id="1" style="height:90%; display: flex; flex-wrap: wrap;justify-content: space-between; align-content: space-around;">
+    </div>
+    <img hidden=true id="rightarrow1" src="images/rightarrow.png" style="float: right; width: auto; height: auto; margin-right: 4%;"/>
+    <img hidden=true id="leftarrow1" src="images/leftarrow.png" style="float: right; width: auto; height: auto; margin-right: 1%;"/>
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <div id="containerlayout1-2" class="col-md-12">
+        <div id="2"  style="height:50%; max-height: 50%; display: flex; flex-wrap: wrap;justify-content: space-between; align-content: space-around;">
         </div>
-        <div id="fullscreenvideo-container" class="modal-body">
-          <video id="fullscreenvideo" src="" style="margin: 0 auto;" />
+        <img hidden=true id="rightarrow2" src="images/rightarrow.png" style="float: right; width: auto; height: auto; margin-right: 4%;"/>
+        <img hidden=true id="leftarrow2" src="images/leftarrow.png" style="float: right; width: auto; height: auto; margin-right: 1%;"/>
+      </div>
+      <div id="containerlayout1-3" class="col-md-12"  >
+        <div id="3" style="height:50%; max-height: 50%; display: flex; flex-wrap: wrap;justify-content: space-between; align-content: space-around;">
         </div>
+        <img hidden=true id="rightarrow3" src="images/rightarrow.png" style="float: right; width: auto; height: auto; margin-right: 4%;"/>
+        <img hidden=true id="leftarrow3" src="images/leftarrow.png" style="float: right; width: auto; height: auto; margin-right: 1%;"/>
       </div>
     </div>
   </div>
+</div>
 
+<div id="audiocontainer">
+  <div id="musictitle">
+  </div>
+  <audio id="audio">
+  </audio>
 
-  <div class="mediacontainer">
-  
-  </div>
-  <div id="audiocontainer">
-    <div id="musictitle">
-    </div>
-    <audio id="audio">
-    </audio>
-    <img hidden=true id="rightarrow" src="images/rightarrow.png" style="float: right; width: auto; height: auto; margin-right: 4%;"/>
-    <img hidden=true id="leftarrow" src="images/leftarrow.png" style="float: right; width: auto; height: auto; margin-right: 1%;"/>
-    
-  </div>
-  <!--<div id="navigation">
+</div>
+<!--<div id="navigation">
     
   </div>-->
 </body>
