@@ -258,6 +258,9 @@ remote_control_mng_nsp.on('connection', function (socket) {
     socket.on('useLayout0', function () {
         board_nsp.emit('changelayout0');
     });
+    socket.on('useLayout1', function () {
+        board_nsp.emit('changelayout2');
+    });
     socket.on('useLayout2', function () {
         board_nsp.emit('changelayout1');
     });

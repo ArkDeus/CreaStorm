@@ -119,15 +119,22 @@ function displayMedias(navigation, indexLayout) {
     }
 }
 
+socket.on('changelayout2', function () {
+    document.getElementById("layout0").style.display = "none";
+    document.getElementById("layout1").style.display = "none";
+    document.getElementById("layout2").style.display = "flex";
+});
 
 socket.on('changelayout1', function () {
     document.getElementById("layout0").style.display = "none";
     document.getElementById("layout1").style.display = "flex";
+    document.getElementById("layout2").style.display = "none";
 });
 
 socket.on('changelayout0', function () {
     document.getElementById("layout0").style.display = "flex";
     document.getElementById("layout1").style.display = "none";
+    document.getElementById("layout2").style.display = "none";
 });
 
 socket.on('tag', function (tab, indexLayout) {

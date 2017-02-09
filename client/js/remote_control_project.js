@@ -278,7 +278,7 @@ function extToFilter() {
 	if (disWmv.checked) { extTab.push("x-ms-wmv"); }
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
-
+	console.log("selectedLayout = " + selectedLayout);
 	socket.emit('filterMedias', extTab, listSelectedTag, selectedLayout);
 }
 
@@ -332,7 +332,7 @@ function layoutSelection() {
 						socket.emit("useLayout2");
 					}
 					else if (current.id == "layout1") {
-						selectedLayout = 1;
+						selectedLayout = 4;
 						document.getElementById('selected-layout0').hidden = true;
 						document.getElementById('selected-layout1').hidden = false;
 						document.getElementById('selected-layout2').hidden = true;
@@ -352,7 +352,6 @@ function layoutSelection() {
 
 function zoneSelection() {
 	var zoneSelect, activeLayoutNumber;
-	console.log("plop");
 	document.getElementById("selection-zone").onclick = function (event) {
 		if (event.target.tagName == "H2") {
 			zoneSelect = event.target.parentElement;
