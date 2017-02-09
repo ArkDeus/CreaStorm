@@ -142,7 +142,7 @@ socket.on('tag', function (tab, indexLayout) {
     document.getElementById("rightarrow" + indexLayout).style.display = "none";
 
     var container = document.getElementById(indexLayout);
-        container.innerHTML = "";
+    container.innerHTML = "";
     if (globalTab.length == 1) {
         // var container = document.getElementById(indexLayout);
         // container.innerHTML = "";
@@ -151,14 +151,18 @@ socket.on('tag', function (tab, indexLayout) {
         if (globalTab[0].type.includes("image")) {
             var img = document.createElement("img");
             img.src = globalTab[0].url;
+            img.style.margin = "auto";
             div.appendChild(img);
         } else if (globalTab[0].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[0].url;
             video.play();
             document.getElementById("audio").pause();
+            video.style.margin = "auto";
             div.appendChild(video);
         }
+        div.style.display = "flex";
+        div.style.alignItems = "center";
 
         container.appendChild(div);
     } else {

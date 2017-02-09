@@ -37,6 +37,8 @@ socket.on('selectedProject', function (name) {
 	remoteControl();
 
 	layoutSelection();
+
+	zoneSelection();
 });
 
 socket.on('projectTag', function (result) {
@@ -173,9 +175,6 @@ window.onload = function () {
 	pauseButton = document.getElementById('control-pause');
 
 	layoutSelect = document.getElementById('selection-layout');
-	document.getElementById("zoneSelected").oninput = function () {
-		selectedLayout = this.value;
-	}
 
 	socket.emit('getProjectName');
 };
@@ -320,14 +319,28 @@ function layoutSelection() {
 					current.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 					if (current.id == "layout0") {
 						selectedLayout = 0;
-						document.getElementById('zoneSelection').style.display = "none";
+						document.getElementById('selected-layout0').hidden = false;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = true;
 						socket.emit('useLayout0');
 					}
-					if (current.id == "layout2") {
+					else if (current.id == "layout2") {
 						selectedLayout = 1;
-						document.getElementById("zoneSelected").value = 1;
-						document.getElementById('zoneSelection').style.display = "block";
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = false;
 						socket.emit("useLayout2");
+					}
+					else if (current.id == "layout1") {
+						selectedLayout = 1;
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = false;
+						document.getElementById('selected-layout2').hidden = true;
+						socket.emit("useLayout1");
+					} else {
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = true;
 					}
 				} else {
 					current.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
@@ -335,6 +348,35 @@ function layoutSelection() {
 			}
 		}
 	};
+}
+
+function zoneSelection() {
+	var zoneSelect, activeLayoutNumber;
+	console.log("plop");
+	document.getElementById("selection-zone").onclick = function (event) {
+		if (event.target.tagName == "H2") {
+			zoneSelect = event.target.parentElement;
+		} else {
+			zoneSelect = event.target;
+		}
+		for (var i = 0; i < this.children.length; i++) {
+			if (!this.children[i].hidden) {
+				activeLayoutNumber = i;
+				clearZoneSelection(this.children[i]);
+			}
+		}
+		selectedLayout = parseInt(zoneSelect.id.replace('zone', ''));
+		zoneSelect.className += " selected";
+	};
+}
+
+function clearZoneSelection(element) {
+	for (var i = 0; i < element.children.length; i++) {
+		element.children[i].className = element.children[i].className.replace(' selected', '');
+		if (element.children[i].children.length > 0) {
+			clearZoneSelection(element.children[i]);
+		}
+	}
 }
 
 function controlMedia() {
