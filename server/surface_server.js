@@ -1,6 +1,8 @@
 // to access to the file system to read folder content
 var filesystem = require("fs");
 
+var jq = require('jquery');
+
 var json = "";
 var projectFolder = "Projects/";
 
@@ -81,6 +83,41 @@ function _getAllTags(project) {
     return projectJson.tags;
 }
 
+
+function _removeMediaFromProject(project, media){
+    console.log("Project name: " + project);
+    console.log("Project url: " + media);
+
+    var projectJson = _getProjectJson(project);
+    console.log("Project Json: " +projectJson.toString());
+    var index;
+    for(var i = 0; i < projectJson.length; i++){
+        if(projectJson.url == media){
+            index = i;
+            break;
+        }
+    }
+
+    projectJson.medias.splice(index,1);
+    console.log("Après splice: " +projectJson.medias);
+    filesystem.unlink(projectFolder + project + '/' + media, function(err){
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('file deleted');
+        }
+    });
+    filesystem.writeFile(projectFolder + project + '/medias.json', projectJson, function (err) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('json updated');
+        }
+    });
+}
+
 module.exports = {
     getAllProjectsName: function () {
         return _getAllProjectsName();
@@ -98,5 +135,8 @@ module.exports = {
     },
     getProjectJson: function (project) {
         return _getProjectJson(project);
+    },
+    removeMediaFromProject: function (project, media) {
+        return _removeMediaFromProject(project, media);
     }
 };
