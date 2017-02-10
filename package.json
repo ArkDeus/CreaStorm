@@ -12,7 +12,7 @@
     "express": "^4.14.0",
     "formidable": "^1.0.17",
     "mime": "^1.3.4",
-    "socket.io": "^1.7.2",
+    "socket.io": "1.7.2",
     "tuiomanager": "^1.0.1"
   }
 }

@@ -118,7 +118,7 @@ surface_nsp.on('connection', function (socket) {
     });
 
     socket.on("getAllTags", function (projectname) {
-        var tags = surface_server.getAllTagFromProject(projectname);
+        var tags = surface_server.getAllTags(projectname);
         socket.emit("returnAllTags", tags);
     });
 

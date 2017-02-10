@@ -78,6 +78,26 @@ function _getAllImages(project) {
     return images;
 }
 
+function _getImageTags(projectAndImage){
+    var projectJson = _getProjectJson(projectAndImage[0]);
+    var medias = projectJson.medias;
+    for (var i=0;i<medias.length;i++) {
+        if(medias[i].url == projectAndImage[1]){
+            return medias[i].tags;
+        }
+    }
+}
+
+function _getImageSize(projectAndImage){
+    var projectJson = _getProjectJson(projectAndImage[0]);
+    var medias = projectJson.medias;
+    for (var i=0;i<medias.length;i++) {
+        if(medias[i].url == projectAndImage[1]){
+            return medias[i].tags;
+        }
+    }
+}
+
 function _getAllTags(project) {
     var projectJson = _getProjectJson(project);
     return projectJson.tags;
@@ -138,5 +158,8 @@ module.exports = {
     },
     removeMediaFromProject: function (project, media) {
         return _removeMediaFromProject(project, media);
+    },
+    getImageTags: function (projectAndImage){
+        return _getImageTags(projectAndImage);
     }
 };
