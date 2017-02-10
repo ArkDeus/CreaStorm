@@ -86,7 +86,7 @@ function displayProjectsImages(project) {
 
         var currentImgRow = document.createElement('div');
         currentImgRow.id = medias[i].url;
-        currentImgRow.className = "imgRow col-xs-12 col-md-6 col-md-pull-left";
+        currentImgRow.className = "imgRow col-xs-12 col-md-4 col-md-pull-left";
         currentImgRow.appendChild(currentMedia);
 
         projectImages.appendChild(currentImgRow);
