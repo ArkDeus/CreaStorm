@@ -230,7 +230,9 @@ socket.on("returnGetAll", function (names, jsonList) {
     projectsList = names;
     projectsJsonList = jsonList;
     displayProjectsList();
-
+    if(currentProjectName.innerHTML != ""){
+        displayProjectsImages(currentProjectName.innerHTML);
+    }
     console.log('updated');
 });
 
@@ -349,7 +351,7 @@ button.addEventListener("click", function (event) {
 
 // affiche un retour visuel dès que input:file change
 fileInputButton.addEventListener("change", function (event) {
-    the_return.innerHTML = this.value;
+    the_return.innerHTML = this.value.replace(/^.*[\\\/]/, '');
 });
 
 document.querySelector('#upload').onclick = function () {
