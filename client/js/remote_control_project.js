@@ -102,11 +102,12 @@ socket.on("resultMedias", function (result) {
 			galleryImageDiv.appendChild(img);
 			resultMedias.push([result[i].url, 'image']);
 		} else if (type === 'audio') {
-			var btn = document.createElement("button");
-			btn.value = result[i].url;
-			btn.innerHTML = "play music";
-			btn.style = "margin:15px;";
-			btn.onclick = function () {
+			var re = /(?:\.([^.]+))?$/;
+			var audio = document.createElement("button");
+			audio.value = result[i].url;
+			audio.innerHTML = "&#9835; " + result[i].url.split('/')[4].replace(re.exec(result[i].url.split('/')[4])[0], '');
+			audio.style = "max-width:90%; margin:15px;";
+			audio.onclick = function () {
 				if (!videoPlaying) {
 					socket.emit('playAudio', this.value);
 					videoPlaying = false;
@@ -115,23 +116,25 @@ socket.on("resultMedias", function (result) {
 					controlMedia();
 				}
 			}
-			galleryAudioDiv.appendChild(btn);
+			galleryAudioDiv.appendChild(audio);
 		} else {
-			var btn = document.createElement("button");
-			btn.id = index++;
-			btn.value = result[i].url;
-			btn.innerHTML = "play video";
-			btn.style = "margin:15px;";
-			btn.onclick = function () {
+			var video = document.createElement("video");
+			video.id = index++;
+			video.src = result[i].url;
+			video.alt = result[i].url;
+			video.play();
+			video.muted = true;
+			video.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+			video.onclick = function () {
 				onFullScreen = true;
 				selectedIndex = this.id;
 				buttonCloseModal.style.display = "block";
-				socket.emit('playVideo', this.value);
+				socket.emit('playVideo', this.alt);
 				videoPlaying = true;
 				isPlaying = true;
 				controlMedia();
 			}
-			galleryVideoDiv.appendChild(btn);
+			galleryVideoDiv.appendChild(video);
 			resultMedias.push([result[i].url, 'video']);
 		}
 	}
@@ -278,7 +281,6 @@ function extToFilter() {
 	if (disWmv.checked) { extTab.push("x-ms-wmv"); }
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
-	console.log("selectedLayout = " + selectedLayout);
 	socket.emit('filterMedias', extTab, listSelectedTag, selectedLayout);
 }
 

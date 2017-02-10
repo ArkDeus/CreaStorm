@@ -52,7 +52,7 @@ function displayMedias(navigation, indexLayout) {
     var endIndex;
 
     if (navigation == "right") {
-        console.log("right : currentIndex " + currentIndex);
+        // console.log("right : currentIndex " + currentIndex);
         if (currentIndex == globalTab.length) {
             return;
         }
@@ -63,13 +63,13 @@ function displayMedias(navigation, indexLayout) {
         if (currentIndex > globalTab.length) {
             currentIndex = globalTab.length;
             nbDisplayedElems = (globalTab.length - startIndex);
-            console.log("nb elems : " + nbDisplayedElems);
+            // console.log("nb elems : " + nbDisplayedElems);
         }
         endIndex = currentIndex;
-        console.log("right : currentIndex " + currentIndex);
+        // console.log("right : currentIndex " + currentIndex);
         currentPage++;
     } else if (navigation == "left") {
-        console.log("left : currentIndex " + currentIndex);
+        // console.log("left : currentIndex " + currentIndex);
         if ((currentIndex - nbDisplayedElems) <= 0) {
             return;
         }
@@ -82,10 +82,10 @@ function displayMedias(navigation, indexLayout) {
             nbDisplayedElems = endIndex;
         }
         // startIndex = currentIndex;
-        console.log("left : currentIndex " + currentIndex);
+        // console.log("left : currentIndex " + currentIndex);
         currentPage--;
     }
-    console.log("current page = " + currentPage + " et nbPages = " + nbPages);
+    // console.log("current page = " + currentPage + " et nbPages = " + nbPages);
     if (currentPage <= 1) {
         document.getElementById("leftarrow" + indexLayout).style.display = "none";
     } else {
@@ -138,10 +138,10 @@ socket.on('changelayout0', function () {
 });
 
 socket.on('tag', function (tab, indexLayout) {
-    console.log("voici l'index du layout : " + indexLayout);
+    // console.log("voici l'index du layout : " + indexLayout);
     globalTab = tab;
     nbPages = Math.ceil(globalTab.length / 6);
-    console.log("il y aura nbPages : " + nbPages);
+    // console.log("il y aura nbPages : " + nbPages);
     currentIndex = 0;
     currentPage = 0;
 
