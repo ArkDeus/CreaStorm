@@ -99,21 +99,21 @@ function displayMedias(navigation, indexLayout) {
 
 
     container.innerHTML = "";
-    console.log("start " + startIndex + " end " + endIndex);
+    // console.log("start " + startIndex + " end " + endIndex);
     for (var i = startIndex; i < endIndex; i++) {
         var div = document.createElement("div");
         div.className = "media";
         if (globalTab[i].type.includes("image")) {
-            // var img = document.createElement("img");
-            // img.src = globalTab[i].url;
-            // if(img.width / img.height < 16 / 9){
-            //     img.className = "tall";
-            // }
-            // div.appendChild(img);
-            div.style.backgroundImage = "url("+globalTab[i].url+")";
-            div.style.backgroundRepeat = "no-repeat";
-            div.style.backgroundPosition = "center";
-            div.style.backgroundSize = "contain";
+            var img = document.createElement("img");
+            img.src = globalTab[i].url;
+            if (img.width / img.height < 1) {
+                img.style = "height: 100%; width:auto;";
+            }
+            div.appendChild(img);
+            // div.style.backgroundImage = "url(" + globalTab[i].url + ")";
+            // div.style.backgroundRepeat = "no-repeat";
+            // div.style.backgroundPosition = "center";
+            // div.style.backgroundSize = "contain";
         } else if (globalTab[i].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[i].url;

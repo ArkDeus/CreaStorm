@@ -37,6 +37,7 @@ h1{
   margin: 10px;
   flex-shrink: 1;
   width: 30%;
+  max-height: 40%;
 }
 
 .mediafull {
