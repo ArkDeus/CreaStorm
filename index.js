@@ -120,7 +120,11 @@ surface_nsp.on('connection', function (socket) {
     socket.on("getAllTags", function (projectname) {
         var tags = surface_server.getAllTagFromProject(projectname);
         socket.emit("returnAllTags", tags);
-    })
+    });
+
+    socket.on("removeMedia", function( projectName, url){
+        surface_server.removeMediaFromProject(projectName, url);
+    });
 });
 
 // manage the event on the namespace 'DeviceService'

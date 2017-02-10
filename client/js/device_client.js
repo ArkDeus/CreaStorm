@@ -80,13 +80,13 @@ function displayProjectsImages(project) {
             currentMedia.setAttribute('controls', 'controls');
         }
 
-        currentMedia.className = 'col-xs-12 col-md-6';
+        //currentMedia.className = 'col-xs-12 col-md-6';
         currentMedia.src = 'Projects/' + json.name + '/' + medias[i].url;
 
 
         var currentImgRow = document.createElement('div');
         currentImgRow.id = medias[i].url;
-        currentImgRow.className = "imgRow";
+        currentImgRow.className = "imgRow col-xs-12 col-md-6 col-md-pull-left";
         currentImgRow.appendChild(currentMedia);
 
         projectImages.appendChild(currentImgRow);
@@ -160,6 +160,7 @@ function createProject() {
     projectJson += '"' + projectTags[projectTags.length - 1] + '"],' +
         '"medias": []}';
 
+    console.log("create: " + projectName);
 
     if (projectName != null) {
         socket.emit('createProject', projectName, projectJson);
@@ -175,24 +176,6 @@ function updateProjectsList() {
     console.log('update');
 }
 
-//mets à jour l'affichage des projets
-function displayProjectsListBis(id) {
-    var sel = document.getElementById(id);
-    while (sel.firstChild) {
-        sel.removeChild(sel.firstChild);
-    }
-    projectsList.forEach(function (projectName, index) {
-        var opt = document.createElement('option');
-        opt.innerHTML = projectName[0];
-        opt.value = projectName[0];
-        sel.appendChild(opt);
-    })
-    if (projectsList.length > 0) {
-        getProjectJson(projectsList[0][0]);
-    }
-    console.log('display');
-    console.log(projectsList);
-}
 
 //mets à jour l'affichage des projets
 function displayProjectsList() {
@@ -247,6 +230,7 @@ socket.on("returnGetAll", function (names, jsonList) {
     projectsList = names;
     projectsJsonList = jsonList;
     displayProjectsList();
+
     console.log('updated');
 });
 
@@ -371,9 +355,13 @@ fileInputButton.addEventListener("change", function (event) {
 document.querySelector('#upload').onclick = function () {
     createJson();
     uploadFiles(currentProjectName.innerHTML, fileInput.files[0]);
+    console.log(currentProjectName.innerHTML);
     socket.emit('addToJson', fileData, currentProjectName.innerHTML);
     fileModal.style.display = "none";
     updateProjectsList();
+    if(currentProjectName.innerHTML != ""){
+        displayProjectsImages(currentProjectName.innerHTML);
+    }
 }
 
 
