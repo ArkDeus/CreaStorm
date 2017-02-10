@@ -52,7 +52,7 @@ function displayMedias(navigation, indexLayout) {
     var endIndex;
 
     if (navigation == "right") {
-        console.log("right : currentIndex " + currentIndex);
+        // console.log("right : currentIndex " + currentIndex);
         if (currentIndex == globalTab.length) {
             return;
         }
@@ -63,13 +63,13 @@ function displayMedias(navigation, indexLayout) {
         if (currentIndex > globalTab.length) {
             currentIndex = globalTab.length;
             nbDisplayedElems = (globalTab.length - startIndex);
-            console.log("nb elems : " + nbDisplayedElems);
+            // console.log("nb elems : " + nbDisplayedElems);
         }
         endIndex = currentIndex;
-        console.log("right : currentIndex " + currentIndex);
+        // console.log("right : currentIndex " + currentIndex);
         currentPage++;
     } else if (navigation == "left") {
-        console.log("left : currentIndex " + currentIndex);
+        // console.log("left : currentIndex " + currentIndex);
         if ((currentIndex - nbDisplayedElems) <= 0) {
             return;
         }
@@ -82,10 +82,10 @@ function displayMedias(navigation, indexLayout) {
             nbDisplayedElems = endIndex;
         }
         // startIndex = currentIndex;
-        console.log("left : currentIndex " + currentIndex);
+        // console.log("left : currentIndex " + currentIndex);
         currentPage--;
     }
-    console.log("current page = " + currentPage + " et nbPages = " + nbPages);
+    // console.log("current page = " + currentPage + " et nbPages = " + nbPages);
     if (currentPage <= 1) {
         document.getElementById("leftarrow" + indexLayout).style.display = "none";
     } else {
@@ -99,14 +99,21 @@ function displayMedias(navigation, indexLayout) {
 
 
     container.innerHTML = "";
-    console.log("start " + startIndex + " end " + endIndex);
+    // console.log("start " + startIndex + " end " + endIndex);
     for (var i = startIndex; i < endIndex; i++) {
         var div = document.createElement("div");
         div.className = "media";
         if (globalTab[i].type.includes("image")) {
             var img = document.createElement("img");
             img.src = globalTab[i].url;
+            if (img.width / img.height < 1) {
+                img.style = "height: 100%; width:auto;";
+            }
             div.appendChild(img);
+            // div.style.backgroundImage = "url(" + globalTab[i].url + ")";
+            // div.style.backgroundRepeat = "no-repeat";
+            // div.style.backgroundPosition = "center";
+            // div.style.backgroundSize = "contain";
         } else if (globalTab[i].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[i].url;
@@ -119,22 +126,29 @@ function displayMedias(navigation, indexLayout) {
     }
 }
 
+socket.on('changelayout2', function () {
+    document.getElementById("layout0").style.display = "none";
+    document.getElementById("layout1").style.display = "none";
+    document.getElementById("layout2").style.display = "flex";
+});
 
 socket.on('changelayout1', function () {
     document.getElementById("layout0").style.display = "none";
     document.getElementById("layout1").style.display = "flex";
+    document.getElementById("layout2").style.display = "none";
 });
 
 socket.on('changelayout0', function () {
     document.getElementById("layout0").style.display = "flex";
     document.getElementById("layout1").style.display = "none";
+    document.getElementById("layout2").style.display = "none";
 });
 
 socket.on('tag', function (tab, indexLayout) {
-    console.log("voici l'index du layout : " + indexLayout);
+    // console.log("voici l'index du layout : " + indexLayout);
     globalTab = tab;
     nbPages = Math.ceil(globalTab.length / 6);
-    console.log("il y aura nbPages : " + nbPages);
+    // console.log("il y aura nbPages : " + nbPages);
     currentIndex = 0;
     currentPage = 0;
 
@@ -142,23 +156,25 @@ socket.on('tag', function (tab, indexLayout) {
     document.getElementById("rightarrow" + indexLayout).style.display = "none";
 
     var container = document.getElementById(indexLayout);
-        container.innerHTML = "";
+    container.innerHTML = "";
     if (globalTab.length == 1) {
-        // var container = document.getElementById(indexLayout);
-        // container.innerHTML = "";
         var div = document.createElement("div");
         div.className = "mediafull";
         if (globalTab[0].type.includes("image")) {
             var img = document.createElement("img");
             img.src = globalTab[0].url;
+            img.style.margin = "auto";
             div.appendChild(img);
         } else if (globalTab[0].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[0].url;
             video.play();
             document.getElementById("audio").pause();
+            video.style.margin = "auto";
             div.appendChild(video);
         }
+        div.style.display = "flex";
+        div.style.alignItems = "center";
 
         container.appendChild(div);
     } else {

@@ -37,6 +37,8 @@ socket.on('selectedProject', function (name) {
 	remoteControl();
 
 	layoutSelection();
+
+	zoneSelection();
 });
 
 socket.on('projectTag', function (result) {
@@ -100,11 +102,12 @@ socket.on("resultMedias", function (result) {
 			galleryImageDiv.appendChild(img);
 			resultMedias.push([result[i].url, 'image']);
 		} else if (type === 'audio') {
-			var btn = document.createElement("button");
-			btn.value = result[i].url;
-			btn.innerHTML = "play music";
-			btn.style = "margin:15px;";
-			btn.onclick = function () {
+			var re = /(?:\.([^.]+))?$/;
+			var audio = document.createElement("button");
+			audio.value = result[i].url;
+			audio.innerHTML = "&#9835; " + result[i].url.split('/')[4].replace(re.exec(result[i].url.split('/')[4])[0], '');
+			audio.style = "max-width:90%; margin:15px;";
+			audio.onclick = function () {
 				if (!videoPlaying) {
 					socket.emit('playAudio', this.value);
 					videoPlaying = false;
@@ -113,23 +116,25 @@ socket.on("resultMedias", function (result) {
 					controlMedia();
 				}
 			}
-			galleryAudioDiv.appendChild(btn);
+			galleryAudioDiv.appendChild(audio);
 		} else {
-			var btn = document.createElement("button");
-			btn.id = index++;
-			btn.value = result[i].url;
-			btn.innerHTML = "play video";
-			btn.style = "margin:15px;";
-			btn.onclick = function () {
+			var video = document.createElement("video");
+			video.id = index++;
+			video.src = result[i].url;
+			video.alt = result[i].url;
+			video.play();
+			video.muted = true;
+			video.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
+			video.onclick = function () {
 				onFullScreen = true;
 				selectedIndex = this.id;
 				buttonCloseModal.style.display = "block";
-				socket.emit('playVideo', this.value);
+				socket.emit('playVideo', this.alt);
 				videoPlaying = true;
 				isPlaying = true;
 				controlMedia();
 			}
-			galleryVideoDiv.appendChild(btn);
+			galleryVideoDiv.appendChild(video);
 			resultMedias.push([result[i].url, 'video']);
 		}
 	}
@@ -173,9 +178,6 @@ window.onload = function () {
 	pauseButton = document.getElementById('control-pause');
 
 	layoutSelect = document.getElementById('selection-layout');
-	document.getElementById("zoneSelected").oninput = function () {
-		selectedLayout = this.value;
-	}
 
 	socket.emit('getProjectName');
 };
@@ -279,7 +281,6 @@ function extToFilter() {
 	if (disWmv.checked) { extTab.push("x-ms-wmv"); }
 	if (disAvi.checked) { extTab.push("avi"); extTab.push("msvideo"); extTab.push("x-msvideo"); }
 	if (disMkv.checked) { extTab.push("x-matroska"); }
-
 	socket.emit('filterMedias', extTab, listSelectedTag, selectedLayout);
 }
 
@@ -320,14 +321,28 @@ function layoutSelection() {
 					current.style = "box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 					if (current.id == "layout0") {
 						selectedLayout = 0;
-						document.getElementById('zoneSelection').style.display = "none";
+						document.getElementById('selected-layout0').hidden = false;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = true;
 						socket.emit('useLayout0');
 					}
-					if (current.id == "layout2") {
+					else if (current.id == "layout2") {
 						selectedLayout = 1;
-						document.getElementById("zoneSelected").value = 1;
-						document.getElementById('zoneSelection').style.display = "block";
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = false;
 						socket.emit("useLayout2");
+					}
+					else if (current.id == "layout1") {
+						selectedLayout = 4;
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = false;
+						document.getElementById('selected-layout2').hidden = true;
+						socket.emit("useLayout1");
+					} else {
+						document.getElementById('selected-layout0').hidden = true;
+						document.getElementById('selected-layout1').hidden = true;
+						document.getElementById('selected-layout2').hidden = true;
 					}
 				} else {
 					current.style = "box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);";
@@ -335,6 +350,34 @@ function layoutSelection() {
 			}
 		}
 	};
+}
+
+function zoneSelection() {
+	var zoneSelect, activeLayoutNumber;
+	document.getElementById("selection-zone").onclick = function (event) {
+		if (event.target.tagName == "H2") {
+			zoneSelect = event.target.parentElement;
+		} else {
+			zoneSelect = event.target;
+		}
+		for (var i = 0; i < this.children.length; i++) {
+			if (!this.children[i].hidden) {
+				activeLayoutNumber = i;
+				clearZoneSelection(this.children[i]);
+			}
+		}
+		selectedLayout = parseInt(zoneSelect.id.replace('zone', ''));
+		zoneSelect.className += " selected";
+	};
+}
+
+function clearZoneSelection(element) {
+	for (var i = 0; i < element.children.length; i++) {
+		element.children[i].className = element.children[i].className.replace(' selected', '');
+		if (element.children[i].children.length > 0) {
+			clearZoneSelection(element.children[i]);
+		}
+	}
 }
 
 function controlMedia() {

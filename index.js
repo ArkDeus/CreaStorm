@@ -118,7 +118,7 @@ surface_nsp.on('connection', function (socket) {
     });
 
     socket.on("getAllTags", function (projectname) {
-        var tags = surface_server.getAllTagFromProject(projectname);
+        var tags = surface_server.getAllTags(projectname);
         socket.emit("returnAllTags", tags);
     });
 
@@ -261,6 +261,9 @@ remote_control_mng_nsp.on('connection', function (socket) {
     //Manage layout selection
     socket.on('useLayout0', function () {
         board_nsp.emit('changelayout0');
+    });
+    socket.on('useLayout1', function () {
+        board_nsp.emit('changelayout2');
     });
     socket.on('useLayout2', function () {
         board_nsp.emit('changelayout1');

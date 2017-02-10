@@ -8,6 +8,18 @@
   height: 80%;
 }
 
+#remote-control > h3{
+  text-align: center;
+  padding: 40% 5%;
+}
+
+@media screen and (min-aspect-ratio: 1/1) {
+  #remote-control > h3{
+    text-align: center;
+    padding: 20% 5% 10% 5%;
+  }
+}
+
 #player-control{
   margin: 0 auto;
   display: flex;
@@ -21,6 +33,63 @@
   right: 0;
   bottom: 0; 
   margin: 10px;
+}
+
+.zone-selectable {
+  min-height: 30%;
+  border: 2px solid white;
+  background-color: darkgray;
+  display: flex;
+  align-items: center;
+}
+
+.zone-selectable-container {
+  min-height: 30%;
+  border: 2px solid white;
+}
+
+.zone-selectable-half {
+  min-height: 15%;
+  border-bottom: 4px solid white;
+  background-color: darkgray;
+  display: flex;
+  align-items: center;
+}
+
+.zone-selectable > h2, .zone-selectable-half > h2{
+  margin: auto;
+}
+
+.zone-selectable.selected, .zone-selectable-half.selected {
+  background-color: royalblue;
+}
+
+@media screen and (min-aspect-ratio: 3/4) {
+  .zone-selectable {
+    min-height: 50%;
+  }
+
+  .zone-selectable-container {
+    min-height: 50%;
+  }
+
+  .zone-selectable-half {
+    min-height: 25%;
+  }
+}
+
+@media screen and (min-aspect-ratio: 1/1) {
+  .zone-selectable {
+    min-height: 76%;
+  }
+
+  .zone-selectable-container {
+    min-height: 76%;
+  }
+
+  .zone-selectable-half {
+    min-height: 38%;
+  }
 }
 
 .panel-body > button.active, .panel-body > button.active:focus {

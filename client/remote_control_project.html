@@ -277,15 +277,15 @@
                 <div id="galleryImage"></div>
                 <div id="galleryAudio"></div>
                 <div id="galleryVideo"></div>
-                <button id="closeFullScreen" class="btn btn-default">X</button>
             </div>
 
             <div id="remote-control" hidden>
-                <h3 style="text-align: center; padding: 40% 5%;">Swipe right or left no navigate in the carousel</h3>
+                <h3>Swipe right or left no navigate in the carousel</h3>
                 <div id="player-control">
                         <i id="control-play" class="material-icons md-light md-50" style="opacity: 0.5;">play_circle_filled</i>
                         <i id="control-pause" class="material-icons md-light md-50" style="opacity: 0.5;">pause_circle_filled</i>
                 </div>
+                <button id="closeFullScreen" class="btn btn-danger">X</button>
             </div>
 
             <div id="layout-manager" hidden>
@@ -316,12 +316,41 @@
                         </div>
                     </div>
 
-                    <div id="zoneSelection" class="panel panel-default" style="display: none;">
+                    <div class="panel panel-default">
                         <div class=" panel-heading">
                             <span>Zone selection</span>
                         </div>
                         <div class="panel-body">
-                            <input id="zoneSelected" type="range" min="1" max="3" step="1"/>
+                            <div id="selection-zone">
+                                <div id="selected-layout0">
+                                    <div id="zone0" class="col-xs-12 zone-selectable selected">
+                                        <h2>1</h2>
+                                    </div>
+                                </div>
+                                <div hidden id="selected-layout1">
+                                    <div id="zone4" class="col-xs-6 zone-selectable selected">
+                                        <h2>1</h2>
+                                    </div>
+                                    <div id="zone5" class="col-xs-6 zone-selectable">
+                                        <h2>2</h2>
+                                    </div>
+                                </div>
+                                <div hidden id="selected-layout2">
+                                    <div id="zone1" class="col-xs-6 zone-selectable selected">
+                                        <h2>1</h2>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="row zone-selectable-container">
+                                            <div id="zone2" class="col-xs-12 zone-selectable-half">
+                                                <h2>2</h2>
+                                            </div>
+                                            <div id="zone3" class="col-xs-12 zone-selectable-half">
+                                                <h2>3</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
             </div>
