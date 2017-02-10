@@ -18,9 +18,9 @@ Pré-requis : node.js (fonctionnement confirmé avec la version 7.2.1)
    * "ifconfig" sous Linux/Mac dans un terminal
  * Exécuter la commande "node index.js" à la racine
  * Ouvrir un navigateur sur les différents terminaux à l'adresse suivante :
-   * "http://<Insérer votre IP>:8080/DeviceService sur les terminaux des membres de l'équipe
-   * "http://<Insérer votre IP>:8080/BoardService sur l'ordinateur connecté à l'écran/vidéoprojecteur pour la synthèse
-   * "http://<Insérer votre IP>:8080/RemoteControl sur le terminal servant à contrôler l'écran/vidéoprojecteur
+   * "http://*Insérer votre IP*:8080/DeviceService sur les terminaux des membres de l'équipe
+   * "http://*Insérer votre IP*:8080/BoardService sur l'ordinateur connecté à l'écran/vidéoprojecteur pour la synthèse
+   * "http://*Insérer votre IP*:8080/RemoteControl sur le terminal servant à contrôler l'écran/vidéoprojecteur
    
 ## Auteurs
 
