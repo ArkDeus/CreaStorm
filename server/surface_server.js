@@ -1,8 +1,6 @@
 // to access to the file system to read folder content
 var filesystem = require("fs");
 
-var jq = require('jquery');
-
 var json = "";
 var projectFolder = "Projects/";
 
@@ -50,7 +48,7 @@ function _getAllProjectsName() {
     return result;
 }
 
-function _getProjectsAndIcon(){
+function _getProjectsAndIcon() {
     var result = [];
     var objProjectAndFiles;
     var listProject = filesystem.readdirSync('Projects');
@@ -78,21 +76,21 @@ function _getAllImages(project) {
     return images;
 }
 
-function _getImageTags(projectAndImage){
+function _getImageTags(projectAndImage) {
     var projectJson = _getProjectJson(projectAndImage[0]);
     var medias = projectJson.medias;
-    for (var i=0;i<medias.length;i++) {
-        if(medias[i].url == projectAndImage[1]){
+    for (var i = 0; i < medias.length; i++) {
+        if (medias[i].url == projectAndImage[1]) {
             return medias[i].tags;
         }
     }
 }
 
-function _getImageSize(projectAndImage){
+function _getImageSize(projectAndImage) {
     var projectJson = _getProjectJson(projectAndImage[0]);
     var medias = projectJson.medias;
-    for (var i=0;i<medias.length;i++) {
-        if(medias[i].url == projectAndImage[1]){
+    for (var i = 0; i < medias.length; i++) {
+        if (medias[i].url == projectAndImage[1]) {
             return medias[i].tags;
         }
     }
@@ -104,23 +102,23 @@ function _getAllTags(project) {
 }
 
 
-function _removeMediaFromProject(project, media){
+function _removeMediaFromProject(project, media) {
     console.log("Project name: " + project);
     console.log("Project url: " + media);
 
     var projectJson = _getProjectJson(project);
-    console.log("Project Json: " +projectJson.toString());
+    console.log("Project Json: " + projectJson.toString());
     var index;
-    for(var i = 0; i < projectJson.length; i++){
-        if(projectJson.url == media){
+    for (var i = 0; i < projectJson.length; i++) {
+        if (projectJson.url == media) {
             index = i;
             break;
         }
     }
 
-    projectJson.medias.splice(index,1);
-    console.log("Après splice: " +projectJson.medias);
-    filesystem.unlink(projectFolder + project + '/' + media, function(err){
+    projectJson.medias.splice(index, 1);
+    console.log("Après splice: " + projectJson.medias);
+    filesystem.unlink(projectFolder + project + '/' + media, function (err) {
         if (err) {
             console.log(err);
         }
@@ -159,7 +157,7 @@ module.exports = {
     removeMediaFromProject: function (project, media) {
         return _removeMediaFromProject(project, media);
     },
-    getImageTags: function (projectAndImage){
+    getImageTags: function (projectAndImage) {
         return _getImageTags(projectAndImage);
     }
 };

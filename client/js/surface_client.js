@@ -12,7 +12,7 @@ function init() {
     socket.emit("getProjectList");
     socket.on("returnProjectList", function (projectList) {
         for (var i = 0; i < projectList.length; i++) {
-            console.log(i+"eme projet");
+            // console.log(i+"eme projet");
             var t = document.querySelector('#projectTemplate');
             // Populate the src at runtime.
             t.content.querySelector('div img').src = '../Projects/' + projectList[i][0] + '/' + projectList[i][1];
@@ -20,8 +20,8 @@ function init() {
             var clone = document.importNode(t.content, true);
             projects.appendChild(clone);
             var child = projects.querySelectorAll('div')[i];
-            child.setAttribute('onclick','displayImages(\"'+projectList[i][0]+'\")');
-            console.log(child);
+            child.setAttribute('onclick', 'displayImages(\"' + projectList[i][0] + '\")');
+            // console.log(child);
         }
     });
 
@@ -36,12 +36,14 @@ function displayImages(projectName) {
     projects.innerHTML = "";
     var workbench = document.getElementById("workbench");
     workbench.innerHTML = "";
-    console.log(projectName);
+    // console.log(projectName);
     socket.emit("getImagesFromProject", projectName);
     socket.on("returnAllImages", function (images) {
-        console.log(images);
+        // console.log(images);
         for (var i = 0; i < images.length; i++) {
-            workbench.innerHTML += "<img src='../Projects/" + projectName + "/" + images[i] + "'/>";
+            if (images[i].type.split('/')[0] == "image") {
+                workbench.innerHTML += "<img src='../Projects/" + projectName + "/" + images[i].url + "'/>";
+            }
         }
         for (var i = 0; i < workbench.children.length; i++) {
             var image = workbench.children[i];
@@ -52,7 +54,7 @@ function displayImages(projectName) {
             image.style.top = top + "px";
             image.style.left = left + "px";
             image.style.transform = "rotate(" + rotation + "deg)";
-            console.log(image);
+            // console.log(image);
             initializeDragAndDrop(image);
         }
     });
