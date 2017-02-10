@@ -107,7 +107,9 @@ function _removeMediaFromProject(project, media) {
     console.log("Project url: " + media);
 
     var projectJson = _getProjectJson(project);
-    console.log("Project Json: " + projectJson.toString());
+
+    // console.log("Project Json: " +projectJson.medias[0].url);
+
     var index;
     for (var i = 0; i < projectJson.length; i++) {
         if (projectJson.url == media) {
@@ -126,7 +128,7 @@ function _removeMediaFromProject(project, media) {
             console.log('file deleted');
         }
     });
-    filesystem.writeFile(projectFolder + project + '/medias.json', projectJson, function (err) {
+    filesystem.writeFile(projectFolder + project + '/medias.json', JSON.stringify(projectJson), function (err) {
         if (err) {
             console.log(err);
         }

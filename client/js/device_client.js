@@ -86,7 +86,7 @@ function displayProjectsImages(project) {
 
         var currentImgRow = document.createElement('div');
         currentImgRow.id = medias[i].url;
-        currentImgRow.className = "imgRow col-xs-12 col-md-6 col-md-pull-left";
+        currentImgRow.className = "imgRow col-xs-12 col-md-4 col-md-pull-left";
         currentImgRow.appendChild(currentMedia);
 
         projectImages.appendChild(currentImgRow);
@@ -230,7 +230,9 @@ socket.on("returnGetAll", function (names, jsonList) {
     projectsList = names;
     projectsJsonList = jsonList;
     displayProjectsList();
-
+    if(currentProjectName.innerHTML != ""){
+        displayProjectsImages(currentProjectName.innerHTML);
+    }
     console.log('updated');
 });
 
@@ -349,7 +351,7 @@ button.addEventListener("click", function (event) {
 
 // affiche un retour visuel dès que input:file change
 fileInputButton.addEventListener("change", function (event) {
-    the_return.innerHTML = this.value;
+    the_return.innerHTML = this.value.replace(/^.*[\\\/]/, '');
 });
 
 document.querySelector('#upload').onclick = function () {
