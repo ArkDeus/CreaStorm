@@ -104,9 +104,16 @@ function displayMedias(navigation, indexLayout) {
         var div = document.createElement("div");
         div.className = "media";
         if (globalTab[i].type.includes("image")) {
-            var img = document.createElement("img");
-            img.src = globalTab[i].url;
-            div.appendChild(img);
+            // var img = document.createElement("img");
+            // img.src = globalTab[i].url;
+            // if(img.width / img.height < 16 / 9){
+            //     img.className = "tall";
+            // }
+            // div.appendChild(img);
+            div.style.backgroundImage = "url("+globalTab[i].url+")";
+            div.style.backgroundRepeat = "no-repeat";
+            div.style.backgroundPosition = "center";
+            div.style.backgroundSize = "contain";
         } else if (globalTab[i].type.includes("video")) {
             var video = document.createElement("video");
             video.src = globalTab[i].url;
