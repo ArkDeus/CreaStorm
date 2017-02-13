@@ -122,8 +122,6 @@ socket.on("resultMedias", function (result) {
 			video.id = index++;
 			video.src = result[i].url;
 			video.alt = result[i].url;
-			video.play();
-			video.muted = true;
 			video.style = "max-height:100px; max-width:200px; margin:15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);";
 			video.onclick = function () {
 				onFullScreen = true;
@@ -272,7 +270,7 @@ function extToFilter() {
 	if (disGif.checked) { extTab.push("gif"); }
 	if (disPng.checked) { extTab.push("png"); }
 	// musics
-	if (disMp3.checked) { extTab.push("mpeg"); }
+	if (disMp3.checked) { extTab.push("mpeg"); extTab.push("mp3"); }
 	if (disWma.checked) { extTab.push("x-ms-wma"); }
 	if (disFlac.checked) { extTab.push("x-flac"); extTab.push("ogg"); }
 	if (disWav.checked) { extTab.push("wav"); extTab.push("wave"); extTab.push("vnd.wave"); }
@@ -381,6 +379,10 @@ function clearZoneSelection(element) {
 }
 
 function controlMedia() {
+	console.log("isPlaying", isPlaying);
+	console.log("videoPlaying", videoPlaying);
+	console.log("audioRunning", audioRunning);
+	console.log("onFullScreen", onFullScreen);
 	if (isPlaying) {
 		if (onFullScreen) {
 			pauseButton.style.opacity = 1;
@@ -414,18 +416,25 @@ function controlMedia() {
 		}
 	} else {
 		if (onFullScreen) {
-			playButton.style.opacity = 1;
-			playButton.onclick = function () {
-				if (videoPlaying) {
-					socket.emit('playInVideo');
-				} else {
-					socket.emit('playInAudio');
+			if (!videoPlaying && !audioRunning) {
+				playButton.style.opacity = 0.5;
+				playButton.onclick = "";
+				pauseButton.style.opacity = 0.5;
+				pauseButton.onclick = "";
+			} else {
+				playButton.style.opacity = 1;
+				playButton.onclick = function () {
+					if (videoPlaying) {
+						socket.emit('playInVideo');
+					} else {
+						socket.emit('playInAudio');
+					}
+					isPlaying = true;
+					controlMedia();
 				}
-				isPlaying = true;
-				controlMedia();
+				pauseButton.style.opacity = 0.5;
+				pauseButton.onclick = "";
 			}
-			pauseButton.style.opacity = 0.5;
-			pauseButton.onclick = "";
 		} else {
 			playButton.style.opacity = 1;
 			playButton.onclick = function () {

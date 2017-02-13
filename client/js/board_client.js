@@ -157,6 +157,13 @@ socket.on('tag', function (tab, indexLayout) {
 
     var container = document.getElementById(indexLayout);
     container.innerHTML = "";
+
+    if (globalTab.length == 0) {
+        document.getElementById("audio").pause();
+        document.getElementById("audio").currentTime = 0;
+        document.getElementById("audiocontainer").hidden = true;
+    }
+
     if (globalTab.length == 1) {
         var div = document.createElement("div");
         div.className = "mediafull";
@@ -169,6 +176,7 @@ socket.on('tag', function (tab, indexLayout) {
             var video = document.createElement("video");
             video.src = globalTab[0].url;
             video.play();
+            video.muted = true;
             document.getElementById("audio").pause();
             video.style.margin = "auto";
             div.appendChild(video);
